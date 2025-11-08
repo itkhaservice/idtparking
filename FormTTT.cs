@@ -26,6 +26,12 @@ namespace IDT_PARKING
         private SqlConnection _connection;
         private DataTable _currentQueryResult;
 
+        public string txtServer = Properties.Settings.Default.ServerAddress;
+        public string txtDatabase = Properties.Settings.Default.DatabaseName;
+        public string txtFolder = Properties.Settings.Default.SharedFolder;
+        public string txtUsername = Properties.Settings.Default.Username;
+        public string txtPassword = Properties.Settings.Default.Password;
+
         public FormTTT(DataTable currentQueryResult)
         {
             _currentQueryResult = currentQueryResult;
@@ -33,22 +39,17 @@ namespace IDT_PARKING
 
         private const string ALL_MATERIAL_TYPE = "ALL";
         private const string PRICE_COLUMN_NAME = "PRICE";
+
         public FormTTT()
         {
             InitializeComponent();
-            LoadConnectionSettings();
-
+            InitializeDatabaseConnection();
             // Ẩn ProgressBar và Label trạng thái ban đầu
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
 
             _currentQueryResult = new DataTable();
             SetInitialControlStates();
-
-            btnQuery.Enabled = false;
-            btnUpdate.Enabled = false;
-            btnDelete.Enabled = false;  
-            btnMonth.Enabled = false;
 
             timeTimeEnd.Value  = DateTime.Now;
             timeTimeStart.Value = DateTime.Now;
@@ -78,115 +79,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void EnsureItKhaTableExists()
-        {
-            if (connection == null || connection.State != ConnectionState.Open)
-                return;
 
-            string checkAndCreateTable = @"
-    IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ITKHA' AND xtype='U')
-    BEGIN
-        CREATE TABLE [dbo].[ITKHA] (
-            STTThe     VARCHAR(10)   NOT NULL,
-            CardID     VARCHAR(20)   NOT NULL,
-            NgayRa     DATETIME      NOT NULL,
-            ThoiGianRa FLOAT         NOT NULL,
-            MaLoaiThe  VARCHAR(10)   NOT NULL,
-            GiaTien    MONEY         NOT NULL,
-            username   VARCHAR(20)   NOT NULL,
-            IDXe       VARCHAR(50)   NOT NULL,
-            IDMat      VARCHAR(50)   NOT NULL,
-            GioRa      NCHAR(10)     NOT NULL,
-            cong       VARCHAR(50)   NULL,
-            soxe       VARCHAR(50)   NULL,
-            soxera     VARCHAR(50)   NOT NULL,
-            Thao_Tac   NVARCHAR(20)  NOT NULL,
-            Ngay_Thuc_Hien DATETIME NOT NULL
-        )
-    END";
-
-            using (SqlCommand cmd = new SqlCommand(checkAndCreateTable, connection))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
-
-
-        private void LoadConnectionSettings()
-        {
-            txtServer.Text = Properties.Settings.Default.ServerAddress;
-            txtDatabase.Text = Properties.Settings.Default.DatabaseName;
-            txtFolder.Text = Properties.Settings.Default.SharedFolder;
-            txtUsername.Text = Properties.Settings.Default.Username;
-            txtPassword.Text = Properties.Settings.Default.Password;
-        }
-
-        private void SaveConnectionSettings()
-        {
-            Properties.Settings.Default.ServerAddress = txtServer.Text;
-            Properties.Settings.Default.DatabaseName = txtDatabase.Text;
-            Properties.Settings.Default.SharedFolder = txtFolder.Text;
-            Properties.Settings.Default.Username = txtUsername.Text;
-            Properties.Settings.Default.Password = txtPassword.Text;
-
-            // Dòng này là BẮT BUỘC để lưu dữ liệu
-            Properties.Settings.Default.Save();
-        }
-
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            string serverAddress = txtServer.Text;
-            string databaseName = txtDatabase.Text;
-            string folder = txtFolder.Text;
-            string uid = txtUsername.Text;
-            string password = txtPassword.Text;
-
-            string connectionString;
-            if (string.IsNullOrWhiteSpace(uid))
-            {
-                connectionString = $"Server={serverAddress};Database={databaseName};Integrated Security=True;TrustServerCertificate=True;";
-                //connectionString =
-                //"Server=192.168.1.120\\SQLEXPRESS;Database=mobiparking;Integrated Security=True;";
-            }
-            else
-            {
-                connectionString = $"Server={serverAddress};Database={databaseName};User ID={uid};Password={password};TrustServerCertificate=True;";
-                //connectionString =
-                //"Server=192.168.1.120\\SQLEXPRESS;Database=mobiparking;Integrated Security=True;";
-            }
-
-            try
-            {
-                connection = new SqlConnection(connectionString);
-                connection.Open();
-                MessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                btnQuery.Enabled = true;
-                btnBackup.Enabled = true;
-                btnRevenue.Enabled = true;
-                btnConsignment.Enabled = true;
-                btnMonth.Enabled = true;
-                btnOpenCus.Enabled = false;
-                btnOpenRevenue.Enabled= false;
-                btnRevenueCa.Enabled = true;
-                btnSaveTable.Enabled = true;
-                Properties.Settings.Default.ServerAddress = txtServer.Text;
-                Properties.Settings.Default.DatabaseName = txtDatabase.Text;
-                Properties.Settings.Default.Username = txtUsername.Text;
-                Properties.Settings.Default.Password = txtPassword.Text;
-
-                // Lưu các thay đổi
-                Properties.Settings.Default.Save();
-                EnsureItKhaTableExists();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                btnQuery.Enabled = false;
-                btnUpdate.Enabled = false;
-                btnRevenue.Enabled = false;
-                btnConsignment.Enabled = false;
-            }
-        }
         private void btnQuery_Click(object sender, EventArgs e)
         {
             // Giữ nguyên các kiểm tra kết nối và vô hiệu hóa UI
@@ -503,11 +396,11 @@ WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
 
         private void btnBackup_Click(object sender, EventArgs e)
         {
-            string serverAddress = txtServer.Text.Trim(); // tên server hoặc IP
-            string databaseName = txtDatabase.Text.Trim();
-            string uid = txtUsername.Text.Trim();
-            string password = txtPassword.Text.Trim();
-            string clientUNCPath = txtFolder.Text.Trim(); // thư mục UNC hoặc đường dẫn đích
+            string serverAddress = txtServer; // tên server hoặc IP
+            string databaseName = txtDatabase;
+            string uid = txtUsername;
+            string password = txtPassword;
+            string clientUNCPath = txtFolder; // thư mục UNC hoặc đường dẫn đích
 
             // Tên file backup
             string backupFileName = $"{databaseName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
@@ -704,10 +597,10 @@ WITH INIT, STATS = 10";
         {
             try
             {
-                string serverAddress = txtServer.Text;
-                string databaseName = txtDatabase.Text;
-                string uid = txtUsername.Text;
-                string password = txtPassword.Text;
+                string serverAddress = txtServer;
+                string databaseName = txtDatabase;
+                string uid = txtUsername;
+                string password = txtPassword;
                 string connectionString;
                 if (string.IsNullOrWhiteSpace(uid))
                 {
@@ -718,8 +611,8 @@ WITH INIT, STATS = 10";
                     connectionString = $"Server={serverAddress};Database={databaseName};User ID={uid};Password={password};TrustServerCertificate=True;";
                 }
 
-                _connection = new SqlConnection(connectionString);
-                _connection.Open();
+                connection = new SqlConnection(connectionString);
+                connection.Open();
                 MessageBox.Show("Kết nối cơ sở dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
@@ -886,10 +779,10 @@ WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
                 }
 
                 // Tạo và mở kết nối cục bộ
-                string serverAddress = txtServer.Text;
-                string databaseName = txtDatabase.Text;
-                string uid = txtUsername.Text;
-                string password = txtPassword.Text;
+                string serverAddress = txtServer;
+                string databaseName = txtDatabase;
+                string uid = txtUsername;
+                string password = txtPassword;
 
                 string connectionString;
                 if (string.IsNullOrWhiteSpace(uid))
@@ -1140,10 +1033,10 @@ WHERE GiaTien > 0 AND "; // Giữ nguyên điều kiện GiaTien > 0
                 }
 
                 // Tạo và mở kết nối cục bộ (giữ nguyên)
-                string serverAddress = txtServer.Text;
-                string databaseName = txtDatabase.Text;
-                string uid = txtUsername.Text;
-                string password = txtPassword.Text;
+                string serverAddress = txtServer;
+                string databaseName = txtDatabase;
+                string uid = txtUsername;
+                string password = txtPassword;
 
                 string connectionString;
                 if (string.IsNullOrWhiteSpace(uid))
@@ -1290,7 +1183,6 @@ WHERE GiaTien > 0 AND "; // Giữ nguyên điều kiện GiaTien > 0
 
         private void FormTTT_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveConnectionSettings();
             if (connection != null && connection.State == ConnectionState.Open)
             {
                 connection.Close();
@@ -1300,7 +1192,7 @@ WHERE GiaTien > 0 AND "; // Giữ nguyên điều kiện GiaTien > 0
 
         private void btnOpenFolder_Click(object sender, EventArgs e)
         {
-            string folderPath = txtFolder.Text.Trim(); // Lấy đường dẫn từ textbox
+            string folderPath = txtFolder; // Lấy đường dẫn từ textbox
 
             if (string.IsNullOrWhiteSpace(folderPath))
             {
@@ -1808,8 +1700,8 @@ ORDER BY CAST(NgayBaoCao AS DATE) ASC;
 
                 progressBarExport.Value = 95; // 95% cho các thao tác tối ưu
 
-                string serverAddress = txtServer.Text;
-                string sharedFolder = txtFolder.Text;
+                string serverAddress = txtServer;
+                string sharedFolder = txtFolder;
                 int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
@@ -1935,6 +1827,22 @@ ORDER BY CAST(NgayBaoCao AS DATE) ASC;
         {
             FormTruyVan formTruyVan = new FormTruyVan();
             formTruyVan.Show(); // Hoặc formTruyVan.ShowDialog();
+        }
+
+        private void splitContainer1_Panel1_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void btnCaiDat_Click(object sender, EventArgs e)
+        {
+            FormCaiDat formCaiDat = new FormCaiDat();
+            formCaiDat.Show(); // Hoặc FormCaiDat.ShowDialog();
+        }
+
+        private void FormTTT_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
