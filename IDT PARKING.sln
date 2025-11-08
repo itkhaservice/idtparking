@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36109.1 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IDT PARKING", "IDT PARKING.csproj", "{11A6086A-01A4-44C3-9EC4-6E7A7D708CEA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11A6086A-01A4-44C3-9EC4-6E7A7D708CEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A6086A-01A4-44C3-9EC4-6E7A7D708CEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A6086A-01A4-44C3-9EC4-6E7A7D708CEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A6086A-01A4-44C3-9EC4-6E7A7D708CEA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CB3470BB-89D4-4AF1-8270-C490E0905262}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,17 @@
+E:\CMTHANG\IDT PARKING\bin\Release\IDT PARKING.exe.config
+E:\CMTHANG\IDT PARKING\bin\Release\IDT PARKING.exe
+E:\CMTHANG\IDT PARKING\bin\Release\IDT PARKING.pdb
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.csproj.AssemblyReference.cache
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.csproj.ResolveComReference.cache
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.FormKiemTra.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.FormTTT.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.PasswordPromptForm.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.Properties.Resources.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.Setting.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.csproj.GenerateResource.cache
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.csproj.CoreCompileInputs.cache
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.exe
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.pdb
+E:\CMTHANG\IDT PARKING\obj\Release\IDT PARKING.exe.config
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.FormTruyVan.resources
+E:\CMTHANG\IDT PARKING\obj\Release\IDT_PARKING.HelpForm.resources

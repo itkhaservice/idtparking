@@ -1,0 +1,13 @@
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.csproj.AssemblyReference.cache
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT_PARKING.FormTTT.resources
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT_PARKING.LoginForm.resources
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT_PARKING.Properties.Resources.resources
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.csproj.GenerateResource.cache
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.csproj.CoreCompileInputs.cache
+E:\CMTHANG\IDT PARKING\bin\Debug\IDT PARKING.exe.config
+E:\CMTHANG\IDT PARKING\bin\Debug\IDT PARKING.exe
+E:\CMTHANG\IDT PARKING\bin\Debug\IDT PARKING.pdb
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.exe
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.pdb
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT PARKING.exe.config
+E:\CMTHANG\IDT PARKING\obj\Debug\IDT_PARKING.PasswordPromptForm.resources
