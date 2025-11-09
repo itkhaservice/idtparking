@@ -39,7 +39,6 @@ namespace IDT_PARKING
         private void DoanhThu_Load()
         {
 
-
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
 
@@ -157,20 +156,20 @@ namespace IDT_PARKING
 
             string query = @"
                         SELECT
-                            STTThe AS 'NO',
-                            NgayRa AS 'DATE OUT',
+                            STTThe AS 'Số thẻ',
+                            NgayRa AS 'Ngày ra',
                             -- Sử dụng các hàm chuỗi cơ bản để tạo định dạng thời gian HH:MM:SS.FF
                             RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
                             RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
                             RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                            RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'TIME OUT',
-                            MaLoaiThe AS 'TYPE',
-                            GiaTien AS 'PRICE',
-                            CardID AS 'ID CARD',
-                            IDXe AS 'ID VEHICLE',
-                            IDMat AS 'ID NO',
-                            soxe AS 'LPN IN',
-                            soxera AS 'LPN OUT'
+                            RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'Giờ ra',
+                            MaLoaiThe AS 'Loại thẻ',
+                            GiaTien AS 'Tiền thu',
+                            CardID AS 'Mã thẻ',
+                            IDXe AS 'Mã xe',
+                            IDMat AS 'Mã mặt',
+                            soxe AS 'Xe vào',
+                            soxera AS 'Xe ra'
                         FROM [dbo].[Ra]
                         WHERE GiaTien > 0 AND ";
 
@@ -302,9 +301,9 @@ namespace IDT_PARKING
             {
                 if (row.IsNewRow) continue;
 
-                string cardId = row.Cells["ID CARD"].Value?.ToString();
-                string idXe = row.Cells["ID VEHICLE"].Value?.ToString();
-                string idMat = row.Cells["ID NO"].Value?.ToString();
+                string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+                string idXe = row.Cells["Mã xe"].Value?.ToString();
+                string idMat = row.Cells["Mã mặt"].Value?.ToString();
 
                 if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
                 {
@@ -387,20 +386,20 @@ namespace IDT_PARKING
             // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
             string query = @"
                             SELECT
-                                STTThe AS 'NO',
-                                NgayRa AS 'DATE OUT',
+                                STTThe AS 'Số thẻ',
+                                NgayRa AS 'Ngày ra',
                                 -- Sử dụng các hàm chuỗi cơ bản để tạo định dạng thời gian HH:MM:SS.FF
                                 RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
                                 RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
                                 RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                                RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'TIME OUT',
-                                MaLoaiThe AS 'TYPE',
-                                GiaTien AS 'PRICE',
-                                CardID AS 'ID CARD',
-                                IDXe AS 'ID VEHICLE',
-                                IDMat AS 'ID NO',
-                                soxe AS 'LPN IN',
-                                soxera AS 'LPN OUT'
+                                RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'Giờ ra',
+                                MaLoaiThe AS 'Loại thẻ',
+                                GiaTien AS 'Tiền thu',
+                                CardID AS 'Mã thẻ',
+                                IDXe AS 'Mã xe',
+                                IDMat AS 'Mã mặt',
+                                soxe AS 'Xe vào',
+                                soxera AS 'Xe ra'
                             FROM [dbo].[Ra]
                             WHERE";
 
@@ -504,9 +503,9 @@ namespace IDT_PARKING
             DataGridViewRow row = dgvResults.SelectedRows[0];
             if (row.IsNewRow) return;
 
-            string cardId = row.Cells["ID CARD"].Value?.ToString();
-            string idXe = row.Cells["ID VEHICLE"].Value?.ToString();
-            string idMat = row.Cells["ID NO"].Value?.ToString();
+            string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+            string idXe = row.Cells["Mã xe"].Value?.ToString();
+            string idMat = row.Cells["Mã mặt"].Value?.ToString();
 
             if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
             {
@@ -538,20 +537,20 @@ namespace IDT_PARKING
                     {
                         logCmd.Parameters.AddWithValue("@cardId", cardId);
                         logCmd.Parameters.AddWithValue("@idXe", idXe);
-                        logCmd.Parameters.AddWithValue("@idMat", idMat);
+                        logCmd.AddWithValue("@idMat", idMat);
                         logCmd.ExecuteNonQuery();
                     }
 
                     // 2) Chuẩn bị update (lấy các cột cần update từ dgv)
                     Dictionary<string, string> columnMapping = new Dictionary<string, string>
                         {
-                            { "NO", "STTThe" },
-                            { "TYPE", "MaLoaiThe" },
-                            { "PRICE", "GiaTien" },
-                            { "USERNAME", "username" },
-                            { "SOXE", "soxe" },
-                            { "SOXERA", "soxera" },
-                            { "CONG", "cong" }
+                            { "Số thẻ", "STTThe" },
+                            { "Loại thẻ", "MaLoaiThe" },
+                            { "Tiền thu", "GiaTien" },
+                            { "USERNAME", "username" }, // Assuming 'username' is still 'USERNAME'
+                            { "Xe vào", "soxe" },
+                            { "Xe ra", "soxera" },
+                            { "CONG", "cong" } // Assuming 'cong' is still 'CONG'
                         };
 
                     List<string> updateFields = new List<string>();
@@ -625,39 +624,9 @@ namespace IDT_PARKING
 
         }
 
-        private void DisplayRevenueResults(DataTable dataTable)
+        private void btnExportRevenue_Click(object sender, EventArgs e)
         {
-            dgvResults.DataSource = dataTable;
-            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            if (dataTable.Rows.Count > 0)
-            {
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
-            }
-            else
-            {
-                btnUpdate.Enabled = false;
-                btnDelete.Enabled = false;
-            }
-            decimal totalGiaTien = 0;
-
-            if (dataTable.Columns.Contains("SUM"))
-            {
-                foreach (DataRow row in dataTable.Rows)
-                {
-                    if (row["SUM"] != DBNull.Value && decimal.TryParse(row["SUM"].ToString(), out decimal giaTien))
-                    {
-                        totalGiaTien += giaTien;
-                    }
-                }
-            }
-            else
-            {
-                MessageBox.Show("Column 'SUM' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
         }
     }
 }

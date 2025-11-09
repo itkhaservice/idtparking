@@ -156,7 +156,7 @@
             // btnDelete
             // 
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnDelete.Location = new System.Drawing.Point(745, 633);
+            this.btnDelete.Location = new System.Drawing.Point(699, 630);
             this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(100, 29);
@@ -168,10 +168,10 @@
             // btnUpdate
             // 
             this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnUpdate.Location = new System.Drawing.Point(743, 600);
+            this.btnUpdate.Location = new System.Drawing.Point(699, 602);
             this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(100, 29);
+            this.btnUpdate.Size = new System.Drawing.Size(100, 27);
             this.btnUpdate.TabIndex = 52;
             this.btnUpdate.Text = "Cập nhật giá";
             this.btnUpdate.UseVisualStyleBackColor = true;
@@ -180,10 +180,10 @@
             // btnQuery
             // 
             this.btnQuery.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnQuery.Location = new System.Drawing.Point(643, 601);
+            this.btnQuery.Location = new System.Drawing.Point(597, 601);
             this.btnQuery.Margin = new System.Windows.Forms.Padding(2);
             this.btnQuery.Name = "btnQuery";
-            this.btnQuery.Size = new System.Drawing.Size(96, 29);
+            this.btnQuery.Size = new System.Drawing.Size(98, 29);
             this.btnQuery.TabIndex = 51;
             this.btnQuery.Text = "Lọc đầy đủ";
             this.btnQuery.UseVisualStyleBackColor = true;
@@ -192,7 +192,7 @@
             // btnRevenue
             // 
             this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnRevenue.Location = new System.Drawing.Point(643, 634);
+            this.btnRevenue.Location = new System.Drawing.Point(597, 631);
             this.btnRevenue.Margin = new System.Windows.Forms.Padding(2);
             this.btnRevenue.Name = "btnRevenue";
             this.btnRevenue.Size = new System.Drawing.Size(98, 29);
@@ -208,10 +208,11 @@
             this.btnExportRevenue.Location = new System.Drawing.Point(467, 632);
             this.btnExportRevenue.Margin = new System.Windows.Forms.Padding(2);
             this.btnExportRevenue.Name = "btnExportRevenue";
-            this.btnExportRevenue.Size = new System.Drawing.Size(152, 29);
+            this.btnExportRevenue.Size = new System.Drawing.Size(127, 29);
             this.btnExportRevenue.TabIndex = 47;
             this.btnExportRevenue.Text = "Xuất Excel";
             this.btnExportRevenue.UseVisualStyleBackColor = true;
+            this.btnExportRevenue.Click += new System.EventHandler(this.btnExportRevenue_Click);
             // 
             // label10
             // 
@@ -228,17 +229,17 @@
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(464, 614);
+            this.label8.Location = new System.Drawing.Point(464, 610);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(59, 15);
+            this.label8.Size = new System.Drawing.Size(51, 15);
             this.label8.TabIndex = 43;
-            this.label8.Text = "LOẠI THẺ";
+            this.label8.Text = "Loại thẻ";
             // 
             // timeTimeEnd
             // 
             this.timeTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeEnd.Location = new System.Drawing.Point(376, 639);
+            this.timeTimeEnd.Location = new System.Drawing.Point(370, 639);
             this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeEnd.Name = "timeTimeEnd";
             this.timeTimeEnd.Size = new System.Drawing.Size(75, 20);
@@ -248,7 +249,7 @@
             // timeTimeStart
             // 
             this.timeTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeStart.Location = new System.Drawing.Point(376, 612);
+            this.timeTimeStart.Location = new System.Drawing.Point(370, 610);
             this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeStart.Name = "timeTimeStart";
             this.timeTimeStart.Size = new System.Drawing.Size(75, 20);
@@ -258,7 +259,7 @@
             // cmbType
             // 
             this.cmbType.FormattingEnabled = true;
-            this.cmbType.Location = new System.Drawing.Point(544, 608);
+            this.cmbType.Location = new System.Drawing.Point(519, 608);
             this.cmbType.Margin = new System.Windows.Forms.Padding(2);
             this.cmbType.Name = "cmbType";
             this.cmbType.Size = new System.Drawing.Size(75, 21);
@@ -268,17 +269,17 @@
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(240, 618);
+            this.label5.Location = new System.Drawing.Point(219, 610);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(23, 15);
+            this.label5.Size = new System.Drawing.Size(51, 15);
             this.label5.TabIndex = 35;
-            this.label5.Text = "TỪ";
+            this.label5.Text = "Từ ngày";
             // 
             // dateTimeStart
             // 
             this.dateTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeStart.Location = new System.Drawing.Point(281, 612);
+            this.dateTimeStart.Location = new System.Drawing.Point(274, 610);
             this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeStart.Name = "dateTimeStart";
             this.dateTimeStart.Size = new System.Drawing.Size(92, 20);
@@ -299,7 +300,7 @@
             // dateTimeEnd
             // 
             this.dateTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeEnd.Location = new System.Drawing.Point(281, 639);
+            this.dateTimeEnd.Location = new System.Drawing.Point(274, 639);
             this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeEnd.Name = "dateTimeEnd";
             this.dateTimeEnd.Size = new System.Drawing.Size(92, 20);
@@ -310,12 +311,12 @@
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(239, 643);
+            this.label6.Location = new System.Drawing.Point(211, 639);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(31, 15);
+            this.label6.Size = new System.Drawing.Size(59, 15);
             this.label6.TabIndex = 39;
-            this.label6.Text = "ĐẾN";
+            this.label6.Text = "Đến ngày";
             // 
             // dgvResults
             // 
