@@ -547,10 +547,8 @@ namespace IDT_PARKING
                             { "Số thẻ", "STTThe" },
                             { "Loại thẻ", "MaLoaiThe" },
                             { "Tiền thu", "GiaTien" },
-                            { "USERNAME", "username" }, // Assuming 'username' is still 'USERNAME'
                             { "Xe vào", "soxe" },
-                            { "Xe ra", "soxera" },
-                            { "CONG", "cong" } // Assuming 'cong' is still 'CONG'
+                            { "Xe ra", "soxera" }
                         };
 
                     List<string> updateFields = new List<string>();
@@ -563,7 +561,8 @@ namespace IDT_PARKING
                         {
                             string columnName = column.Name;
 
-                            if (columnName == "ID CARD" || columnName == "ID VEHICLE" || columnName == "ID NO")
+                            // Skip primary key columns and read-only columns
+                            if (columnName == "Mã thẻ" || columnName == "Mã xe" || columnName == "Mã mặt" || columnName == "Ngày ra" || columnName == "Giờ ra")
                                 continue;
 
                             if (!columnMapping.TryGetValue(columnName, out string dbColumnName))
