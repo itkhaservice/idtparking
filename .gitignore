@@ -1,1 +1,3 @@
-# B? qua thu m?c IDE c?a Visual Studio (gây l?i Permission denied).vs/# B? qua thu m?c t?m c?a IDE nhu bin/ và obj/[Bb]in/[Oo]bj/# B? qua các file c?u hình t?m th?i và file ngu?i dùng*.user*.suo*.pdb# B? qua các file cài d?t và file log không c?n thi?t khác*.log*.bak
+# B? qua thu m?c IDE c?a Visual Studio (gây l?i Permission denied).vs/# B? qua thu m?c t?m c?a IDE nhu bin/ và obj/[Bb]in/[Oo]bj/# B? qua các file c?u hình t?m th?i và file ngu?i dùng*.user*.suo*.pdb# B? qua các file cài d?t và file log không c?n thi?t khác*.log*.bak.vs/
+bin/
+obj/
