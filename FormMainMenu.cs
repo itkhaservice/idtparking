@@ -116,7 +116,7 @@ namespace IDT_PARKING
             STTThe     VARCHAR(10)   NOT NULL,
             CardID     VARCHAR(20)   NOT NULL,
             NgayRa     DATETIME      NOT NULL,
-            ThoiGianRa FLOAT         NOT NULL,
+            ThoiGianRa NCHAR(10)     NOT NULL,
             MaLoaiThe  VARCHAR(10)   NOT NULL,
             GiaTien    MONEY         NOT NULL,
             username   VARCHAR(20)   NOT NULL,

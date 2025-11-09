@@ -98,7 +98,7 @@
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(146, 23);
             this.txtFolder.TabIndex = 9;
-            this.txtFolder.Text = "hinh";
+            this.txtFolder.Text = "\\\\192.168.1.95\\hinh";
             // 
             // label1
             // 

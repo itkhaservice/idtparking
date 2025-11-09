@@ -1,4 +1,4 @@
-﻿namespace IDT_PARKING
+namespace IDT_PARKING
 {
     partial class FormTruyVan
     {
@@ -48,7 +48,7 @@
             this.txtCommand.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtCommand.Size = new System.Drawing.Size(1166, 296);
             this.txtCommand.TabIndex = 0;
-            this.txtCommand.Text = "SELECT table_name FROM information_schema.tables WHERE table_type = \'BASE TABLE\'";
+            this.txtCommand.Text = "SELECT table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE'";
             this.txtCommand.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCommand_KeyDown);
             // 
             // dgvResult

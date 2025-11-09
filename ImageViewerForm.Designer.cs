@@ -1,6 +1,6 @@
-﻿namespace IDT_PARKING
+namespace IDT_PARKING
 {
-    partial class Setting
+    partial class ImageViewerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.SuspendLayout();
-            // 
-            // Setting
-            // 
+            //
+            // ImageViewerForm
+            //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1101, 657);
-            this.Name = "Setting";
-            this.Text = "Setting";
+            this.ClientSize = new System.Drawing.Size(800, 600);
+            this.Name = "ImageViewerForm";
+            this.Text = "Image Viewer";
             this.ResumeLayout(false);
 
         }

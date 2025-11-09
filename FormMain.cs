@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -19,7 +19,6 @@ namespace IDT_PARKING
         // KHAI BÁO CÁC BIẾN LƯU TỪ FORM CÀI ĐẶT
         public string txtServer = Properties.Settings.Default.ServerAddress;
         public string txtDatabase = Properties.Settings.Default.DatabaseName;
-        public string txtFolder = Properties.Settings.Default.SharedFolder;
         public string txtUsername = Properties.Settings.Default.Username;
         public string txtPassword = Properties.Settings.Default.Password;
 
@@ -36,9 +35,13 @@ namespace IDT_PARKING
             InitializeComponent();
             InitializeDatabaseConnection(); // Call here once
             DoanhThu_Load();
+            dgvXeRa.KeyDown += dgvXeRa_KeyDown;
+            ptHinhMatRa.Click += pictureBoxMatRa_Click;
+            ptHinhXeRa.Click += pictureBoxXeRa_Click;
+            toolTip1.Active = true;
         }
 
-        // TAB DOANH THU
+        #region KHỐI DOANH THU
         private void DoanhThu_Load()
         {
 
@@ -71,19 +74,52 @@ namespace IDT_PARKING
             dateTimeEnd.Format = DateTimePickerFormat.Custom;
             dateTimeEnd.CustomFormat = "dd/MM/yyyy";
 
-            cmbType.Items.Add("VL");
-            cmbType.Items.Add("VL-XD");
-            cmbType.Items.Add("VL-XM");
-            cmbType.Items.Add("VL-XH");
-            cmbType.Items.Add("VT-XH");
-            cmbType.Items.Add("VT-XM");
-            cmbType.Items.Add("VT");
-            cmbType.Items.Add("VT-XD");
-            cmbType.Items.Add("All");
+            cmbTypeDoanhThu.Items.Add("VL");
+            cmbTypeDoanhThu.Items.Add("VL-XD");
+            cmbTypeDoanhThu.Items.Add("VL-XM");
+            cmbTypeDoanhThu.Items.Add("VL-XH");
+            cmbTypeDoanhThu.Items.Add("VT-XH");
+            cmbTypeDoanhThu.Items.Add("VT-XM");
+            cmbTypeDoanhThu.Items.Add("VT");
+            cmbTypeDoanhThu.Items.Add("VT-XD");
+            cmbTypeDoanhThu.Items.Add("All");
 
-            if (cmbType.Items.Count > 0)
+            if (cmbTypeDoanhThu.Items.Count > 0)
             {
-                cmbType.SelectedIndex = 0;
+                cmbTypeDoanhThu.SelectedIndex = 0;
+            }
+
+            // Initialize Xe Ra tab controls
+            dtXeRaTuDate.Value = firstDayOfMonth;
+            dtXeRaDenDate.Value = firstDayOfMonth;
+            dtXeRaTuTime.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
+            dtXeRaDenTime.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
+
+            dtXeRaTuTime.Format = DateTimePickerFormat.Custom;
+            dtXeRaDenTime.Format = DateTimePickerFormat.Custom;
+            dtXeRaTuTime.CustomFormat = "HH:mm:ss";
+            dtXeRaDenTime.CustomFormat = "HH:mm:ss";
+            dtXeRaTuTime.ShowUpDown = true;
+            dtXeRaDenTime.ShowUpDown = true;
+
+            dtXeRaTuDate.Format = DateTimePickerFormat.Custom;
+            dtXeRaTuDate.CustomFormat = "dd/MM/yyyy";
+            dtXeRaDenDate.Format = DateTimePickerFormat.Custom;
+            dtXeRaDenDate.CustomFormat = "dd/MM/yyyy";
+
+            cbbXeRa.Items.Add("VL");
+            cbbXeRa.Items.Add("VL-XD");
+            cbbXeRa.Items.Add("VL-XM");
+            cbbXeRa.Items.Add("VL-XH");
+            cbbXeRa.Items.Add("VT-XH");
+            cbbXeRa.Items.Add("VT-XM");
+            cbbXeRa.Items.Add("VT");
+            cbbXeRa.Items.Add("VT-XD");
+            cbbXeRa.Items.Add("All");
+
+            if (cbbXeRa.Items.Count > 0)
+            {
+                cbbXeRa.SelectedIndex = 0;
             }
         }
 
@@ -91,11 +127,17 @@ namespace IDT_PARKING
         {
             btnUpdate.Enabled = false;
             btnDelete.Enabled = false;
-            if (!cmbType.Items.Contains(ALL_MATERIAL_TYPE))
+            if (!cmbTypeDoanhThu.Items.Contains(ALL_MATERIAL_TYPE))
             {
-                cmbType.Items.Insert(0, ALL_MATERIAL_TYPE);
+                cmbTypeDoanhThu.Items.Insert(0, ALL_MATERIAL_TYPE);
             }
-            cmbType.SelectedIndex = 0;
+            cmbTypeDoanhThu.SelectedIndex = 0;
+
+            if (!cbbXeRa.Items.Contains(ALL_MATERIAL_TYPE))
+            {
+                cbbXeRa.Items.Insert(0, ALL_MATERIAL_TYPE);
+            }
+            cbbXeRa.SelectedIndex = 0;
         }
 
         private void InitializeDatabaseConnection()
@@ -122,7 +164,6 @@ namespace IDT_PARKING
                 }
 
                 connection = new SqlConnection(connectionString);
-                connection.Open();
             }
             catch (Exception ex)
             {
@@ -155,17 +196,14 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbType.SelectedItem?.ToString();
+            string selectedMaterialType = cmbTypeDoanhThu.SelectedItem?.ToString();
 
             string query = @"
                         SELECT
                             STTThe AS 'Số thẻ',
                             NgayRa AS 'Ngày ra',
                             -- Sử dụng các hàm chuỗi cơ bản để tạo định dạng thời gian HH:MM:SS.FF
-                            RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                            RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                            RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                            RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'Giờ ra',
+                            FORMAT(DATEADD(second, CAST(GioRa AS INT) % 100, DATEADD(minute, (CAST(GioRa AS INT) / 100) % 100, DATEADD(hour, CAST(GioRa AS INT) / 10000, '00:00:00'))), 'HH:mm:ss.ff') AS 'Giờ ra',
                             MaLoaiThe AS 'Loại thẻ',
                             GiaTien AS 'Tiền thu',
                             CardID AS 'Mã thẻ',
@@ -253,7 +291,7 @@ namespace IDT_PARKING
                 MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
+        
         private void btnDelete_Click(object sender, EventArgs e)
         {
             using (PasswordPromptForm passwordForm = new PasswordPromptForm())
@@ -351,7 +389,7 @@ namespace IDT_PARKING
                     }
                 }
                 catch
-                {
+                                {
                     failCount++;
                 }
             }
@@ -384,7 +422,7 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbType.SelectedItem?.ToString();
+            string selectedMaterialType = cmbTypeDoanhThu.SelectedItem?.ToString();
 
             // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
             string query = @"
@@ -410,10 +448,7 @@ namespace IDT_PARKING
             query += @" (
                             CAST(NgayRa AS DATETIME) +
                             CAST( -- Cast chuỗi thời gian được tạo từ GioRa thành DATETIME
-                                RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                                RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                                RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                                RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                                FORMAT(DATEADD(second, CAST(GioRa AS INT) % 100, DATEADD(minute, (CAST(GioRa AS INT) / 100) % 100, DATEADD(hour, CAST(GioRa AS INT) / 10000, '00:00:00'))), 'HH:mm:ss.ff')
                             AS DATETIME)
                         ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
@@ -680,13 +715,14 @@ namespace IDT_PARKING
                 progressBarExport.Value = 95; // 95% cho các thao tác tối ưu
 
                 string serverAddress = txtServer;
-                string sharedFolder = txtFolder;
+                string sharedFolderValue = Properties.Settings.Default.SharedFolder; 
+
                 int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
                     serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
                 }
-                string networkPath = $"\\\\{serverAddress}\\{sharedFolder}";
+                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
 
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -834,6 +870,382 @@ namespace IDT_PARKING
             }
         }
 
-        // TAB KHÁCH HÀNG
+        #endregion
+
+        #region KHỐI XE VÀO
+        private Bitmap GetBlackImage(int width, int height)
+        {
+            Bitmap blackImage = new Bitmap(width, height);
+            using (Graphics g = Graphics.FromImage(blackImage))
+            {
+                g.FillRectangle(Brushes.Black, 0, 0, blackImage.Width, blackImage.Height);
+            }
+            return blackImage;
+        }
+
+        private void btnXoaXeVao_Click(object sender, EventArgs e)
+        {
+            // Implement deletion logic for Xe Ra if needed
+        }
+        #endregion
+
+        #region KHỐI XE RA
+        private void LoadXeRaData()
+        {
+            InitializeDatabaseConnection(); // Ensure connection is open
+
+            DateTime startDateFromPicker = dtXeRaTuDate.Value;
+            DateTime endDateFromPicker = dtXeRaDenDate.Value;
+            DateTime startTimeFromPicker = dtXeRaTuTime.Value;
+            DateTime endTimeFromPicker = dtXeRaDenTime.Value;
+
+            DateTime fullStartDateTime = new DateTime(
+                startDateFromPicker.Year,
+                startDateFromPicker.Month,
+                startDateFromPicker.Day,
+                startTimeFromPicker.Hour,
+                startTimeFromPicker.Minute,
+                startTimeFromPicker.Second);
+
+            DateTime fullEndDateTime = new DateTime(
+                endDateFromPicker.Year,
+                endDateFromPicker.Month,
+                endDateFromPicker.Day,
+                endTimeFromPicker.Hour,
+                endTimeFromPicker.Minute,
+                endTimeFromPicker.Second);
+
+            string selectedMaterialType = cbbXeRa.SelectedItem?.ToString();
+            string soTheXeRa = txtSoTheXeRa.Text.Trim();
+            string bienSoXeRa = txtBienSoXeRa.Text.Trim();
+
+            string query = @"
+SELECT
+    Ra.STTThe AS 'Số thẻ',
+    Ra.CardID AS 'Mã thẻ',
+    Vao.NgayVao AS 'Ngày vào',
+    Vao.ThoiGian AS 'Thời gian vào',
+    Ra.NgayRa AS 'Ngày ra',
+    Ra.THoiGianRa AS 'Thời gian ra',
+    Ra.MaLoaiThe AS 'Loại thẻ',
+    Ra.GiaTien AS 'Tiền thu',
+    Ra.username,
+    Ra.IDXe,
+    Ra.IDMat,
+    RA.cong,
+    Ra.soxe AS 'Biển số vào',
+    Ra.soxera AS 'Biển số ra'
+FROM
+[dbo].[Ra]
+INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
+                WHERE 1=1 "; // Start with a true condition to easily append AND clauses
+
+            // Add date/time filter
+            query += @" AND (
+                CAST(NgayRa AS DATETIME) +
+                CAST(
+                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                AS DATETIME)
+            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+
+            // Add card number filter
+            if (!string.IsNullOrEmpty(soTheXeRa))
+            {
+                query += " AND Ra.CardID LIKE @soTheXeRa";
+            }
+
+            // Add license plate filter
+            if (!string.IsNullOrEmpty(bienSoXeRa))
+            {
+                query += " AND (Ra.soxe LIKE @bienSoXeRa OR Ra.soxera LIKE @bienSoXeRa)";
+            }
+
+            // Add material type filter
+            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+            {
+                query += " AND Ra.MaLoaiThe = @MaterialType";
+            }
+
+            query += " ORDER BY Ra.NgayRa DESC, Ra.GioRa DESC;";
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                    command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+
+                    if (!string.IsNullOrEmpty(soTheXeRa))
+                    {
+                        command.Parameters.AddWithValue("@soTheXeRa", "%" + soTheXeRa + "%");
+                    }
+                    if (!string.IsNullOrEmpty(bienSoXeRa))
+                    {
+                        command.Parameters.AddWithValue("@bienSoXeRa", "%" + bienSoXeRa + "%");
+                    }
+                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                    {
+                        command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
+                    }
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvXeRa.DataSource = dataTable;
+                        dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi truy vấn dữ liệu xe ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnLocXeRa_Click(object sender, EventArgs e)
+        {
+            LoadXeRaData();
+        }
+
+        private void dgvXeRa_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                LoadImagesFromSelectedRow(dgvXeRa.Rows[e.RowIndex]);
+            }
+        }
+
+        private void LoadImagesFromSelectedRow(DataGridViewRow row)
+        {
+            if (row == null || row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
+                row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
+            {
+                // Clear picture boxes if data is incomplete or row is null
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hàng không đầy đủ.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Dữ liệu hàng không đầy đủ.");
+                return;
+            }
+
+            string idMat = row.Cells["IDMat"].Value?.ToString();
+            string idXe = row.Cells["IDXe"].Value?.ToString();
+            string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
+
+            DateTime ngayVao;
+
+            // Attempt to parse NgayVao
+            if (!DateTime.TryParse(row.Cells["Ngày vào"].Value?.ToString(), out ngayVao))
+            {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích ngày vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích ngày vào.");
+                return;
+            }
+
+            string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
+            // Attempt to parse GioVao 
+
+            if (int.TryParse(gioVaoString, out int totalSeconds))
+            {
+                TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+                string formattedTime = time.ToString(@"hh\:mm\:ss");
+                gioVaoString = formattedTime;
+            }
+            else
+            {
+                MessageBox.Show("Giá trị thời gian không hợp lệ!");
+            }
+
+            if (string.IsNullOrEmpty(gioVaoString))
+            {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích giờ vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
+                return;
+            }
+
+            // Format GioVao from "HH:mm:ss" to "HHmmss" string
+            string gioVaoFormatted = gioVaoString.Replace(":", "");
+
+            string folderPath = Properties.Settings.Default.SharedFolder;
+            if (!string.IsNullOrEmpty(folderPath) && folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
+            {
+                folderPath = @"\\" + folderPath;
+            }
+
+            if (string.IsNullOrWhiteSpace(folderPath))
+            {
+                // Thay vì MessageBox.Show, đặt hình ảnh là màu đen
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Đường dẫn thư mục hình ảnh không được để trống.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Đường dẫn thư mục hình ảnh không được để trống.");
+                return;
+            }
+
+            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
+            // Tạo tên tệp hình ảnh theo định dạng: ngayVao (yyyyMMdd) + gioVaoFormatted (HHmmss) + CardID
+            string fileNameMat = yearMonthDay + gioVaoFormatted + cardId;
+            string fileNameXe = yearMonthDay + gioVaoFormatted + cardId;
+
+            string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
+
+            LoadImageIntoPictureBox(ptHinhMatRa, imageMatPath);
+            LoadImageIntoPictureBox(ptHinhXeRa, imageXePath);
+
+        }
+
+        private void LoadImageIntoPictureBox(Guna.UI2.WinForms.Guna2PictureBox pictureBox, string imagePath)
+        {
+            try
+            {
+                if (File.Exists(imagePath))
+                {
+                    using (FileStream fs = new FileStream(imagePath, FileMode.Open, FileAccess.Read))
+                    {
+                        pictureBox.Image = Image.FromStream(fs);
+                        pictureBox.SizeMode = PictureBoxSizeMode.Zoom; // Or other suitable layout
+                    }
+                    toolTip1.SetToolTip(pictureBox, imagePath);
+                }
+                else
+                {
+                    pictureBox.Image = GetBlackImage(pictureBox.Width, pictureBox.Height); // Đặt hình ảnh màu đen
+                    toolTip1.SetToolTip(pictureBox, "Image not found: " + imagePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                pictureBox.Image = GetBlackImage(pictureBox.Width, pictureBox.Height); // Đặt hình ảnh màu đen
+                toolTip1.SetToolTip(pictureBox, "Error loading image: " + ex.Message);
+                Console.WriteLine($"Error loading image {imagePath}: {ex.Message}");
+            }
+        }
+
+        private void pictureBoxMatRa_Click(object sender, EventArgs e)
+        {
+            OpenImageViewer(ptHinhMatRa);
+        }
+
+        private void pictureBoxXeRa_Click(object sender, EventArgs e)
+        {
+            OpenImageViewer(ptHinhXeRa);
+        }
+
+        private void OpenImageViewer(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
+        {
+            if (dgvXeRa.CurrentRow == null) return;
+
+            DataGridViewRow row = dgvXeRa.CurrentRow;
+
+            if (row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
+                row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
+            {
+                return;
+            }
+
+            string idMat = row.Cells["IDMat"].Value?.ToString();
+            string idXe = row.Cells["IDXe"].Value?.ToString();
+            string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
+
+            DateTime ngayVao;
+
+            if (!DateTime.TryParse(row.Cells["Ngày vào"].Value?.ToString(), out ngayVao))
+            {
+                return;
+            }
+
+            string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
+            if (string.IsNullOrEmpty(gioVaoString))
+            {
+                return;
+            }
+
+            // Format GioVao from "HH:mm:ss" to "HHmmss" string
+            string gioVaoFormatted = gioVaoString.Replace(":", "");
+
+            string folderPath = Properties.Settings.Default.SharedFolder;
+            if (!string.IsNullOrEmpty(folderPath) && folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
+            {
+                folderPath = @"\\" + folderPath;
+            }
+
+            if (string.IsNullOrWhiteSpace(folderPath))
+            {
+                MessageBox.Show("Đường dẫn thư mục hình ảnh không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
+            // Tạo tên tệp hình ảnh theo định dạng: ngayVao (yyyyMMdd) + gioVaoFormatted (HHmmss) + CardID
+            string fileNameMat = yearMonthDay + gioVaoFormatted + cardId;
+            string fileNameXe = yearMonthDay + gioVaoFormatted + cardId;
+
+            string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
+
+            List<string> imagePaths = new List<string>();
+            int startIndex = 0;
+
+            if (File.Exists(imageMatPath))
+            {
+                imagePaths.Add(imageMatPath);
+            }
+            if (File.Exists(imageXePath))
+            {
+                if (clickedPictureBox == ptHinhXeRa)
+                {
+                    startIndex = imagePaths.Count;
+                }
+                imagePaths.Add(imageXePath);
+            }
+
+            if (imagePaths.Any())
+            {
+                ImageViewerForm imageViewer = new ImageViewerForm(imagePaths, startIndex);
+                imageViewer.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Không tìm thấy hình ảnh nào để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void dgvXeRa_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+            {
+                // Allow the DataGridView to handle the navigation first
+                // Then load images for the newly selected row
+                this.BeginInvoke(new MethodInvoker(() =>
+                {
+                    if (dgvXeRa.CurrentRow != null)
+                    {
+                        LoadImagesFromSelectedRow(dgvXeRa.CurrentRow);
+                    }
+                }));
+            }
+        }
+
+        #endregion
+
+        private void guna2Button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dgvXeRa_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
