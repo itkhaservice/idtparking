@@ -130,15 +130,16 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnOpenFolder_Click(object sender, EventArgs e)
-        {
-            FormTTT formMain = new FormTTT();
-            formMain.Show();
-        }
-
         private void FormCaiDat_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            FormMain formMain = new FormMain();
+            this.Hide();
+            formMain.Show();
         }
     }
 }

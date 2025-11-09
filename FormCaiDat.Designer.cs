@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btnOpenFolder = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.txtFolder = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -46,7 +46,7 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.btnOpenFolder);
+            this.groupBox1.Controls.Add(this.btnExit);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.txtFolder);
             this.groupBox1.Controls.Add(this.label1);
@@ -68,17 +68,17 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "KẾT NỐI";
             // 
-            // btnOpenFolder
+            // btnExit
             // 
-            this.btnOpenFolder.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnOpenFolder.Location = new System.Drawing.Point(12, 144);
-            this.btnOpenFolder.Margin = new System.Windows.Forms.Padding(2);
-            this.btnOpenFolder.Name = "btnOpenFolder";
-            this.btnOpenFolder.Size = new System.Drawing.Size(95, 29);
-            this.btnOpenFolder.TabIndex = 11;
-            this.btnOpenFolder.Text = "THOÁT";
-            this.btnOpenFolder.UseVisualStyleBackColor = true;
-            this.btnOpenFolder.Click += new System.EventHandler(this.btnOpenFolder_Click);
+            this.btnExit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExit.Location = new System.Drawing.Point(12, 144);
+            this.btnExit.Margin = new System.Windows.Forms.Padding(2);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(95, 29);
+            this.btnExit.TabIndex = 11;
+            this.btnExit.Text = "THOÁT";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // label9
             // 
@@ -214,7 +214,7 @@
         #endregion
 
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button btnOpenFolder;
+        private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtFolder;
         private System.Windows.Forms.Label label1;
