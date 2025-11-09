@@ -5,9 +5,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IDT_PARKING
 {
@@ -224,11 +227,11 @@ namespace IDT_PARKING
 
                         decimal totalGiaTien = 0;
 
-                        if (dataTable.Columns.Contains("PRICE"))
+                        if (dataTable.Columns.Contains("Tiền thu"))
                         {
                             foreach (DataRow row in dataTable.Rows)
                             {
-                                if (row["PRICE"] != DBNull.Value && decimal.TryParse(row["PRICE"].ToString(), out decimal giaTien))
+                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
                                 {
                                     totalGiaTien += giaTien;
                                 }
@@ -236,7 +239,7 @@ namespace IDT_PARKING
                         }
                         else
                         {
-                            MessageBox.Show("Column 'PRICE' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
                         txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
@@ -457,11 +460,11 @@ namespace IDT_PARKING
 
                         decimal totalGiaTien = 0;
 
-                        if (dataTable.Columns.Contains("PRICE"))
+                        if (dataTable.Columns.Contains("Tiền thu"))
                         {
                             foreach (DataRow row in dataTable.Rows)
                             {
-                                if (row["PRICE"] != DBNull.Value && decimal.TryParse(row["PRICE"].ToString(), out decimal giaTien))
+                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
                                 {
                                     totalGiaTien += giaTien;
                                 }
@@ -469,7 +472,7 @@ namespace IDT_PARKING
                         }
                         else
                         {
-                            MessageBox.Show("Column 'PRICE' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
 
                         txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
@@ -537,7 +540,7 @@ namespace IDT_PARKING
                     {
                         logCmd.Parameters.AddWithValue("@cardId", cardId);
                         logCmd.Parameters.AddWithValue("@idXe", idXe);
-                        logCmd.AddWithValue("@idMat", idMat);
+                        logCmd.Parameters.AddWithValue("@idMat", idMat);
                         logCmd.ExecuteNonQuery();
                     }
 
@@ -623,9 +626,214 @@ namespace IDT_PARKING
 
         }
 
+        private void ExportDataTableToExcel(DataTable dataTable, String filename, DateTime fullStartDateTime, DateTime fullEndDateTime)
+        {
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+            Excel.Range headerRange = null; // Khai báo để giải phóng
+            Excel.Range dataRange = null;   // Khai báo để giải phóng
+
+            try
+            {
+                // Tối ưu hóa Excel Application
+                excelApp = new Excel.Application();
+
+                workbook = excelApp.Workbooks.Add();
+                worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                int columnCount = dataTable.Columns.Count;
+                int rowCount = dataTable.Rows.Count;
+
+                object[] header = new object[columnCount];
+                for (int col = 0; col < columnCount; col++)
+                {
+                    header[col] = dataTable.Columns[col].ColumnName;
+                }
+                headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, columnCount]];
+                headerRange.Value = header;
+                headerRange.Font.Bold = true;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                Marshal.ReleaseComObject(headerRange); // Giải phóng Range sau khi dùng
+
+                object[,] data = new object[rowCount, columnCount];
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
+                    }
+                    if (row % 1000 == 0 || row == rowCount - 1) // Cập nhật mỗi 1000 hàng hoặc ở cuối
+                    {
+                        progressBarExport.Value = (int)((double)(row + 1) / rowCount * 90); // 90% cho việc ghi dữ liệu
+                        Application.DoEvents(); // Cho phép UI xử lý sự kiện để cập nhật ProgressBar
+                    }
+                }
+                dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
+                dataRange.Value = data;
+                Marshal.ReleaseComObject(dataRange); // Giải phóng Range sau khi dùng
+
+                // 3. Tự động điều chỉnh độ rộng cột và các tối ưu khác
+                worksheet.Columns.AutoFit();
+
+                progressBarExport.Value = 95; // 95% cho các thao tác tối ưu
+
+                string serverAddress = txtServer;
+                string sharedFolder = txtFolder;
+                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                }
+                string networkPath = $"\\\\{serverAddress}\\{sharedFolder}";
+
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.InitialDirectory = networkPath;
+
+                    sfd.Filter = "Excel Workbook (*.xlsx)|*.xlsx|Excel 97-2003 Workbook (*.xls)|*.xls";
+                    sfd.Title = "Lưu file Excel";
+                    if (filename == "DANH-SACH-THE-THANG")
+                    {
+                        sfd.FileName = "XUAT-DU-LIEU-" + filename + "-DEN-NGAY" + DateTime.Now.ToString("-dd-MM-yyyy") + ".xlsx";
+                    }
+                    else if (filename == "DOANH-THU-VANG-LAI")
+                    {
+                        string startDate = fullStartDateTime.ToString("ddMMyyyy");
+                        string startTime = fullStartDateTime.ToString("HHmmss");
+                        string endDate = fullEndDateTime.ToString("ddMMyyyy");
+                        string endTime = fullEndDateTime.ToString("HHmmss");
+                        sfd.FileName = $"DOANH-THU-TU-{startDate}-{startTime}-DEN-{endDate}-{endTime}.xlsx";
+                    }
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        // Lấy đường dẫn thư mục chứa file
+                        string folderPath = Path.GetDirectoryName(sfd.FileName);
+                        if (filename == "DANH-SACH-THE-THANG")
+                        {
+                            //btnOpenCus.Enabled = true; // btnOpenCus does not exist in FormMain
+                            Properties.Settings.Default.FolderCus = folderPath;
+                        }
+                        else if (filename == "DOANH-THU-VANG-LAI")
+                        {
+                            //btnOpenRevenue.Enabled = true; // btnOpenRevenue does not exist in FormMain
+                            Properties.Settings.Default.FolderRevenue = folderPath;
+                        }
+                        Properties.Settings.Default.Save(); // Save settings after updating folder paths
+                    }
+                }
+                progressBarExport.Value = 100; // Hoàn thành
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Nếu có lỗi, đảm bảo workbook không hỏi lưu khi đóng
+                if (workbook != null) workbook.Saved = true;
+            }
+            finally
+            {
+                // Khôi phục trạng thái của Excel Application
+                if (excelApp != null)
+                {
+                    excelApp.ScreenUpdating = true;
+                    excelApp.DisplayAlerts = true;
+                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+                }
+
+                // Giải phóng tài nguyên COM Objects một cách an toàn
+                // Đảm bảo giải phóng các đối tượng đã khai báo
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+                if (workbook != null)
+                {
+                    workbook.Close(false); // False để không hỏi lưu lại lần nữa
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                // Buộc Garbage Collection để giải phóng các đối tượng COM bị treo
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect(); // Chạy lại lần nữa để chắc chắn
+            }
+        }
+
         private void btnExportRevenue_Click(object sender, EventArgs e)
         {
+            // Vô hiệu hóa nút Export và hiển thị ProgressBar
+            btnExportRevenue.Enabled = false;
+            this.Cursor = Cursors.WaitCursor;
+            progressBarExport.Visible = true;
+            progressBarExport.Value = 0;
 
+            // Recalculate fullStartDateTime and fullEndDateTime
+            DateTime startDateFromPicker = dateTimeStart.Value;
+            DateTime endDateFromPicker = dateTimeEnd.Value;
+            DateTime startTimeFromPicker = timeTimeStart.Value;
+            DateTime endTimeFromPicker = timeTimeEnd.Value;
+
+            DateTime fullStartDateTime = new DateTime(
+                startDateFromPicker.Year,
+                startDateFromPicker.Month,
+                startDateFromPicker.Day,
+                startTimeFromPicker.Hour,
+                startTimeFromPicker.Minute,
+                startTimeFromPicker.Second);
+
+            DateTime fullEndDateTime = new DateTime(
+                endDateFromPicker.Year,
+                endDateFromPicker.Month,
+                endDateFromPicker.Day,
+                endTimeFromPicker.Hour,
+                endTimeFromPicker.Minute,
+                endTimeFromPicker.Second);
+
+            DataTable dataTable = new DataTable();
+            try
+            {
+                // Check if dgvResults has data
+                if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
+                {
+                    MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                // Get data from dgvResults
+                dataTable = (DataTable)dgvResults.DataSource;
+
+                // Call the export function with new parameters
+                ExportDataTableToExcel(dataTable, "DOANH-THU-VANG-LAI", fullStartDateTime, fullEndDateTime);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Khôi phục trạng thái UI
+                btnExportRevenue.Enabled = true;
+                this.Cursor = Cursors.Default;
+                progressBarExport.Visible = false;
+                progressBarExport.Value = 0;
+            }
         }
+
+        // TAB KHÁCH HÀNG
     }
 }

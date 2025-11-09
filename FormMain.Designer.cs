@@ -32,12 +32,14 @@
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
+            this.btnUpdate = new Guna.UI2.WinForms.Guna2Button();
+            this.btnRevenue = new Guna.UI2.WinForms.Guna2Button();
+            this.btnQuery = new Guna.UI2.WinForms.Guna2Button();
+            this.btnExportRevenue = new Guna.UI2.WinForms.Guna2Button();
+            this.txtCount = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtSum = new Guna.UI2.WinForms.Guna2TextBox();
             this.progressBarExport = new System.Windows.Forms.ProgressBar();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
-            this.btnQuery = new System.Windows.Forms.Button();
-            this.btnRevenue = new System.Windows.Forms.Button();
-            this.btnExportRevenue = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.timeTimeEnd = new System.Windows.Forms.DateTimePicker();
@@ -53,8 +55,6 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.tabPage6 = new System.Windows.Forms.TabPage();
             this.tabPage7 = new System.Windows.Forms.TabPage();
-            this.txtSum = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtCount = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2TabControl1.SuspendLayout();
             this.tabPage3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
@@ -92,7 +92,7 @@
             this.guna2TabControl1.TabButtonSelectedState.InnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(132)))), ((int)(((byte)(255)))));
             this.guna2TabControl1.TabButtonSize = new System.Drawing.Size(180, 40);
             this.guna2TabControl1.TabIndex = 0;
-            this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.guna2TabControl1.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop;
             // 
             // tabPage1
@@ -117,14 +117,14 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.btnDelete);
+            this.tabPage3.Controls.Add(this.btnUpdate);
+            this.tabPage3.Controls.Add(this.btnRevenue);
+            this.tabPage3.Controls.Add(this.btnQuery);
+            this.tabPage3.Controls.Add(this.btnExportRevenue);
             this.tabPage3.Controls.Add(this.txtCount);
             this.tabPage3.Controls.Add(this.txtSum);
             this.tabPage3.Controls.Add(this.progressBarExport);
-            this.tabPage3.Controls.Add(this.btnDelete);
-            this.tabPage3.Controls.Add(this.btnUpdate);
-            this.tabPage3.Controls.Add(this.btnQuery);
-            this.tabPage3.Controls.Add(this.btnRevenue);
-            this.tabPage3.Controls.Add(this.btnExportRevenue);
             this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.timeTimeEnd);
@@ -144,6 +144,122 @@
             this.tabPage3.Text = "Doanh thu";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // btnDelete
+            // 
+            this.btnDelete.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnDelete.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnDelete.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnDelete.ForeColor = System.Drawing.Color.White;
+            this.btnDelete.Location = new System.Drawing.Point(1135, 606);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(127, 24);
+            this.btnDelete.TabIndex = 62;
+            this.btnDelete.Text = "Xóa dữ liệu";
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnUpdate.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnUpdate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnUpdate.ForeColor = System.Drawing.Color.White;
+            this.btnUpdate.Location = new System.Drawing.Point(1002, 606);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(127, 24);
+            this.btnUpdate.TabIndex = 61;
+            this.btnUpdate.Text = "Cập nhật giá";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnRevenue
+            // 
+            this.btnRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnRevenue.ForeColor = System.Drawing.Color.White;
+            this.btnRevenue.Location = new System.Drawing.Point(736, 606);
+            this.btnRevenue.Name = "btnRevenue";
+            this.btnRevenue.Size = new System.Drawing.Size(127, 24);
+            this.btnRevenue.TabIndex = 60;
+            this.btnRevenue.Text = "Lọc doanh thu";
+            this.btnRevenue.Click += new System.EventHandler(this.btnRevenue_Click);
+            // 
+            // btnQuery
+            // 
+            this.btnQuery.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnQuery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnQuery.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnQuery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnQuery.ForeColor = System.Drawing.Color.White;
+            this.btnQuery.Location = new System.Drawing.Point(603, 606);
+            this.btnQuery.Name = "btnQuery";
+            this.btnQuery.Size = new System.Drawing.Size(127, 24);
+            this.btnQuery.TabIndex = 59;
+            this.btnQuery.Text = "Lọc đầy đủ";
+            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
+            // 
+            // btnExportRevenue
+            // 
+            this.btnExportRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnExportRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnExportRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnExportRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnExportRevenue.ForeColor = System.Drawing.Color.White;
+            this.btnExportRevenue.Location = new System.Drawing.Point(869, 606);
+            this.btnExportRevenue.Name = "btnExportRevenue";
+            this.btnExportRevenue.Size = new System.Drawing.Size(127, 24);
+            this.btnExportRevenue.TabIndex = 58;
+            this.btnExportRevenue.Text = "Xuất Excel";
+            this.btnExportRevenue.Click += new System.EventHandler(this.btnExportRevenue_Click);
+            // 
+            // txtCount
+            // 
+            this.txtCount.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtCount.DefaultText = "";
+            this.txtCount.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtCount.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtCount.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCount.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtCount.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCount.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtCount.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtCount.Location = new System.Drawing.Point(106, 636);
+            this.txtCount.Name = "txtCount";
+            this.txtCount.PlaceholderText = "";
+            this.txtCount.SelectedText = "";
+            this.txtCount.Size = new System.Drawing.Size(96, 24);
+            this.txtCount.TabIndex = 57;
+            // 
+            // txtSum
+            // 
+            this.txtSum.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSum.DefaultText = "";
+            this.txtSum.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtSum.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtSum.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtSum.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtSum.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtSum.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtSum.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtSum.Location = new System.Drawing.Point(106, 606);
+            this.txtSum.Name = "txtSum";
+            this.txtSum.PlaceholderText = "";
+            this.txtSum.SelectedText = "";
+            this.txtSum.Size = new System.Drawing.Size(96, 24);
+            this.txtSum.TabIndex = 56;
+            // 
             // progressBarExport
             // 
             this.progressBarExport.Location = new System.Drawing.Point(10, 666);
@@ -152,67 +268,6 @@
             this.progressBarExport.Size = new System.Drawing.Size(1327, 11);
             this.progressBarExport.TabIndex = 55;
             this.progressBarExport.Visible = false;
-            // 
-            // btnDelete
-            // 
-            this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnDelete.Location = new System.Drawing.Point(699, 630);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(100, 29);
-            this.btnDelete.TabIndex = 54;
-            this.btnDelete.Text = "Xóa dữ liệu";
-            this.btnDelete.UseVisualStyleBackColor = true;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnUpdate.Location = new System.Drawing.Point(699, 602);
-            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(100, 27);
-            this.btnUpdate.TabIndex = 52;
-            this.btnUpdate.Text = "Cập nhật giá";
-            this.btnUpdate.UseVisualStyleBackColor = true;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // btnQuery
-            // 
-            this.btnQuery.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnQuery.Location = new System.Drawing.Point(597, 601);
-            this.btnQuery.Margin = new System.Windows.Forms.Padding(2);
-            this.btnQuery.Name = "btnQuery";
-            this.btnQuery.Size = new System.Drawing.Size(98, 29);
-            this.btnQuery.TabIndex = 51;
-            this.btnQuery.Text = "Lọc đầy đủ";
-            this.btnQuery.UseVisualStyleBackColor = true;
-            this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
-            // 
-            // btnRevenue
-            // 
-            this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnRevenue.Location = new System.Drawing.Point(597, 631);
-            this.btnRevenue.Margin = new System.Windows.Forms.Padding(2);
-            this.btnRevenue.Name = "btnRevenue";
-            this.btnRevenue.Size = new System.Drawing.Size(98, 29);
-            this.btnRevenue.TabIndex = 46;
-            this.btnRevenue.Text = "Lọc doanh thu";
-            this.btnRevenue.UseVisualStyleBackColor = true;
-            this.btnRevenue.Click += new System.EventHandler(this.btnRevenue_Click);
-            // 
-            // btnExportRevenue
-            // 
-            this.btnExportRevenue.Enabled = false;
-            this.btnExportRevenue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnExportRevenue.Location = new System.Drawing.Point(467, 632);
-            this.btnExportRevenue.Margin = new System.Windows.Forms.Padding(2);
-            this.btnExportRevenue.Name = "btnExportRevenue";
-            this.btnExportRevenue.Size = new System.Drawing.Size(127, 29);
-            this.btnExportRevenue.TabIndex = 47;
-            this.btnExportRevenue.Text = "Xuất Excel";
-            this.btnExportRevenue.UseVisualStyleBackColor = true;
-            this.btnExportRevenue.Click += new System.EventHandler(this.btnExportRevenue_Click);
             // 
             // label10
             // 
@@ -337,7 +392,7 @@
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage4.Size = new System.Drawing.Size(1344, 681);
             this.tabPage4.TabIndex = 3;
-            this.tabPage4.Text = "tabPage4";
+            this.tabPage4.Text = "Khách hàng";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tabPage5
@@ -347,7 +402,7 @@
             this.tabPage5.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage5.Size = new System.Drawing.Size(1344, 681);
             this.tabPage5.TabIndex = 4;
-            this.tabPage5.Text = "tabPage5";
+            this.tabPage5.Text = "Thẻ";
             this.tabPage5.UseVisualStyleBackColor = true;
             // 
             // tabPage6
@@ -369,42 +424,6 @@
             this.tabPage7.TabIndex = 6;
             this.tabPage7.Text = "tabPage7";
             this.tabPage7.UseVisualStyleBackColor = true;
-            // 
-            // txtSum
-            // 
-            this.txtSum.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtSum.DefaultText = "";
-            this.txtSum.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtSum.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtSum.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtSum.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtSum.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSum.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtSum.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSum.Location = new System.Drawing.Point(106, 606);
-            this.txtSum.Name = "txtSum";
-            this.txtSum.PlaceholderText = "";
-            this.txtSum.SelectedText = "";
-            this.txtSum.Size = new System.Drawing.Size(96, 24);
-            this.txtSum.TabIndex = 56;
-            // 
-            // txtCount
-            // 
-            this.txtCount.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtCount.DefaultText = "";
-            this.txtCount.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtCount.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtCount.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCount.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtCount.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCount.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtCount.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCount.Location = new System.Drawing.Point(106, 636);
-            this.txtCount.Name = "txtCount";
-            this.txtCount.PlaceholderText = "";
-            this.txtCount.SelectedText = "";
-            this.txtCount.Size = new System.Drawing.Size(96, 24);
-            this.txtCount.TabIndex = 57;
             // 
             // FormMain
             // 
@@ -445,13 +464,13 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.DateTimePicker dateTimeEnd;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Button btnRevenue;
-        private System.Windows.Forms.Button btnExportRevenue;
-        private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnUpdate;
-        private System.Windows.Forms.Button btnQuery;
         private System.Windows.Forms.ProgressBar progressBarExport;
         private Guna.UI2.WinForms.Guna2TextBox txtCount;
         private Guna.UI2.WinForms.Guna2TextBox txtSum;
+        private Guna.UI2.WinForms.Guna2Button btnExportRevenue;
+        private Guna.UI2.WinForms.Guna2Button btnUpdate;
+        private Guna.UI2.WinForms.Guna2Button btnRevenue;
+        private Guna.UI2.WinForms.Guna2Button btnQuery;
+        private Guna.UI2.WinForms.Guna2Button btnDelete;
     }
 }

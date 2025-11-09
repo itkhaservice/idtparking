@@ -55,9 +55,9 @@ namespace IDT_PARKING
                 Properties.Settings.Default.ServerAddress = txtServer.Text;
                 Properties.Settings.Default.DatabaseName = txtDatabase.Text;
                 Properties.Settings.Default.Username = txtUsername.Text;
-                Properties.Settings.Default.Password = txtPassword.Text;
+                Properties.Settings.Default.Password = password;
                 Properties.Settings.Default.Save();
-                //EnsureItKhaTableExists();
+                EnsureItKhaTableExists();
             }
             catch (Exception ex)
             {
@@ -69,9 +69,11 @@ namespace IDT_PARKING
         // TẠO BẢNG ITKHA NẾU CHƯA TỒN TẠI TRONG CƠ SỞ DỮ LIỆU SAU KHI KẾT NỐI THÀNH CÔNG
         private void EnsureItKhaTableExists()
         {
-            InitializeDatabaseConnection();
             if (connection == null || connection.State != ConnectionState.Open)
+            {
+                MessageBox.Show("Không có kết nối cơ sở dữ liệu. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
+            }
 
             string checkAndCreateTable = @"
             IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ITKHA' AND xtype='U')
@@ -80,11 +82,10 @@ namespace IDT_PARKING
                     STTThe     VARCHAR(10)   NOT NULL,
                     CardID     VARCHAR(20)   NOT NULL,
                     NgayRa     DATETIME      NOT NULL,
-                    ThoiGianRa FLOAT         NOT NULL,
+                    ThoiGianRa NCHAR(10)     NOT NULL,
                     MaLoaiThe  VARCHAR(10)   NOT NULL,
                     GiaTien    MONEY         NOT NULL,
                     username   VARCHAR(20)   NOT NULL,
-                    IDXe       VARCHAR(50)   NOT NULL,
                     IDXe       VARCHAR(50)   NOT NULL,
                     IDMat      VARCHAR(50)   NOT NULL,
                     GioRa      NCHAR(10)     NOT NULL,
