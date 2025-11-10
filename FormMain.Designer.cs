@@ -57,8 +57,6 @@ namespace IDT_PARKING
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.ptHinhMatRa = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhXeRa = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.ptHinhMatVao = new Guna.UI2.WinForms.Guna2Panel();
-            this.ptHinhXeVao = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
             this.btnXoaXeVao = new Guna.UI2.WinForms.Guna2Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -100,6 +98,8 @@ namespace IDT_PARKING
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.ptHinhXeVao = new Guna.UI2.WinForms.Guna2PictureBox();
+            this.ptHinhMatVao = new Guna.UI2.WinForms.Guna2PictureBox();
             this.tabPage3.SuspendLayout();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
@@ -112,6 +112,8 @@ namespace IDT_PARKING
             this.guna2Panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.guna2TabControl1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage7
@@ -434,10 +436,10 @@ namespace IDT_PARKING
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.ptHinhMatRa);
-            this.tabPage2.Controls.Add(this.ptHinhXeRa);
             this.tabPage2.Controls.Add(this.ptHinhMatVao);
             this.tabPage2.Controls.Add(this.ptHinhXeVao);
+            this.tabPage2.Controls.Add(this.ptHinhMatRa);
+            this.tabPage2.Controls.Add(this.ptHinhXeRa);
             this.tabPage2.Controls.Add(this.guna2Panel2);
             this.tabPage2.Controls.Add(this.dgvXeRa);
             this.tabPage2.Location = new System.Drawing.Point(4, 44);
@@ -467,22 +469,6 @@ namespace IDT_PARKING
             this.ptHinhXeRa.Size = new System.Drawing.Size(302, 288);
             this.ptHinhXeRa.TabIndex = 0;
             this.ptHinhXeRa.TabStop = false;
-            // 
-            // ptHinhMatVao
-            // 
-            this.ptHinhMatVao.BackColor = System.Drawing.Color.Silver;
-            this.ptHinhMatVao.Location = new System.Drawing.Point(1042, 4);
-            this.ptHinhMatVao.Name = "ptHinhMatVao";
-            this.ptHinhMatVao.Size = new System.Drawing.Size(302, 288);
-            this.ptHinhMatVao.TabIndex = 66;
-            // 
-            // ptHinhXeVao
-            // 
-            this.ptHinhXeVao.BackColor = System.Drawing.Color.Silver;
-            this.ptHinhXeVao.Location = new System.Drawing.Point(738, 4);
-            this.ptHinhXeVao.Name = "ptHinhXeVao";
-            this.ptHinhXeVao.Size = new System.Drawing.Size(302, 288);
-            this.ptHinhXeVao.TabIndex = 65;
             // 
             // guna2Panel2
             // 
@@ -986,6 +972,26 @@ namespace IDT_PARKING
             this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.guna2TabControl1.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop;
             // 
+            // ptHinhXeVao
+            // 
+            this.ptHinhXeVao.FillColor = System.Drawing.Color.Gainsboro;
+            this.ptHinhXeVao.ImageRotate = 0F;
+            this.ptHinhXeVao.Location = new System.Drawing.Point(737, 6);
+            this.ptHinhXeVao.Name = "ptHinhXeVao";
+            this.ptHinhXeVao.Size = new System.Drawing.Size(302, 286);
+            this.ptHinhXeVao.TabIndex = 0;
+            this.ptHinhXeVao.TabStop = false;
+            // 
+            // ptHinhMatVao
+            // 
+            this.ptHinhMatVao.FillColor = System.Drawing.Color.Gainsboro;
+            this.ptHinhMatVao.ImageRotate = 0F;
+            this.ptHinhMatVao.Location = new System.Drawing.Point(1042, 6);
+            this.ptHinhMatVao.Name = "ptHinhMatVao";
+            this.ptHinhMatVao.Size = new System.Drawing.Size(302, 286);
+            this.ptHinhMatVao.TabIndex = 70;
+            this.ptHinhMatVao.TabStop = false;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1011,6 +1017,8 @@ namespace IDT_PARKING
             this.guna2Panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.guna2TabControl1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1045,7 +1053,6 @@ namespace IDT_PARKING
         private System.Windows.Forms.TabPage tabPage1;
         private Guna.UI2.WinForms.Guna2TabControl guna2TabControl1;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
-        private Guna.UI2.WinForms.Guna2Panel ptHinhXeVao;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -1062,7 +1069,6 @@ namespace IDT_PARKING
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.DataGridView dgvXeRa;
-        private Guna.UI2.WinForms.Guna2Panel ptHinhMatVao;
         private Guna.UI2.WinForms.Guna2Button btnXoaXeVao;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel7;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel8;
@@ -1089,5 +1095,7 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhMatRa;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhXeRa;
         private System.Windows.Forms.ToolStrip toolStrip1;
+        private Guna.UI2.WinForms.Guna2PictureBox ptHinhMatVao;
+        private Guna.UI2.WinForms.Guna2PictureBox ptHinhXeVao;
     }
 }

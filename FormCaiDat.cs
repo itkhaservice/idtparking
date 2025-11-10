@@ -55,6 +55,7 @@ namespace IDT_PARKING
                 Properties.Settings.Default.ServerAddress = txtServer.Text;
                 Properties.Settings.Default.DatabaseName = txtDatabase.Text;
                 Properties.Settings.Default.Username = txtUsername.Text;
+                Properties.Settings.Default.SharedFolder = txtFolder.Text;
                 Properties.Settings.Default.Password = password;
                 Properties.Settings.Default.Save();
                 EnsureItKhaTableExists();

@@ -98,7 +98,7 @@
             this.txtFolder.Name = "txtFolder";
             this.txtFolder.Size = new System.Drawing.Size(146, 23);
             this.txtFolder.TabIndex = 9;
-            this.txtFolder.Text = "\\\\192.168.1.95\\hinh";
+            this.txtFolder.Text = "\\\\192.168.1.99\\hinh";
             // 
             // label1
             // 
@@ -118,7 +118,7 @@
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(146, 23);
             this.txtServer.TabIndex = 1;
-            this.txtServer.Text = "DESKTOP-ISU44LM";
+            this.txtServer.Text = "192.168.1.99";
             // 
             // txtDatabase
             // 
@@ -179,7 +179,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(146, 23);
             this.txtPassword.TabIndex = 4;
-            this.txtPassword.Text = "ABC123";
+            this.txtPassword.Text = "123ABC";
             this.txtPassword.UseSystemPasswordChar = true;
             // 
             // btnConnect

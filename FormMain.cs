@@ -929,10 +929,8 @@ SELECT
     Ra.THoiGianRa AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
-    Ra.username,
     Ra.IDXe,
     Ra.IDMat,
-    RA.cong,
     Ra.soxe AS 'Biển số vào',
     Ra.soxera AS 'Biển số ra'
 FROM
@@ -954,7 +952,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             // Add card number filter
             if (!string.IsNullOrEmpty(soTheXeRa))
             {
-                query += " AND Ra.CardID LIKE @soTheXeRa";
+                query += " AND Ra.STTThe LIKE @soTheXeRa";
             }
 
             // Add license plate filter
@@ -1069,6 +1067,10 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
                 toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích giờ vào.");
                 toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
+                ptHinhMatVao.Image = GetBlackImage(ptHinhMatVao.Width, ptHinhMatVao.Height);
+                ptHinhXeVao.Image = GetBlackImage(ptHinhXeVao.Width, ptHinhXeVao.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích giờ vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
                 return;
             }
 
@@ -1081,6 +1083,18 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 folderPath = @"\\" + folderPath;
             }
 
+            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
+            // Tạo tên tệp hình ảnh theo định dạng: ngayVao (yyyyMMdd) + gioVaoFormatted (HHmmss) + CardID
+            string fileNameMat = idMat + cardId;
+            string fileNameXe = idXe + cardId;
+
+            //string imageMatPath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            //string imageXePath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "xe", yearMonthDay, fileNameXe + ".jpg");
+            string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
+            string imageMatVaoPath = Path.Combine(folderPath, "in", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXeVaoPath = Path.Combine(folderPath, "in", "xe", yearMonthDay, fileNameXe + ".jpg");
+
             if (string.IsNullOrWhiteSpace(folderPath))
             {
                 // Thay vì MessageBox.Show, đặt hình ảnh là màu đen
@@ -1088,17 +1102,20 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
                 toolTip1.SetToolTip(ptHinhMatRa, "Đường dẫn thư mục hình ảnh không được để trống.");
                 toolTip1.SetToolTip(ptHinhXeRa, "Đường dẫn thư mục hình ảnh không được để trống.");
+                ptHinhMatVao.Image = GetBlackImage(ptHinhMatVao.Width, ptHinhMatVao.Height);
+                ptHinhXeVao.Image = GetBlackImage(ptHinhXeVao.Width, ptHinhXeVao.Height);
+                toolTip1.SetToolTip(ptHinhMatVao, "Đường dẫn thư mục hình ảnh không được để trống.");
+                toolTip1.SetToolTip(ptHinhXeVao, "Đường dẫn thư mục hình ảnh không được để trống.");
                 return;
             }
+            else
+            {
 
-            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
-            // Tạo tên tệp hình ảnh theo định dạng: ngayVao (yyyyMMdd) + gioVaoFormatted (HHmmss) + CardID
-            string fileNameMat = yearMonthDay + gioVaoFormatted + cardId;
-            string fileNameXe = yearMonthDay + gioVaoFormatted + cardId;
+            }
 
-            string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
-            string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
 
+            LoadImageIntoPictureBox(ptHinhMatVao, imageMatVaoPath);
+            LoadImageIntoPictureBox(ptHinhXeVao, imageXeVaoPath);
             LoadImageIntoPictureBox(ptHinhMatRa, imageMatPath);
             LoadImageIntoPictureBox(ptHinhXeRa, imageXePath);
 
@@ -1159,14 +1176,40 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             DateTime ngayVao;
 
+            // Attempt to parse NgayVao
             if (!DateTime.TryParse(row.Cells["Ngày vào"].Value?.ToString(), out ngayVao))
             {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích ngày vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích ngày vào.");
                 return;
             }
 
             string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
+            // Attempt to parse GioVao 
+
+            if (int.TryParse(gioVaoString, out int totalSeconds))
+            {
+                TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+                string formattedTime = time.ToString(@"hh\:mm\:ss");
+                gioVaoString = formattedTime;
+            }
+            else
+            {
+                MessageBox.Show("Giá trị thời gian không hợp lệ!");
+            }
+
             if (string.IsNullOrEmpty(gioVaoString))
             {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích giờ vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
+                ptHinhMatVao.Image = GetBlackImage(ptHinhMatVao.Width, ptHinhMatVao.Height);
+                ptHinhXeVao.Image = GetBlackImage(ptHinhXeVao.Width, ptHinhXeVao.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Không thể phân tích giờ vào.");
+                toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
                 return;
             }
 
@@ -1179,20 +1222,17 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 folderPath = @"\\" + folderPath;
             }
 
-            if (string.IsNullOrWhiteSpace(folderPath))
-            {
-                MessageBox.Show("Đường dẫn thư mục hình ảnh không được để trống.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
             string yearMonthDay = ngayVao.ToString("yyyyMMdd");
             // Tạo tên tệp hình ảnh theo định dạng: ngayVao (yyyyMMdd) + gioVaoFormatted (HHmmss) + CardID
-            string fileNameMat = yearMonthDay + gioVaoFormatted + cardId;
-            string fileNameXe = yearMonthDay + gioVaoFormatted + cardId;
+            string fileNameMat = idMat + cardId;
+            string fileNameXe = idXe + cardId;
 
+            //string imageMatPath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            //string imageXePath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "xe", yearMonthDay, fileNameXe + ".jpg");
             string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
             string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
-
+            string imageMatVaoPath = Path.Combine(folderPath, "in", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXeVaoPath = Path.Combine(folderPath, "in", "xe", yearMonthDay, fileNameXe + ".jpg");
             List<string> imagePaths = new List<string>();
             int startIndex = 0;
 
