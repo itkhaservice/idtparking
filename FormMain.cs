@@ -45,10 +45,51 @@ namespace IDT_PARKING
             ptHinhMatVao.Click += pictureBox_Click;
             ptHinhXeVao.Click += pictureBox_Click;
 
+            ptHinhMatVaoVao.Click += pictureBox_Click;
+            ptHinhXeVaoVao.Click += pictureBox_Click;
+
             txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
             txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
 
+            dgvXeVao.CellClick += dgvXeVao_CellClick;
+            dgvXeVao.KeyDown += dgvXeVao_KeyDown;
+            txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
+            txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
+            txtBienSoXeVao.KeyDown += txtBienSoXeVao_KeyDown;
+
             toolTip1.Active = true;
+        }
+
+        private void txtSoTheXeVao_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLocXeVao.PerformClick();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtBienSoXeVao_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLocXeVao.PerformClick();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void dgvXeVao_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down)
+            {
+                this.BeginInvoke(new MethodInvoker(() =>
+                {
+                    if (dgvXeVao.CurrentRow != null)
+                    {
+                        LoadImagesFromXeVaoRow(dgvXeVao.CurrentRow);
+                    }
+                }));
+            }
         }
 
         private void txtSoTheXeRa_KeyDown(object sender, KeyEventArgs e)
@@ -148,6 +189,39 @@ namespace IDT_PARKING
             if (cbbXeRa.Items.Count > 0)
             {
                 cbbXeRa.SelectedIndex = 0;
+            }
+
+            // Initialize Xe Vao tab controls
+            dtXeVaoTuDate.Value = firstDayOfMonth;
+            dtXeVaoDenDate.Value = firstDayOfMonth;
+            dtXeVaoTuTime.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
+            dtXeVaoDenTime.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
+
+            dtXeVaoTuTime.Format = DateTimePickerFormat.Custom;
+            dtXeVaoDenTime.Format = DateTimePickerFormat.Custom;
+            dtXeVaoTuTime.CustomFormat = "HH:mm:ss";
+            dtXeVaoDenTime.CustomFormat = "HH:mm:ss";
+            dtXeVaoTuTime.ShowUpDown = true;
+            dtXeVaoDenTime.ShowUpDown = true;
+
+            dtXeVaoTuDate.Format = DateTimePickerFormat.Custom;
+            dtXeVaoTuDate.CustomFormat = "dd/MM/yyyy";
+            dtXeVaoDenDate.Format = DateTimePickerFormat.Custom;
+            dtXeVaoDenDate.CustomFormat = "dd/MM/yyyy";
+
+            cbbXeVao.Items.Add("VL");
+            cbbXeVao.Items.Add("VL-XD");
+            cbbXeVao.Items.Add("VL-XM");
+            cbbXeVao.Items.Add("VL-XH");
+            cbbXeVao.Items.Add("VT-XH");
+            cbbXeVao.Items.Add("VT-XM");
+            cbbXeVao.Items.Add("VT");
+            cbbXeVao.Items.Add("VT-XD");
+            cbbXeVao.Items.Add("All");
+
+            if (cbbXeVao.Items.Count > 0)
+            {
+                cbbXeVao.SelectedIndex = 0;
             }
         }
 
@@ -915,6 +989,216 @@ namespace IDT_PARKING
         {
             // Implement deletion logic for Xe Ra if needed
         }
+
+        private void btnLocXeVao_Click(object sender, EventArgs e)
+        {
+            LoadXeVaoData();
+        }
+        private void LoadXeVaoData()
+        {
+            InitializeDatabaseConnection(); // Ensure connection is open
+
+            DateTime startDateFromPicker = dtXeVaoTuDate.Value;
+            DateTime endDateFromPicker = dtXeVaoDenDate.Value;
+            DateTime startTimeFromPicker = dtXeVaoTuTime.Value;
+            DateTime endTimeFromPicker = dtXeVaoDenTime.Value;
+
+            DateTime fullStartDateTime = new DateTime(
+                startDateFromPicker.Year,
+                startDateFromPicker.Month,
+                startDateFromPicker.Day,
+                startTimeFromPicker.Hour,
+                startTimeFromPicker.Minute,
+                startTimeFromPicker.Second);
+
+            DateTime fullEndDateTime = new DateTime(
+                endDateFromPicker.Year,
+                endDateFromPicker.Month,
+                endDateFromPicker.Day,
+                endTimeFromPicker.Hour,
+                endTimeFromPicker.Minute,
+                endTimeFromPicker.Second);
+
+            string selectedMaterialType = cbbXeVao.SelectedItem?.ToString();
+            string soTheXeVao = txtSoTheXeVao.Text.Trim();
+            string bienSoXeVao = txtBienSoXeVao.Text.Trim();
+
+            string query = @"
+        SELECT
+            Vao.STTThe AS 'Số thẻ',
+            Vao.CardID AS 'Mã thẻ',
+            Vao.NgayVao AS 'Ngày vào',
+            CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS 'Thời gian vào',
+            Vao.MaLoaiThe AS 'Loại thẻ',
+            Vao.IDXe,
+            Vao.IDMat,
+            Vao.soxe AS 'Biển số vào'
+        FROM [dbo].[Vao] AS Vao
+        LEFT JOIN [dbo].[Ra] AS Ra ON Vao.IDXe = Ra.IDXe
+        WHERE Ra.IDXe IS NULL";
+
+            // Add date/time filter
+            query += @" AND (
+                CAST(Vao.NgayVao AS DATETIME) +
+                CAST(CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS DATETIME)
+            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+
+            // Add card number filter
+            if (!string.IsNullOrEmpty(soTheXeVao))
+            {
+                query += " AND Vao.STTThe LIKE @soTheXeVao";
+            }
+
+            // Add license plate filter
+            if (!string.IsNullOrEmpty(bienSoXeVao))
+            {
+                query += " AND Vao.soxe LIKE @bienSoXeVao";
+            }
+
+            // Add material type filter
+            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+            {
+                query += " AND Vao.MaLoaiThe = @MaterialType";
+            }
+
+            query += " ORDER BY Vao.NgayVao DESC, Vao.ThoiGian DESC;";
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                    command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+
+                    if (!string.IsNullOrEmpty(soTheXeVao))
+                    {
+                        command.Parameters.AddWithValue("@soTheXeVao", "%" + soTheXeVao + "%");
+                    }
+                    if (!string.IsNullOrEmpty(bienSoXeVao))
+                    {
+                        command.Parameters.AddWithValue("@bienSoXeVao", "%" + bienSoXeVao + "%");
+                    }
+                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                    {
+                        command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
+                    }
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvXeVao.DataSource = dataTable;
+                        dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi truy vấn dữ liệu xe vào: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvXeVao_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                LoadImagesFromXeVaoRow(dgvXeVao.Rows[e.RowIndex]);
+            }
+        }
+
+        private void LoadImagesFromXeVaoRow(DataGridViewRow row)
+        {
+            // Clear exit images and info
+            ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+            ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+            txtInfoRa.Text = "Thông tin ra: ";
+
+            string idXe = "";
+            DateTime ngayVao;
+            // Update Info TextBoxes
+            try
+            {
+                // --- Info Vào ---
+                idXe = row.Cells["IDXe"].Value?.ToString();
+                if (!string.IsNullOrEmpty(idXe) && idXe.Length >= 8 &&
+                    DateTime.TryParseExact(idXe.Substring(0, 8), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out ngayVao) &&
+                    TimeSpan.TryParse(row.Cells["Thời gian vào"].Value?.ToString(), out TimeSpan timeVao))
+                {
+                    txtInfoVaoVao.Text = $"Thông tin vào: Ngày {ngayVao.Day} tháng {ngayVao.Month} năm {ngayVao.Year} Thời gian: {timeVao.Hours} giờ {timeVao.Minutes} phút {timeVao.Seconds} giây";
+                }
+                else
+                {
+                    txtInfoVaoVao.Text = "Thông tin vào: Không có dữ liệu";
+                }
+            }
+            catch (Exception)
+            {
+                txtInfoVaoVao.Text = "Thông tin vào: Lỗi định dạng dữ liệu";
+            }
+
+            if (row == null || row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
+                row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
+            {
+                // Clear picture boxes if data is incomplete or row is null
+                ptHinhMatVaoVao.Image = GetBlackImage(ptHinhMatVaoVao.Width, ptHinhMatVaoVao.Height);
+                ptHinhXeVaoVao.Image = GetBlackImage(ptHinhXeVaoVao.Width, ptHinhXeVaoVao.Height);
+                toolTip1.SetToolTip(ptHinhMatVaoVao, "Dữ liệu hàng không đầy đủ.");
+                toolTip1.SetToolTip(ptHinhXeVaoVao, "Dữ liệu hàng không đầy đủ.");
+                return;
+            }
+
+            string idMat = row.Cells["IDMat"].Value?.ToString();
+            idXe = row.Cells["IDXe"].Value?.ToString();
+            string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
+
+            // Attempt to parse NgayVao
+            if (!DateTime.TryParse(row.Cells["Ngày vào"].Value?.ToString(), out ngayVao))
+            {
+                ptHinhMatVaoVao.Image = GetBlackImage(ptHinhMatVaoVao.Width, ptHinhMatVaoVao.Height);
+                ptHinhXeVaoVao.Image = GetBlackImage(ptHinhXeVaoVao.Width, ptHinhXeVaoVao.Height);
+                toolTip1.SetToolTip(ptHinhMatVaoVao, "Không thể phân tích ngày vào.");
+                toolTip1.SetToolTip(ptHinhXeVaoVao, "Không thể phân tích ngày vào.");
+                return;
+            }
+
+            string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
+
+            if (string.IsNullOrEmpty(gioVaoString))
+            {
+                ptHinhMatVaoVao.Image = GetBlackImage(ptHinhMatVaoVao.Width, ptHinhMatVaoVao.Height);
+                ptHinhXeVaoVao.Image = GetBlackImage(ptHinhXeVaoVao.Width, ptHinhXeVaoVao.Height);
+                toolTip1.SetToolTip(ptHinhMatVaoVao, "Không thể phân tích giờ vào.");
+                toolTip1.SetToolTip(ptHinhXeVaoVao, "Không thể phân tích giờ vào.");
+                return;
+            }
+
+            string folderPath = Properties.Settings.Default.SharedFolder;
+            if (!string.IsNullOrEmpty(folderPath) && folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
+            {
+                folderPath = @"\\" + folderPath;
+            }
+
+            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
+            string fileNameMat = idMat + cardId;
+            string fileNameXe = idXe + cardId;
+
+            string imageMatVaoPath = Path.Combine(folderPath, "in", "mat", yearMonthDay, fileNameMat + ".jpg");
+            string imageXeVaoPath = Path.Combine(folderPath, "in", "xe", yearMonthDay, fileNameXe + ".jpg");
+
+            if (string.IsNullOrWhiteSpace(folderPath))
+            {
+                ptHinhMatVaoVao.Image = GetBlackImage(ptHinhMatVaoVao.Width, ptHinhMatVaoVao.Height);
+                ptHinhXeVaoVao.Image = GetBlackImage(ptHinhXeVaoVao.Width, ptHinhXeVaoVao.Height);
+                toolTip1.SetToolTip(ptHinhMatVaoVao, "Đường dẫn thư mục hình ảnh không được để trống.");
+                toolTip1.SetToolTip(ptHinhXeVaoVao, "Đường dẫn thư mục hình ảnh không được để trống.");
+                return;
+            }
+
+            LoadImageIntoPictureBox(ptHinhMatVaoVao, imageMatVaoPath);
+            LoadImageIntoPictureBox(ptHinhXeVaoVao, imageXeVaoPath);
+        }
+
         #endregion
 
         #region KHỐI XE RA
@@ -1238,14 +1522,34 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private void NavigateGrid(int direction)
         {
-            if (dgvXeRa.Rows.Count == 0 || dgvXeRa.CurrentRow == null) return;
-
-            int newIndex = dgvXeRa.CurrentRow.Index + direction;
-
-            if (newIndex >= 0 && newIndex < dgvXeRa.Rows.Count)
+            DataGridView dgv = null;
+            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
             {
-                dgvXeRa.CurrentCell = dgvXeRa.Rows[newIndex].Cells[0]; // Change selection
-                LoadImagesFromSelectedRow(dgvXeRa.Rows[newIndex]); // Update main form images
+                dgv = dgvXeVao;
+            }
+            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            {
+                dgv = dgvXeRa;
+            }
+
+            if (dgv == null || dgv.Rows.Count == 0 || dgv.CurrentRow == null) return;
+
+            int newIndex = dgv.CurrentRow.Index + direction;
+
+            if (newIndex >= 0 && newIndex < dgv.Rows.Count)
+            {
+                dgv.CurrentCell = dgv.Rows[newIndex].Cells[0]; // Change selection
+
+                // Update images based on the active tab
+                if (guna2TabControl1.SelectedIndex == 0)
+                {
+                    LoadImagesFromXeVaoRow(dgv.Rows[newIndex]);
+                }
+                else
+                {
+                    LoadImagesFromSelectedRow(dgv.Rows[newIndex]);
+                }
+
 
                 // Update viewer if it's open
                 if (imageViewerInstance != null && !imageViewerInstance.IsDisposed && lastClickedPictureBox != null)
@@ -1261,15 +1565,25 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private string GetSingleImagePathForCurrentRow(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
         {
-            if (dgvXeRa.CurrentRow == null || clickedPictureBox == null) return null;
+            DataGridView dgv = null;
+            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
+            {
+                dgv = dgvXeVao;
+            }
+            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            {
+                dgv = dgvXeRa;
+            }
 
-            DataGridViewRow row = dgvXeRa.CurrentRow;
+            if (dgv == null || dgv.CurrentRow == null || clickedPictureBox == null) return null;
+
+            DataGridViewRow row = dgv.CurrentRow;
 
             // Determine image type and direction from the clicked control
             string imageType = "";
             string direction = "";
-            if (clickedPictureBox == ptHinhMatVao) { imageType = "mat"; direction = "in"; }
-            else if (clickedPictureBox == ptHinhXeVao) { imageType = "xe"; direction = "in"; }
+            if (clickedPictureBox == ptHinhMatVao || clickedPictureBox == ptHinhMatVaoVao) { imageType = "mat"; direction = "in"; }
+            else if (clickedPictureBox == ptHinhXeVao || clickedPictureBox == ptHinhXeVaoVao) { imageType = "xe"; direction = "in"; }
             else if (clickedPictureBox == ptHinhMatRa) { imageType = "mat"; direction = "out"; }
             else if (clickedPictureBox == ptHinhXeRa) { imageType = "xe"; direction = "out"; }
             else return null; // Should not happen if wired correctly
@@ -1312,9 +1626,19 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private void OpenImageViewer(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
         {
-            if (dgvXeRa.CurrentRow == null) return;
+            DataGridView dgv = null;
+            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
+            {
+                dgv = dgvXeVao;
+            }
+            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            {
+                dgv = dgvXeRa;
+            }
 
-            DataGridViewRow row = dgvXeRa.CurrentRow;
+            if (dgv == null || dgv.CurrentRow == null) return;
+
+            DataGridViewRow row = dgv.CurrentRow;
 
             if (row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
                 row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
@@ -1364,8 +1688,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             string fileNameMat = idMat + cardId;
             string fileNameXe = idXe + cardId;
 
-            //string imageMatPath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "mat", yearMonthDay, fileNameMat + ".jpg");
-            //string imageXePath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "xe", yearMonthDay, fileNameXe + ".jpg");
             string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
             string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
             string imageMatVaoPath = Path.Combine(folderPath, "in", "mat", yearMonthDay, fileNameMat + ".jpg");
@@ -1373,18 +1695,39 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             List<string> imagePaths = new List<string>();
             int startIndex = 0;
 
-            if (File.Exists(imageMatPath))
+            if (File.Exists(imageMatVaoPath))
             {
-                imagePaths.Add(imageMatPath);
+                imagePaths.Add(imageMatVaoPath);
             }
-            if (File.Exists(imageXePath))
+            if (File.Exists(imageXeVaoPath))
             {
-                if (clickedPictureBox == ptHinhXeRa)
+                if (clickedPictureBox == ptHinhXeVao || clickedPictureBox == ptHinhXeVaoVao)
                 {
                     startIndex = imagePaths.Count;
                 }
-                imagePaths.Add(imageXePath);
+                imagePaths.Add(imageXeVaoPath);
             }
+
+            if (guna2TabControl1.SelectedIndex == 1) // Only add "out" images for Xe Ra tab
+            {
+                if (File.Exists(imageMatPath))
+                {
+                    if (clickedPictureBox == ptHinhMatRa)
+                    {
+                        startIndex = imagePaths.Count;
+                    }
+                    imagePaths.Add(imageMatPath);
+                }
+                if (File.Exists(imageXePath))
+                {
+                    if (clickedPictureBox == ptHinhXeRa)
+                    {
+                        startIndex = imagePaths.Count;
+                    }
+                    imagePaths.Add(imageXePath);
+                }
+            }
+
 
             if (imagePaths.Any())
             {
@@ -1424,14 +1767,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         #endregion
 
-        private void guna2Button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void dgvXeRa_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
+
+
     }
 }
