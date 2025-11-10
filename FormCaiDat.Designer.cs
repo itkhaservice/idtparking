@@ -118,7 +118,7 @@
             this.txtServer.Name = "txtServer";
             this.txtServer.Size = new System.Drawing.Size(146, 23);
             this.txtServer.TabIndex = 1;
-            this.txtServer.Text = "192.168.1.99";
+            this.txtServer.Text = "DESKTOP-ISU44LM";
             // 
             // txtDatabase
             // 
@@ -179,7 +179,7 @@
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(146, 23);
             this.txtPassword.TabIndex = 4;
-            this.txtPassword.Text = "123ABC";
+            this.txtPassword.Text = "ABC123";
             this.txtPassword.UseSystemPasswordChar = true;
             // 
             // btnConnect

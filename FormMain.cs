@@ -27,6 +27,8 @@ namespace IDT_PARKING
         public const string ALL_MATERIAL_TYPE = "ALL";
         public const string PRICE_COLUMN_NAME = "PRICE";
         private SqlConnection connection;
+        private ImageViewerForm imageViewerInstance = null;
+        private Guna.UI2.WinForms.Guna2PictureBox lastClickedPictureBox = null;
         //private SqlConnection _connection;
         //private DataTable _currentQueryResult;
 
@@ -36,9 +38,35 @@ namespace IDT_PARKING
             InitializeDatabaseConnection(); // Call here once
             DoanhThu_Load();
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
-            ptHinhMatRa.Click += pictureBoxMatRa_Click;
-            ptHinhXeRa.Click += pictureBoxXeRa_Click;
+
+
+            ptHinhMatRa.Click += pictureBox_Click;
+            ptHinhXeRa.Click += pictureBox_Click;
+            ptHinhMatVao.Click += pictureBox_Click;
+            ptHinhXeVao.Click += pictureBox_Click;
+
+            txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
+            txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
+
             toolTip1.Active = true;
+        }
+
+        private void txtSoTheXeRa_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLocXeRa.PerformClick();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void txtBienSoXeRa_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLocXeRa.PerformClick();
+                e.SuppressKeyPress = true;
+            }
         }
 
         #region KHỐI DOANH THU
@@ -1020,6 +1048,43 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private void LoadImagesFromSelectedRow(DataGridViewRow row)
         {
+            string idXe = "";
+            DateTime ngayVao;
+            // Update Info TextBoxes
+            try
+            {
+                // --- Info Vào ---
+                idXe = row.Cells["IDXe"].Value?.ToString();
+                if (!string.IsNullOrEmpty(idXe) && idXe.Length >= 8 &&
+                    DateTime.TryParseExact(idXe.Substring(0, 8), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out ngayVao) &&
+                    int.TryParse(row.Cells["Thời gian vào"].Value?.ToString(), out int thoiGianVaoSeconds))
+                {
+                    TimeSpan timeVao = TimeSpan.FromSeconds(thoiGianVaoSeconds);
+                    txtInfoVao.Text = $"Thông tin vào: Ngày {ngayVao.Day} tháng {ngayVao.Month} năm {ngayVao.Year} Thời gian: {timeVao.Hours} giờ {timeVao.Minutes} phút {timeVao.Seconds} giây";
+                }
+                else
+                {
+                    txtInfoVao.Text = "Thông tin vào: Không có dữ liệu";
+                }
+
+                // --- Info Ra ---
+                if (DateTime.TryParse(row.Cells["Ngày ra"].Value?.ToString(), out DateTime ngayRa) &&
+                    int.TryParse(row.Cells["Thời gian ra"].Value?.ToString(), out int thoiGianRaSeconds))
+                {
+                    TimeSpan timeRa = TimeSpan.FromSeconds(thoiGianRaSeconds);
+                    txtInfoRa.Text = $"Thông tin ra: Ngày {ngayRa.Day} tháng {ngayRa.Month} năm {ngayRa.Year} Thời gian: {timeRa.Hours} giờ {timeRa.Minutes} phút {timeRa.Seconds} giây";
+                }
+                else
+                {
+                    txtInfoRa.Text = "Thông tin ra: Không có dữ liệu";
+                }
+            }
+            catch (Exception)
+            {
+                txtInfoVao.Text = "Thông tin vào: Lỗi định dạng dữ liệu";
+                txtInfoRa.Text = "Thông tin ra: Lỗi định dạng dữ liệu";
+            }
+
             if (row == null || row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
                 row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
             {
@@ -1032,10 +1097,10 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
 
             string idMat = row.Cells["IDMat"].Value?.ToString();
-            string idXe = row.Cells["IDXe"].Value?.ToString();
+            idXe = row.Cells["IDXe"].Value?.ToString();
             string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
 
-            DateTime ngayVao;
+
 
             // Attempt to parse NgayVao
             if (!DateTime.TryParse(row.Cells["Ngày vào"].Value?.ToString(), out ngayVao))
@@ -1146,6 +1211,110 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 toolTip1.SetToolTip(pictureBox, "Error loading image: " + ex.Message);
                 Console.WriteLine($"Error loading image {imagePath}: {ex.Message}");
             }
+        }
+
+        private void pictureBox_Click(object sender, EventArgs e)
+        {
+            lastClickedPictureBox = sender as Guna.UI2.WinForms.Guna2PictureBox;
+            if (lastClickedPictureBox == null) return;
+
+            string imagePath = GetSingleImagePathForCurrentRow(lastClickedPictureBox);
+
+            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
+            {
+                MessageBox.Show("Không tìm thấy hình ảnh để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var imageList = new List<string> { imagePath };
+
+            if (imageViewerInstance == null || imageViewerInstance.IsDisposed)
+            {
+                imageViewerInstance = new ImageViewerForm(imageList, 0);
+                imageViewerInstance.FormClosed += (s, args) => imageViewerInstance = null;
+                // Subscribe to the new events
+                imageViewerInstance.RequestNextImage += Viewer_RequestNextImage;
+                imageViewerInstance.RequestPreviousImage += Viewer_RequestPreviousImage;
+                imageViewerInstance.Show();
+            }
+            else
+            {
+                imageViewerInstance.UpdateAndShowImage(imageList, 0);
+            }
+        }
+
+        private void Viewer_RequestNextImage(object sender, EventArgs e)
+        {
+            NavigateGrid(1);
+        }
+
+        private void Viewer_RequestPreviousImage(object sender, EventArgs e)
+        {
+            NavigateGrid(-1);
+        }
+
+        private void NavigateGrid(int direction)
+        {
+            if (dgvXeRa.Rows.Count == 0 || dgvXeRa.CurrentRow == null) return;
+
+            int newIndex = dgvXeRa.CurrentRow.Index + direction;
+
+            if (newIndex >= 0 && newIndex < dgvXeRa.Rows.Count)
+            {
+                dgvXeRa.CurrentCell = dgvXeRa.Rows[newIndex].Cells[0]; // Change selection
+                LoadImagesFromSelectedRow(dgvXeRa.Rows[newIndex]); // Update main form images
+
+                // Update viewer if it's open
+                if (imageViewerInstance != null && !imageViewerInstance.IsDisposed && lastClickedPictureBox != null)
+                {
+                    string newImagePath = GetSingleImagePathForCurrentRow(lastClickedPictureBox);
+                    if (!string.IsNullOrEmpty(newImagePath) && File.Exists(newImagePath))
+                    {
+                        imageViewerInstance.UpdateAndShowImage(new List<string> { newImagePath }, 0);
+                    }
+                }
+            }
+        }
+
+        private string GetSingleImagePathForCurrentRow(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
+        {
+            if (dgvXeRa.CurrentRow == null || clickedPictureBox == null) return null;
+
+            DataGridViewRow row = dgvXeRa.CurrentRow;
+
+            // Determine image type and direction from the clicked control
+            string imageType = "";
+            string direction = "";
+            if (clickedPictureBox == ptHinhMatVao) { imageType = "mat"; direction = "in"; }
+            else if (clickedPictureBox == ptHinhXeVao) { imageType = "xe"; direction = "in"; }
+            else if (clickedPictureBox == ptHinhMatRa) { imageType = "mat"; direction = "out"; }
+            else if (clickedPictureBox == ptHinhXeRa) { imageType = "xe"; direction = "out"; }
+            else return null; // Should not happen if wired correctly
+
+            // Common data extraction
+            if (row.Cells["IDMat"]?.Value == null || row.Cells["IDXe"]?.Value == null ||
+                row.Cells["Mã thẻ"]?.Value == null || row.Cells["Ngày vào"]?.Value == null)
+            {
+                return null;
+            }
+
+            string idMat = row.Cells["IDMat"].Value.ToString();
+            string idXe = row.Cells["IDXe"].Value.ToString();
+            string cardId = row.Cells["Mã thẻ"].Value.ToString();
+
+            if (!DateTime.TryParse(row.Cells["Ngày vào"].Value.ToString(), out DateTime ngayVao)) return null;
+
+            string folderPath = Properties.Settings.Default.SharedFolder;
+            if (string.IsNullOrWhiteSpace(folderPath)) return null;
+            if (folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
+            {
+                folderPath = @"\\" + folderPath;
+            }
+
+            string yearMonthDay = ngayVao.ToString("yyyyMMdd");
+            string fileName = (imageType == "mat") ? (idMat + cardId) : (idXe + cardId);
+
+            return Path.Combine(folderPath, direction, imageType, yearMonthDay, fileName + ".jpg");
         }
 
         private void pictureBoxMatRa_Click(object sender, EventArgs e)
@@ -1273,6 +1442,15 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         LoadImagesFromSelectedRow(dgvXeRa.CurrentRow);
                     }
                 }));
+            }
+        }
+
+        private void txtTimKiem_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnLocXeRa.PerformClick();
+                e.SuppressKeyPress = true;
             }
         }
 

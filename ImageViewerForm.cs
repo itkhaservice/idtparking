@@ -17,6 +17,10 @@ namespace IDT_PARKING
         private int _currentIndex;
         private PictureBox _pictureBox; // Declare PictureBox here
 
+        // Events for navigation requests
+        public event EventHandler RequestNextImage;
+        public event EventHandler RequestPreviousImage;
+
         public ImageViewerForm(List<string> imagePaths, int startIndex)
         {
             InitializeComponent();
@@ -33,6 +37,14 @@ namespace IDT_PARKING
             this.KeyPreview = true; // Allow form to receive key events before controls
 
             LoadImage();
+        }
+
+        public void UpdateAndShowImage(List<string> imagePaths, int startIndex)
+        {
+            _imagePaths = imagePaths;
+            _currentIndex = startIndex;
+            LoadImage();
+            this.Activate(); // Bring the form to the front
         }
 
         private void LoadImage()
@@ -71,18 +83,14 @@ namespace IDT_PARKING
 
         private void ImageViewerForm_KeyDown(object sender, KeyEventArgs e)
         {
-            if (_imagePaths == null || _imagePaths.Count <= 1) return;
-
             if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Left)
             {
-                _currentIndex = (_currentIndex - 1 + _imagePaths.Count) % _imagePaths.Count;
-                LoadImage();
+                RequestPreviousImage?.Invoke(this, EventArgs.Empty);
                 e.Handled = true;
             }
             else if (e.KeyCode == Keys.Down || e.KeyCode == Keys.Right)
             {
-                _currentIndex = (_currentIndex + 1) % _imagePaths.Count;
-                LoadImage();
+                RequestNextImage?.Invoke(this, EventArgs.Empty);
                 e.Handled = true;
             }
         }

@@ -55,6 +55,8 @@ namespace IDT_PARKING
             this.label10 = new System.Windows.Forms.Label();
             this.dgvResults = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ptHinhMatVao = new Guna.UI2.WinForms.Guna2PictureBox();
+            this.ptHinhXeVao = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhMatRa = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhXeRa = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
@@ -98,12 +100,14 @@ namespace IDT_PARKING
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.ptHinhXeVao = new Guna.UI2.WinForms.Guna2PictureBox();
-            this.ptHinhMatVao = new Guna.UI2.WinForms.Guna2PictureBox();
+            this.txtInfoRa = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtInfoVao = new Guna.UI2.WinForms.Guna2TextBox();
             this.tabPage3.SuspendLayout();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatRa)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeRa)).BeginInit();
             this.guna2Panel2.SuspendLayout();
@@ -112,8 +116,6 @@ namespace IDT_PARKING
             this.guna2Panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.guna2TabControl1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).BeginInit();
             this.SuspendLayout();
             // 
             // tabPage7
@@ -436,6 +438,8 @@ namespace IDT_PARKING
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.txtInfoVao);
+            this.tabPage2.Controls.Add(this.txtInfoRa);
             this.tabPage2.Controls.Add(this.ptHinhMatVao);
             this.tabPage2.Controls.Add(this.ptHinhXeVao);
             this.tabPage2.Controls.Add(this.ptHinhMatRa);
@@ -450,11 +454,31 @@ namespace IDT_PARKING
             this.tabPage2.Text = "Xe ra";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // ptHinhMatVao
+            // 
+            this.ptHinhMatVao.FillColor = System.Drawing.Color.Gainsboro;
+            this.ptHinhMatVao.ImageRotate = 0F;
+            this.ptHinhMatVao.Location = new System.Drawing.Point(1042, 33);
+            this.ptHinhMatVao.Name = "ptHinhMatVao";
+            this.ptHinhMatVao.Size = new System.Drawing.Size(302, 286);
+            this.ptHinhMatVao.TabIndex = 70;
+            this.ptHinhMatVao.TabStop = false;
+            // 
+            // ptHinhXeVao
+            // 
+            this.ptHinhXeVao.FillColor = System.Drawing.Color.Gainsboro;
+            this.ptHinhXeVao.ImageRotate = 0F;
+            this.ptHinhXeVao.Location = new System.Drawing.Point(737, 33);
+            this.ptHinhXeVao.Name = "ptHinhXeVao";
+            this.ptHinhXeVao.Size = new System.Drawing.Size(302, 286);
+            this.ptHinhXeVao.TabIndex = 0;
+            this.ptHinhXeVao.TabStop = false;
+            // 
             // ptHinhMatRa
             // 
             this.ptHinhMatRa.FillColor = System.Drawing.Color.Gainsboro;
             this.ptHinhMatRa.ImageRotate = 0F;
-            this.ptHinhMatRa.Location = new System.Drawing.Point(1042, 295);
+            this.ptHinhMatRa.Location = new System.Drawing.Point(1042, 356);
             this.ptHinhMatRa.Name = "ptHinhMatRa";
             this.ptHinhMatRa.Size = new System.Drawing.Size(302, 288);
             this.ptHinhMatRa.TabIndex = 69;
@@ -464,7 +488,7 @@ namespace IDT_PARKING
             // 
             this.ptHinhXeRa.FillColor = System.Drawing.Color.Gainsboro;
             this.ptHinhXeRa.ImageRotate = 0F;
-            this.ptHinhXeRa.Location = new System.Drawing.Point(738, 295);
+            this.ptHinhXeRa.Location = new System.Drawing.Point(738, 356);
             this.ptHinhXeRa.Name = "ptHinhXeRa";
             this.ptHinhXeRa.Size = new System.Drawing.Size(302, 288);
             this.ptHinhXeRa.TabIndex = 0;
@@ -489,7 +513,7 @@ namespace IDT_PARKING
             this.guna2Panel2.Controls.Add(this.label9);
             this.guna2Panel2.Location = new System.Drawing.Point(4, 589);
             this.guna2Panel2.Name = "guna2Panel2";
-            this.guna2Panel2.Size = new System.Drawing.Size(1337, 86);
+            this.guna2Panel2.Size = new System.Drawing.Size(728, 86);
             this.guna2Panel2.TabIndex = 64;
             // 
             // btnXoaXeVao
@@ -503,7 +527,7 @@ namespace IDT_PARKING
             this.btnXoaXeVao.ForeColor = System.Drawing.Color.White;
             this.btnXoaXeVao.Location = new System.Drawing.Point(601, 38);
             this.btnXoaXeVao.Name = "btnXoaXeVao";
-            this.btnXoaXeVao.Size = new System.Drawing.Size(127, 24);
+            this.btnXoaXeVao.Size = new System.Drawing.Size(115, 24);
             this.btnXoaXeVao.TabIndex = 60;
             this.btnXoaXeVao.Text = "Xóa dữ liệu rác";
             // 
@@ -560,7 +584,7 @@ namespace IDT_PARKING
             this.btnLocXeRa.ForeColor = System.Drawing.Color.White;
             this.btnLocXeRa.Location = new System.Drawing.Point(601, 7);
             this.btnLocXeRa.Name = "btnLocXeRa";
-            this.btnLocXeRa.Size = new System.Drawing.Size(127, 25);
+            this.btnLocXeRa.Size = new System.Drawing.Size(115, 25);
             this.btnLocXeRa.TabIndex = 61;
             this.btnLocXeRa.Text = "Tìm kiếm";
             this.btnLocXeRa.Click += new System.EventHandler(this.btnLocXeRa_Click);
@@ -646,7 +670,7 @@ namespace IDT_PARKING
             this.progressBar1.Location = new System.Drawing.Point(8, 67);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(1325, 11);
+            this.progressBar1.Size = new System.Drawing.Size(708, 11);
             this.progressBar1.TabIndex = 55;
             this.progressBar1.Visible = false;
             // 
@@ -972,25 +996,41 @@ namespace IDT_PARKING
             this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.guna2TabControl1.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop;
             // 
-            // ptHinhXeVao
+            // txtInfoRa
             // 
-            this.ptHinhXeVao.FillColor = System.Drawing.Color.Gainsboro;
-            this.ptHinhXeVao.ImageRotate = 0F;
-            this.ptHinhXeVao.Location = new System.Drawing.Point(737, 6);
-            this.ptHinhXeVao.Name = "ptHinhXeVao";
-            this.ptHinhXeVao.Size = new System.Drawing.Size(302, 286);
-            this.ptHinhXeVao.TabIndex = 0;
-            this.ptHinhXeVao.TabStop = false;
+            this.txtInfoRa.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtInfoRa.DefaultText = "";
+            this.txtInfoRa.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtInfoRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtInfoRa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoRa.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoRa.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoRa.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtInfoRa.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoRa.Location = new System.Drawing.Point(738, 326);
+            this.txtInfoRa.Name = "txtInfoRa";
+            this.txtInfoRa.PlaceholderText = "";
+            this.txtInfoRa.SelectedText = "";
+            this.txtInfoRa.Size = new System.Drawing.Size(606, 24);
+            this.txtInfoRa.TabIndex = 62;
             // 
-            // ptHinhMatVao
+            // txtInfoVao
             // 
-            this.ptHinhMatVao.FillColor = System.Drawing.Color.Gainsboro;
-            this.ptHinhMatVao.ImageRotate = 0F;
-            this.ptHinhMatVao.Location = new System.Drawing.Point(1042, 6);
-            this.ptHinhMatVao.Name = "ptHinhMatVao";
-            this.ptHinhMatVao.Size = new System.Drawing.Size(302, 286);
-            this.ptHinhMatVao.TabIndex = 70;
-            this.ptHinhMatVao.TabStop = false;
+            this.txtInfoVao.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtInfoVao.DefaultText = "";
+            this.txtInfoVao.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtInfoVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtInfoVao.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoVao.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoVao.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoVao.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtInfoVao.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoVao.Location = new System.Drawing.Point(735, 3);
+            this.txtInfoVao.Name = "txtInfoVao";
+            this.txtInfoVao.PlaceholderText = "";
+            this.txtInfoVao.SelectedText = "";
+            this.txtInfoVao.Size = new System.Drawing.Size(606, 24);
+            this.txtInfoVao.TabIndex = 71;
             // 
             // FormMain
             // 
@@ -1007,6 +1047,8 @@ namespace IDT_PARKING
             this.guna2Panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatRa)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeRa)).EndInit();
             this.guna2Panel2.ResumeLayout(false);
@@ -1017,8 +1059,6 @@ namespace IDT_PARKING
             this.guna2Panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.guna2TabControl1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.ptHinhXeVao)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1097,5 +1137,7 @@ namespace IDT_PARKING
         private System.Windows.Forms.ToolStrip toolStrip1;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhMatVao;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhXeVao;
+        private Guna.UI2.WinForms.Guna2TextBox txtInfoVao;
+        private Guna.UI2.WinForms.Guna2TextBox txtInfoRa;
     }
 }
