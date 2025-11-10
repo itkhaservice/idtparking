@@ -1772,6 +1772,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         }
 
+        private void label17_Click(object sender, EventArgs e)
+        {
 
+        }
     }
 }
