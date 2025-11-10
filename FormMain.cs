@@ -1523,11 +1523,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void NavigateGrid(int direction)
         {
             DataGridView dgv = null;
-            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
+            if (tabControl.SelectedIndex == 0) // Xe Vao
             {
                 dgv = dgvXeVao;
             }
-            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            else if (tabControl.SelectedIndex == 1) // Xe Ra
             {
                 dgv = dgvXeRa;
             }
@@ -1541,7 +1541,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 dgv.CurrentCell = dgv.Rows[newIndex].Cells[0]; // Change selection
 
                 // Update images based on the active tab
-                if (guna2TabControl1.SelectedIndex == 0)
+                if (tabControl.SelectedIndex == 0)
                 {
                     LoadImagesFromXeVaoRow(dgv.Rows[newIndex]);
                 }
@@ -1566,11 +1566,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private string GetSingleImagePathForCurrentRow(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
         {
             DataGridView dgv = null;
-            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
+            if (tabControl.SelectedIndex == 0) // Xe Vao
             {
                 dgv = dgvXeVao;
             }
-            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            else if (tabControl.SelectedIndex == 1) // Xe Ra
             {
                 dgv = dgvXeRa;
             }
@@ -1627,11 +1627,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void OpenImageViewer(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
         {
             DataGridView dgv = null;
-            if (guna2TabControl1.SelectedIndex == 0) // Xe Vao
+            if (tabControl.SelectedIndex == 0) // Xe Vao
             {
                 dgv = dgvXeVao;
             }
-            else if (guna2TabControl1.SelectedIndex == 1) // Xe Ra
+            else if (tabControl.SelectedIndex == 1) // Xe Ra
             {
                 dgv = dgvXeRa;
             }
@@ -1708,7 +1708,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 imagePaths.Add(imageXeVaoPath);
             }
 
-            if (guna2TabControl1.SelectedIndex == 1) // Only add "out" images for Xe Ra tab
+            if (tabControl.SelectedIndex == 1) // Only add "out" images for Xe Ra tab
             {
                 if (File.Exists(imageMatPath))
                 {
