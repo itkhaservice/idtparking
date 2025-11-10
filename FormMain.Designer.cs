@@ -55,6 +55,8 @@ namespace IDT_PARKING
             this.label10 = new System.Windows.Forms.Label();
             this.dgvResults = new System.Windows.Forms.DataGridView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.txtInfoVao = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtInfoRa = new Guna.UI2.WinForms.Guna2TextBox();
             this.ptHinhMatVao = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhXeVao = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhMatRa = new Guna.UI2.WinForms.Guna2PictureBox();
@@ -82,7 +84,6 @@ namespace IDT_PARKING
             this.guna2Panel9 = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel10 = new Guna.UI2.WinForms.Guna2Panel();
             this.guna2Panel11 = new Guna.UI2.WinForms.Guna2Panel();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.dateTimePicker5 = new System.Windows.Forms.DateTimePicker();
@@ -100,8 +101,9 @@ namespace IDT_PARKING
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.txtInfoRa = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtInfoVao = new Guna.UI2.WinForms.Guna2TextBox();
+            this.guna2Button2 = new Guna.UI2.WinForms.Guna2Button();
+            this.guna2TextBox1 = new Guna.UI2.WinForms.Guna2TextBox();
+            this.guna2TextBox2 = new Guna.UI2.WinForms.Guna2TextBox();
             this.tabPage3.SuspendLayout();
             this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
@@ -454,6 +456,44 @@ namespace IDT_PARKING
             this.tabPage2.Text = "Xe ra";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // txtInfoVao
+            // 
+            this.txtInfoVao.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtInfoVao.DefaultText = "";
+            this.txtInfoVao.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtInfoVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtInfoVao.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoVao.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoVao.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoVao.Font = new System.Drawing.Font("Segoe UI", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.txtInfoVao.ForeColor = System.Drawing.Color.Black;
+            this.txtInfoVao.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoVao.Location = new System.Drawing.Point(735, 3);
+            this.txtInfoVao.Name = "txtInfoVao";
+            this.txtInfoVao.PlaceholderText = "";
+            this.txtInfoVao.SelectedText = "";
+            this.txtInfoVao.Size = new System.Drawing.Size(606, 24);
+            this.txtInfoVao.TabIndex = 71;
+            // 
+            // txtInfoRa
+            // 
+            this.txtInfoRa.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtInfoRa.DefaultText = "";
+            this.txtInfoRa.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtInfoRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtInfoRa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoRa.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtInfoRa.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoRa.Font = new System.Drawing.Font("Segoe UI", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.txtInfoRa.ForeColor = System.Drawing.Color.Black;
+            this.txtInfoRa.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtInfoRa.Location = new System.Drawing.Point(738, 326);
+            this.txtInfoRa.Name = "txtInfoRa";
+            this.txtInfoRa.PlaceholderText = "";
+            this.txtInfoRa.SelectedText = "";
+            this.txtInfoRa.Size = new System.Drawing.Size(606, 24);
+            this.txtInfoRa.TabIndex = 62;
+            // 
             // ptHinhMatVao
             // 
             this.ptHinhMatVao.FillColor = System.Drawing.Color.Gainsboro;
@@ -712,6 +752,8 @@ namespace IDT_PARKING
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.guna2TextBox2);
+            this.tabPage1.Controls.Add(this.guna2TextBox1);
             this.tabPage1.Controls.Add(this.guna2Panel7);
             this.tabPage1.Controls.Add(this.guna2Panel8);
             this.tabPage1.Controls.Add(this.guna2Panel9);
@@ -728,35 +770,35 @@ namespace IDT_PARKING
             // 
             // guna2Panel7
             // 
-            this.guna2Panel7.Location = new System.Drawing.Point(1042, 295);
+            this.guna2Panel7.Location = new System.Drawing.Point(1042, 361);
             this.guna2Panel7.Name = "guna2Panel7";
             this.guna2Panel7.Size = new System.Drawing.Size(302, 288);
             this.guna2Panel7.TabIndex = 73;
             // 
             // guna2Panel8
             // 
-            this.guna2Panel8.Location = new System.Drawing.Point(1042, 4);
+            this.guna2Panel8.Location = new System.Drawing.Point(1041, 33);
             this.guna2Panel8.Name = "guna2Panel8";
             this.guna2Panel8.Size = new System.Drawing.Size(302, 288);
             this.guna2Panel8.TabIndex = 71;
             // 
             // guna2Panel9
             // 
-            this.guna2Panel9.Location = new System.Drawing.Point(738, 295);
+            this.guna2Panel9.Location = new System.Drawing.Point(738, 361);
             this.guna2Panel9.Name = "guna2Panel9";
             this.guna2Panel9.Size = new System.Drawing.Size(302, 288);
             this.guna2Panel9.TabIndex = 72;
             // 
             // guna2Panel10
             // 
-            this.guna2Panel10.Location = new System.Drawing.Point(738, 4);
+            this.guna2Panel10.Location = new System.Drawing.Point(737, 33);
             this.guna2Panel10.Name = "guna2Panel10";
             this.guna2Panel10.Size = new System.Drawing.Size(302, 288);
             this.guna2Panel10.TabIndex = 70;
             // 
             // guna2Panel11
             // 
-            this.guna2Panel11.Controls.Add(this.toolStrip1);
+            this.guna2Panel11.Controls.Add(this.guna2Button2);
             this.guna2Panel11.Controls.Add(this.label11);
             this.guna2Panel11.Controls.Add(this.label12);
             this.guna2Panel11.Controls.Add(this.dateTimePicker5);
@@ -773,16 +815,8 @@ namespace IDT_PARKING
             this.guna2Panel11.Controls.Add(this.label15);
             this.guna2Panel11.Location = new System.Drawing.Point(4, 589);
             this.guna2Panel11.Name = "guna2Panel11";
-            this.guna2Panel11.Size = new System.Drawing.Size(1337, 86);
+            this.guna2Panel11.Size = new System.Drawing.Size(728, 86);
             this.guna2Panel11.TabIndex = 69;
-            // 
-            // toolStrip1
-            // 
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1337, 25);
-            this.toolStrip1.TabIndex = 60;
-            this.toolStrip1.Text = "toolStrip1";
             // 
             // label11
             // 
@@ -837,7 +871,7 @@ namespace IDT_PARKING
             this.guna2Button1.ForeColor = System.Drawing.Color.White;
             this.guna2Button1.Location = new System.Drawing.Point(601, 7);
             this.guna2Button1.Name = "guna2Button1";
-            this.guna2Button1.Size = new System.Drawing.Size(127, 24);
+            this.guna2Button1.Size = new System.Drawing.Size(115, 24);
             this.guna2Button1.TabIndex = 59;
             this.guna2Button1.Text = "Tìm kiếm";
             this.guna2Button1.Click += new System.EventHandler(this.guna2Button1_Click);
@@ -923,7 +957,7 @@ namespace IDT_PARKING
             this.progressBar2.Location = new System.Drawing.Point(8, 67);
             this.progressBar2.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(1325, 11);
+            this.progressBar2.Size = new System.Drawing.Size(708, 11);
             this.progressBar2.TabIndex = 55;
             this.progressBar2.Visible = false;
             // 
@@ -996,41 +1030,58 @@ namespace IDT_PARKING
             this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.guna2TabControl1.TabMenuOrientation = Guna.UI2.WinForms.TabMenuOrientation.HorizontalTop;
             // 
-            // txtInfoRa
+            // guna2Button2
             // 
-            this.txtInfoRa.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtInfoRa.DefaultText = "";
-            this.txtInfoRa.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtInfoRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtInfoRa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtInfoRa.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtInfoRa.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtInfoRa.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtInfoRa.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtInfoRa.Location = new System.Drawing.Point(738, 326);
-            this.txtInfoRa.Name = "txtInfoRa";
-            this.txtInfoRa.PlaceholderText = "";
-            this.txtInfoRa.SelectedText = "";
-            this.txtInfoRa.Size = new System.Drawing.Size(606, 24);
-            this.txtInfoRa.TabIndex = 62;
+            this.guna2Button2.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.guna2Button2.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.guna2Button2.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.guna2Button2.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.guna2Button2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.guna2Button2.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.guna2Button2.ForeColor = System.Drawing.Color.White;
+            this.guna2Button2.Location = new System.Drawing.Point(601, 37);
+            this.guna2Button2.Name = "guna2Button2";
+            this.guna2Button2.Size = new System.Drawing.Size(115, 24);
+            this.guna2Button2.TabIndex = 61;
+            this.guna2Button2.Text = "Xóa dữ liệu rác";
             // 
-            // txtInfoVao
+            // guna2TextBox1
             // 
-            this.txtInfoVao.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtInfoVao.DefaultText = "";
-            this.txtInfoVao.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtInfoVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtInfoVao.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtInfoVao.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtInfoVao.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtInfoVao.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtInfoVao.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtInfoVao.Location = new System.Drawing.Point(735, 3);
-            this.txtInfoVao.Name = "txtInfoVao";
-            this.txtInfoVao.PlaceholderText = "";
-            this.txtInfoVao.SelectedText = "";
-            this.txtInfoVao.Size = new System.Drawing.Size(606, 24);
-            this.txtInfoVao.TabIndex = 71;
+            this.guna2TextBox1.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.guna2TextBox1.DefaultText = "";
+            this.guna2TextBox1.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.guna2TextBox1.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.guna2TextBox1.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.guna2TextBox1.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.guna2TextBox1.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2TextBox1.Font = new System.Drawing.Font("Segoe UI", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.guna2TextBox1.ForeColor = System.Drawing.Color.Black;
+            this.guna2TextBox1.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2TextBox1.Location = new System.Drawing.Point(737, 329);
+            this.guna2TextBox1.Name = "guna2TextBox1";
+            this.guna2TextBox1.PlaceholderText = "";
+            this.guna2TextBox1.SelectedText = "";
+            this.guna2TextBox1.Size = new System.Drawing.Size(606, 24);
+            this.guna2TextBox1.TabIndex = 74;
+            // 
+            // guna2TextBox2
+            // 
+            this.guna2TextBox2.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.guna2TextBox2.DefaultText = "";
+            this.guna2TextBox2.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.guna2TextBox2.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.guna2TextBox2.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.guna2TextBox2.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.guna2TextBox2.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2TextBox2.Font = new System.Drawing.Font("Segoe UI", 10F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))));
+            this.guna2TextBox2.ForeColor = System.Drawing.Color.Black;
+            this.guna2TextBox2.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.guna2TextBox2.Location = new System.Drawing.Point(735, 3);
+            this.guna2TextBox2.Name = "guna2TextBox2";
+            this.guna2TextBox2.PlaceholderText = "";
+            this.guna2TextBox2.SelectedText = "";
+            this.guna2TextBox2.Size = new System.Drawing.Size(606, 24);
+            this.guna2TextBox2.TabIndex = 75;
             // 
             // FormMain
             // 
@@ -1134,10 +1185,12 @@ namespace IDT_PARKING
         private System.Windows.Forms.ToolTip toolTip1;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhMatRa;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhXeRa;
-        private System.Windows.Forms.ToolStrip toolStrip1;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhMatVao;
         private Guna.UI2.WinForms.Guna2PictureBox ptHinhXeVao;
         private Guna.UI2.WinForms.Guna2TextBox txtInfoVao;
         private Guna.UI2.WinForms.Guna2TextBox txtInfoRa;
+        private Guna.UI2.WinForms.Guna2Button guna2Button2;
+        private Guna.UI2.WinForms.Guna2TextBox guna2TextBox1;
+        private Guna.UI2.WinForms.Guna2TextBox guna2TextBox2;
     }
 }

@@ -952,9 +952,9 @@ SELECT
     Ra.STTThe AS 'Số thẻ',
     Ra.CardID AS 'Mã thẻ',
     Vao.NgayVao AS 'Ngày vào',
-    Vao.ThoiGian AS 'Thời gian vào',
+    CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS 'Thời gian vào',
     Ra.NgayRa AS 'Ngày ra',
-    Ra.THoiGianRa AS 'Thời gian ra',
+    CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
     Ra.IDXe,
@@ -1057,9 +1057,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 idXe = row.Cells["IDXe"].Value?.ToString();
                 if (!string.IsNullOrEmpty(idXe) && idXe.Length >= 8 &&
                     DateTime.TryParseExact(idXe.Substring(0, 8), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out ngayVao) &&
-                    int.TryParse(row.Cells["Thời gian vào"].Value?.ToString(), out int thoiGianVaoSeconds))
+                    TimeSpan.TryParse(row.Cells["Thời gian vào"].Value?.ToString(), out TimeSpan timeVao))
                 {
-                    TimeSpan timeVao = TimeSpan.FromSeconds(thoiGianVaoSeconds);
                     txtInfoVao.Text = $"Thông tin vào: Ngày {ngayVao.Day} tháng {ngayVao.Month} năm {ngayVao.Year} Thời gian: {timeVao.Hours} giờ {timeVao.Minutes} phút {timeVao.Seconds} giây";
                 }
                 else
@@ -1069,9 +1068,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 // --- Info Ra ---
                 if (DateTime.TryParse(row.Cells["Ngày ra"].Value?.ToString(), out DateTime ngayRa) &&
-                    int.TryParse(row.Cells["Thời gian ra"].Value?.ToString(), out int thoiGianRaSeconds))
+                    TimeSpan.TryParse(row.Cells["Thời gian ra"].Value?.ToString(), out TimeSpan timeRa))
                 {
-                    TimeSpan timeRa = TimeSpan.FromSeconds(thoiGianRaSeconds);
                     txtInfoRa.Text = $"Thông tin ra: Ngày {ngayRa.Day} tháng {ngayRa.Month} năm {ngayRa.Year} Thời gian: {timeRa.Hours} giờ {timeRa.Minutes} phút {timeRa.Seconds} giây";
                 }
                 else
@@ -1113,18 +1111,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
 
             string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
-            // Attempt to parse GioVao 
-
-            if (int.TryParse(gioVaoString, out int totalSeconds))
-            {
-                TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
-                string formattedTime = time.ToString(@"hh\:mm\:ss");
-                gioVaoString = formattedTime;
-            }
-            else
-            {
-                MessageBox.Show("Giá trị thời gian không hợp lệ!");
-            }
 
             if (string.IsNullOrEmpty(gioVaoString))
             {
@@ -1138,9 +1124,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
                 return;
             }
-
-            // Format GioVao from "HH:mm:ss" to "HHmmss" string
-            string gioVaoFormatted = gioVaoString.Replace(":", "");
 
             string folderPath = Properties.Settings.Default.SharedFolder;
             if (!string.IsNullOrEmpty(folderPath) && folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
@@ -1356,18 +1339,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
 
             string gioVaoString = row.Cells["Thời gian vào"].Value?.ToString();
-            // Attempt to parse GioVao 
-
-            if (int.TryParse(gioVaoString, out int totalSeconds))
-            {
-                TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
-                string formattedTime = time.ToString(@"hh\:mm\:ss");
-                gioVaoString = formattedTime;
-            }
-            else
-            {
-                MessageBox.Show("Giá trị thời gian không hợp lệ!");
-            }
 
             if (string.IsNullOrEmpty(gioVaoString))
             {
@@ -1381,9 +1352,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 toolTip1.SetToolTip(ptHinhXeRa, "Không thể phân tích giờ vào.");
                 return;
             }
-
-            // Format GioVao from "HH:mm:ss" to "HHmmss" string
-            string gioVaoFormatted = gioVaoString.Replace(":", "");
 
             string folderPath = Properties.Settings.Default.SharedFolder;
             if (!string.IsNullOrEmpty(folderPath) && folderPath.StartsWith(@"\") && !folderPath.StartsWith(@"\\"))
