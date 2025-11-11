@@ -71,6 +71,30 @@ namespace IDT_PARKING
             btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
             btnXoa_KH.Click += new System.EventHandler(this.btnXoa_KH_Click);
             btnExportExcel_KH.Click += new System.EventHandler(this.btnExportExcel_KH_Click);
+
+            // Sự kiện cho Tab Thẻ tháng (trong tab Khách hàng)
+            dgvTheThang_KH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTheThang_KH_CellClick);
+            rbSoThe_TT.Checked = true; // Default search by CardID
+            txtThe_TT.KeyDown += new KeyEventHandler(this.txtThe_TT_KeyDown);
+            rbSoThe_TT.CheckedChanged += new EventHandler(this.rbSoThe_TT_CheckedChanged);
+            rbBienSo_TT.CheckedChanged += new EventHandler(this.rbBienSo_TT_CheckedChanged);
+
+            LoadKhachHangData(); // Initial load for KhachHang
+            LoadTheThangData(); // Initial load for TheThang
+            LoadTheTrongData(); // Initial load for TheTrong
+
+            // Sự kiện cho tìm kiếm thẻ trống
+            txtThe_TTr.KeyDown += new KeyEventHandler(this.txtThe_TTr_KeyDown);
+
+            // Set custom format for Guna2DateTimePicker controls
+            dtTu_TT.Format = DateTimePickerFormat.Custom;
+            dtTu_TT.CustomFormat = "dd-MM-yyyy";
+            dtDen_TT.Format = DateTimePickerFormat.Custom;
+            dtDen_TT.CustomFormat = "dd-MM-yyyy";
+            guna2DateTimePicker1.Format = DateTimePickerFormat.Custom;
+            guna2DateTimePicker1.CustomFormat = "dd-MM-yyyy";
+            guna2DateTimePicker2.Format = DateTimePickerFormat.Custom;
+            guna2DateTimePicker2.CustomFormat = "dd-MM-yyyy";
         }
 
         private void txtSoTheXeVao_KeyDown(object sender, KeyEventArgs e)
@@ -190,6 +214,77 @@ namespace IDT_PARKING
             }
         }
 
+        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true)
+        {
+            InitializeDatabaseConnection(); // Ensure connection is open
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>();
+
+            string query = @"
+                SELECT
+                    tt.SoTT AS 'Số thẻ',
+                    tt.soxe AS 'Biển số',
+                    kh.DonVi AS 'Đơn vị',
+                    kh.DiaChi AS 'Địa chỉ',
+                    kh.hoten AS 'Họ tên',
+                    tt.CardID AS 'Mã thẻ',
+                    tt.MaLoaiThe AS 'Loại thẻ',
+                    tt.NgayBD AS 'Ngày bắt đầu',
+                    tt.NgayKT AS 'Ngày kết thúc',
+                    tt.nguoicap AS 'Người cấp',
+                    tt.giatien AS 'Giá tiền',
+                    tt.datcoc AS 'Đặt cọc',
+                    kh.dienthoai AS 'Điện thoại',
+                    kh.chungloai AS 'Chủng loại'
+                FROM
+                    TheThang tt
+                INNER JOIN
+                    KhachHang kh ON tt.MaKH = kh.MaKH";
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                if (searchByCardID)
+                {
+                    whereClauses.Add("tt.SoTT LIKE @searchTerm");
+                }
+                else // Search by license plate
+                {
+                    whereClauses.Add("tt.soxe LIKE @searchTerm");
+                }
+                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
+            }
+
+            if (whereClauses.Any())
+            {
+                query += " WHERE " + string.Join(" AND ", whereClauses);
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvTheThang_KH.DataSource = dataTable;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void dgvKhachHang_KH_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -206,6 +301,37 @@ namespace IDT_PARKING
             }
         }
 
+        private void dgvTheThang_KH_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvTheThang_KH.Rows[e.RowIndex];
+
+                // Populate dtTu_TT with "Ngày bắt đầu"
+                if (row.Cells["Ngày bắt đầu"].Value != null && DateTime.TryParse(row.Cells["Ngày bắt đầu"].Value.ToString(), out DateTime ngayBD))
+                {
+                    dtTu_TT.Value = ngayBD;
+                }
+                else
+                {
+                    dtTu_TT.Value = DateTime.Now; // Default to current date if parsing fails
+                }
+
+                // Populate dtDen_TT with "Ngày kết thúc"
+                if (row.Cells["Ngày kết thúc"].Value != null && DateTime.TryParse(row.Cells["Ngày kết thúc"].Value.ToString(), out DateTime ngayKT))
+                {
+                    dtDen_TT.Value = ngayKT;
+                }
+                else
+                {
+                    dtDen_TT.Value = DateTime.Now; // Default to current date if parsing fails
+                }
+
+                // Populate txtBienSo_TT with "Biển số"
+                txtBienSo_TT.Text = row.Cells["Biển số"].Value?.ToString();
+            }
+        }
+
         private void SearchKhachHang_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -215,11 +341,47 @@ namespace IDT_PARKING
             }
         }
 
+        private void txtThe_TT_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                PerformTheThangSearch();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        private void rbSoThe_TT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbSoThe_TT.Checked)
+            {
+                rbBienSo_TT.Checked = false;
+                PerformTheThangSearch();
+            }
+        }
+
+        private void rbBienSo_TT_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rbBienSo_TT.Checked)
+            {
+                rbSoThe_TT.Checked = false;
+                PerformTheThangSearch();
+            }
+        }
+
+        private void PerformTheThangSearch()
+        {
+            string searchTerm = txtThe_TT.Text.Trim();
+            bool searchByCardID = rbSoThe_TT.Checked;
+            LoadTheThangData(searchTerm, searchByCardID);
+        }
+
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == tabKhachHang)
             {
                 LoadKhachHangData();
+                LoadTheThangData();
+                LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
             }
         }
 
@@ -558,27 +720,81 @@ namespace IDT_PARKING
 
 
 
-        private void btnExport_KH_Click(object sender, EventArgs e)
+        private void LoadTheTrongData(string searchTerm = "")
         {
-            if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
+            InitializeDatabaseConnection(); // Ensure connection is open
+
+            string query = @"
+                SELECT
+                    sttthe AS 'Số thẻ',
+                    CardID AS 'Mã thẻ',
+                    trangthai AS 'Trạng thái'
+                FROM
+                    Active"; // Assuming 'Active' is the table name
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                MessageBox.Show("Không có dữ liệu khách hàng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                whereClauses.Add("sttthe LIKE @searchTerm");
+                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
             }
 
-                        DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
+            if (whereClauses.Any())
+            {
+                query += " WHERE " + string.Join(" AND ", whereClauses);
+            }
 
-                        ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG");
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
 
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvTheTrong_KH.DataSource = dataTable;
+                        dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
                     }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-                    #endregion // End of KHÁCH HÀNG
+                    private void PerformTheTrongSearch()
+        {
+            string searchTerm = txtThe_TTr.Text.Trim();
+            LoadTheTrongData(searchTerm);
+        }
+
+        private void txtThe_TTr_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                PerformTheTrongSearch();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        #endregion // End of KHÁCH HÀNG
 
             
 
-                    #region KHỐI DOANH THU
+            #region KHỐI DOANH THU
 
-                    private void DoanhThu_Load()        {
+            private void DoanhThu_Load()        
+        {
 
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
@@ -603,11 +819,11 @@ namespace IDT_PARKING
             timeTimeStart.ShowUpDown = true;
             timeTimeEnd.ShowUpDown = true;
 
-            // Set custom format for date pickers to dd/MM/yyyy
+            // Set custom format for date pickers to dd-MM-yyyy
             dateTimeStart.Format = DateTimePickerFormat.Custom;
-            dateTimeStart.CustomFormat = "dd/MM/yyyy";
+            dateTimeStart.CustomFormat = "dd-MM-yyyy";
             dateTimeEnd.Format = DateTimePickerFormat.Custom;
-            dateTimeEnd.CustomFormat = "dd/MM/yyyy";
+            dateTimeEnd.CustomFormat = "dd-MM-yyyy";
 
             cmbTypeDoanhThu.Items.Add("VL");
             cmbTypeDoanhThu.Items.Add("VL-XD");
@@ -638,9 +854,9 @@ namespace IDT_PARKING
             dtXeRaDenTime.ShowUpDown = true;
 
             dtXeRaTuDate.Format = DateTimePickerFormat.Custom;
-            dtXeRaTuDate.CustomFormat = "dd/MM/yyyy";
+            dtXeRaTuDate.CustomFormat = "dd-MM-yyyy";
             dtXeRaDenDate.Format = DateTimePickerFormat.Custom;
-            dtXeRaDenDate.CustomFormat = "dd/MM/yyyy";
+            dtXeRaDenDate.CustomFormat = "dd-MM-yyyy";
 
             cbbXeRa.Items.Add("VL");
             cbbXeRa.Items.Add("VL-XD");
@@ -671,9 +887,9 @@ namespace IDT_PARKING
             dtXeVaoDenTime.ShowUpDown = true;
 
             dtXeVaoTuDate.Format = DateTimePickerFormat.Custom;
-            dtXeVaoTuDate.CustomFormat = "dd/MM/yyyy";
+            dtXeVaoTuDate.CustomFormat = "dd-MM-yyyy";
             dtXeVaoDenDate.Format = DateTimePickerFormat.Custom;
-            dtXeVaoDenDate.CustomFormat = "dd/MM/yyyy";
+            dtXeVaoDenDate.CustomFormat = "dd-MM-yyyy";
 
             cbbXeVao.Items.Add("VL");
             cbbXeVao.Items.Add("VL-XD");
