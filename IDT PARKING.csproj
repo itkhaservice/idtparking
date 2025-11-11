@@ -82,12 +82,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormCaiDat.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FormCaiDat.Designer.cs">
-      <DependentUpon>FormCaiDat.cs</DependentUpon>
-    </Compile>
+
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,9 +115,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FormCaiDat.resx">
-      <DependentUpon>FormCaiDat.cs</DependentUpon>
-    </EmbeddedResource>
+
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>

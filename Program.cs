@@ -14,7 +14,7 @@ namespace IDT_PARKING
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            using (FormCaiDat mainForm = new FormCaiDat())
+            using (FormMain mainForm = new FormMain())
             {
                 Application.Run(mainForm);
             }

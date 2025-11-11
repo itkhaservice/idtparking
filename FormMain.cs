@@ -36,7 +36,11 @@ namespace IDT_PARKING
         public FormMain()
         {
             InitializeComponent();
-            InitializeDatabaseConnection(); // Call here once
+            this.tabControl.Selecting += new TabControlCancelEventHandler(this.tabControl_Selecting);
+            SetupAndConnect();
+            btnConnect_Main.Click += new System.EventHandler(this.btnConnect_Main_Click);
+            this.tabControl.SelectedTab = tabCaiDat;
+            
             DoanhThu_Load();
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
 
@@ -79,9 +83,9 @@ namespace IDT_PARKING
             rbSoThe_TT.CheckedChanged += new EventHandler(this.rbSoThe_TT_CheckedChanged);
             rbBienSo_TT.CheckedChanged += new EventHandler(this.rbBienSo_TT_CheckedChanged);
 
-            LoadKhachHangData(); // Initial load for KhachHang
-            LoadTheThangData(); // Initial load for TheThang
-            LoadTheTrongData(); // Initial load for TheTrong
+            //LoadKhachHangData(); // Initial load for KhachHang
+            //LoadTheThangData(); // Initial load for TheThang
+            //LoadTheTrongData(); // Initial load for TheTrong
 
             // Sự kiện cho tìm kiếm thẻ trống
             txtThe_TTr.KeyDown += new KeyEventHandler(this.txtThe_TTr_KeyDown);
@@ -96,6 +100,172 @@ namespace IDT_PARKING
             guna2DateTimePicker2.Format = DateTimePickerFormat.Custom;
             guna2DateTimePicker2.CustomFormat = "dd-MM-yyyy";
         }
+
+        private void SetTabStates(bool enabled)
+        {
+            foreach (TabPage tab in tabControl.TabPages)
+            {
+                if (tab == tabCaiDat) continue; // Always keep settings tab enabled
+
+                tab.Enabled = enabled; // This enables/disables controls within the tab
+                // For Guna2TabControl, disabling the TabPage itself might not visually disable the header.
+                // We'll rely on the Selecting event to prevent navigation.
+            }
+        }
+
+        private void tabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            // If the connection is not open and the selected tab is not the settings tab, cancel the selection
+            if ((connection == null || connection.State != ConnectionState.Open) && e.TabPage != tabCaiDat)
+            {
+                e.Cancel = true;
+                MessageBox.Show("Vui lòng kết nối cơ sở dữ liệu trước khi truy cập các chức năng khác.", "Yêu cầu kết nối", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void SetupAndConnect()
+        {
+            SetTabStates(false); // Initially disable all tabs except settings
+
+            // Check if settings are already saved
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress))
+            {
+                // Populate textboxes from settings
+                txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
+                txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
+                txtUsername_Main.Text = Properties.Settings.Default.Username;
+                txtPassword_Main.Text = Properties.Settings.Default.Password;
+                txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
+
+                // Try to connect automatically
+                try
+                {
+                    InitializeDatabaseConnection();
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    // If connection is successful, switch to the main tab and enable other tabs
+                    SetTabStates(true);
+                    tabControl.SelectedTab = tabXeVao;
+                }
+                catch (Exception ex)
+                {
+                    // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
+                    MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    tabControl.SelectedTab = tabCaiDat;
+                    SetTabStates(false);
+                }
+            }
+            else
+            {
+                // First time launch: clear textboxes and stay on settings tab, keep other tabs disabled
+                txtServer_Main.Text = "";
+                txtDatabase_Main.Text = "";
+                txtUsername_Main.Text = "";
+                txtPassword_Main.Text = "";
+                txtFolder_Main.Text = "";
+                tabControl.SelectedTab = tabCaiDat;
+                SetTabStates(false);
+            }
+        }
+
+        private void btnConnect_Main_Click(object sender, EventArgs e)
+        {
+            // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
+            //string serverAddress = "txtServer_Main.Text";
+            //string databaseName = "txtDatabase_Main.Text";
+            //string folder = "txtFolder_Main.Text";
+            //string uid = "txtUsername_Main.Text";
+            //string password = "txtPassword_Main.Text";
+
+            string serverAddress = txtServer_Main.Text;
+            string databaseName = txtDatabase_Main.Text;
+            string folder = txtFolder_Main.Text;
+            string uid = txtUsername_Main.Text;
+            string password = txtPassword_Main.Text;
+
+            // KIỂM TRA XEM CÁC TRƯỜNG BẮT BUỘC CÓ BỊ TRỐNG KHÔNG
+            if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(databaseName))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin Server và Database.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // Dừng thực hiện nếu thiếu thông tin
+            }
+
+            // TẠO CHUỖI KẾT NỐI DỰA TRÊN THÔNG TIN NHẬP VÀO
+            string connectionString;
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                connectionString = $"Server={serverAddress};Database={databaseName};Integrated Security=True;TrustServerCertificate=True;";
+            }
+            else
+            {
+                connectionString = $"Server={serverAddress};Database={databaseName};User ID={uid};Password={password};TrustServerCertificate=True;";
+            }
+
+            // THỬ KẾT NỐI ĐẾN CƠ SỞ DỮ LIỆU
+            try
+            {
+                connection = new SqlConnection(connectionString);
+                connection.Open();
+                MessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // LƯU LẠI CÁC THÔNG TIN KẾT NỐI ĐẾN CƠ SỞ DỮ LIỆU
+                Properties.Settings.Default.ServerAddress = txtServer_Main.Text;
+                Properties.Settings.Default.DatabaseName = txtDatabase_Main.Text;
+                Properties.Settings.Default.Username = txtUsername_Main.Text;
+                Properties.Settings.Default.SharedFolder = txtFolder_Main.Text;
+                Properties.Settings.Default.Password = txtPassword_Main.Text;
+                Properties.Settings.Default.Save();
+                EnsureItKhaTableExists();
+
+                // Chuyển sang tab chính và kích hoạt các tab khác
+                SetTabStates(true);
+                tabControl.SelectedTab = tabXeVao;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SetTabStates(false); // Keep other tabs disabled on connection failure
+            }
+        }
+
+        private void EnsureItKhaTableExists()
+        {
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                MessageBox.Show("Không có kết nối cơ sở dữ liệu. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string checkAndCreateTable = @"
+            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ITKHA' AND xtype='U')
+            BEGIN
+                CREATE TABLE [dbo].[ITKHA] (
+                    STTThe     VARCHAR(10)   NOT NULL,
+                    CardID     VARCHAR(20)   NOT NULL,
+                    NgayRa     DATETIME      NOT NULL,
+                    ThoiGianRa NCHAR(10)     NOT NULL,
+                    MaLoaiThe  VARCHAR(10)   NOT NULL,
+                    GiaTien    MONEY         NOT NULL,
+                    username   VARCHAR(20)   NOT NULL,
+                    IDXe       VARCHAR(50)   NOT NULL,
+                    IDMat      VARCHAR(50)   NOT NULL,
+                    GioRa      NCHAR(10)     NOT NULL,
+                    cong       VARCHAR(50)   NULL,
+                    soxe       VARCHAR(50)   NULL,
+                    soxera     VARCHAR(50)   NOT NULL,
+                    Thao_Tac   NVARCHAR(20)  NOT NULL,
+                    Ngay_Thuc_Hien DATETIME NOT NULL
+                )
+            END";
+
+            using (SqlCommand cmd = new SqlCommand(checkAndCreateTable, connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+        }
+
 
         private void txtSoTheXeVao_KeyDown(object sender, KeyEventArgs e)
         {
@@ -151,7 +321,7 @@ namespace IDT_PARKING
 
         private void LoadKhachHangData()
         {
-            InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
+            // InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
 
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
@@ -216,7 +386,7 @@ namespace IDT_PARKING
 
         private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true)
         {
-            InitializeDatabaseConnection(); // Ensure connection is open
+            // InitializeDatabaseConnection(); // Ensure connection is open
 
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
@@ -722,7 +892,7 @@ namespace IDT_PARKING
 
         private void LoadTheTrongData(string searchTerm = "")
         {
-            InitializeDatabaseConnection(); // Ensure connection is open
+            // InitializeDatabaseConnection(); // Ensure connection is open
 
             string query = @"
                 SELECT
@@ -947,7 +1117,7 @@ namespace IDT_PARKING
                     connectionString = $"Server={serverAddress};Database={databaseName};User ID={uid};Password={password};TrustServerCertificate=True;";
                 }
 
-                connection = new SqlConnection(connectionString);
+                this.connection = new SqlConnection(connectionString);
             }
             catch (Exception ex)
             {
@@ -1678,7 +1848,7 @@ namespace IDT_PARKING
         }
         private void LoadXeVaoData()
         {
-            InitializeDatabaseConnection(); // Ensure connection is open
+            // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeVaoTuDate.Value;
             DateTime endDateFromPicker = dtXeVaoDenDate.Value;
@@ -2455,6 +2625,23 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void label17_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ClearAllSettings()
+        {
+            txtServer_Main.Text = "";
+            txtDatabase_Main.Text = "";
+            txtUsername_Main.Text = "";
+            txtPassword_Main.Text = "";
+            txtFolder_Main.Text = "";
+            Properties.Settings.Default.Reset();
+            Properties.Settings.Default.Save();
+            MessageBox.Show("Tất cả cài đặt đã được xóa về mặc định.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnClearConnect_Click(object sender, EventArgs e)
+        {
+            ClearAllSettings();
         }
     }
 }
