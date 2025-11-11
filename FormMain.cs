@@ -27,6 +27,7 @@ namespace IDT_PARKING
         public const string ALL_MATERIAL_TYPE = "ALL";
         public const string PRICE_COLUMN_NAME = "PRICE";
         private SqlConnection connection;
+        private string _selectedMaKH = string.Empty; // To store the MaKH of the selected customer
         private ImageViewerForm imageViewerInstance = null;
         private Guna.UI2.WinForms.Guna2PictureBox lastClickedPictureBox = null;
         //private SqlConnection _connection;
@@ -58,6 +59,18 @@ namespace IDT_PARKING
             txtBienSoXeVao.KeyDown += txtBienSoXeVao_KeyDown;
 
             toolTip1.Active = true;
+            this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
+
+            // Sự kiện cho Tab Khách hàng
+            dgvKhachHang_KH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvKhachHang_KH_CellClick);
+            txtTimTen_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
+            txtTimDVDC_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
+            txtTimBS_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
+
+            btnThem_KH.Click += new System.EventHandler(this.btnThem_KH_Click);
+            btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
+            btnXoa_KH.Click += new System.EventHandler(this.btnXoa_KH_Click);
+            btnExportExcel_KH.Click += new System.EventHandler(this.btnExportExcel_KH_Click);
         }
 
         private void txtSoTheXeVao_KeyDown(object sender, KeyEventArgs e)
@@ -110,9 +123,462 @@ namespace IDT_PARKING
             }
         }
 
-        #region KHỐI DOANH THU
-        private void DoanhThu_Load()
+        #region KHÁCH HÀNG
+
+        private void LoadKhachHangData()
         {
+            InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>();
+
+            string baseQuery = "SELECT MaKH AS 'Mã KH', hoten AS 'Họ tên', DonVi AS 'Đơn vị', DiaChi AS 'Địa chỉ', dienthoai AS 'Điện thoại', hopdong AS 'Biển số', chungloai AS 'Hiệu xe', hinhanh AS 'Hình ảnh' FROM KhachHang";
+
+            if (!string.IsNullOrWhiteSpace(txtTimTen_KH.Text))
+            {
+                whereClauses.Add("hoten LIKE @hoten");
+                parameters.Add(new SqlParameter("@hoten", "%" + txtTimTen_KH.Text + "%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtTimDVDC_KH.Text))
+            {
+                whereClauses.Add("(DonVi LIKE @dvdc OR DiaChi LIKE @dvdc)");
+                parameters.Add(new SqlParameter("@dvdc", "%" + txtTimDVDC_KH.Text + "%"));
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtTimBS_KH.Text))
+            {
+                whereClauses.Add("hopdong LIKE @hopdong");
+                parameters.Add(new SqlParameter("@hopdong", "%" + txtTimBS_KH.Text + "%"));
+            }
+
+            string finalQuery = baseQuery;
+            if (whereClauses.Any())
+            {
+                finalQuery += " WHERE " + string.Join(" AND ", whereClauses);
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using (SqlCommand command = new SqlCommand(finalQuery, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvKhachHang_KH.DataSource = dataTable;
+
+                        if (dgvKhachHang_KH.Columns.Contains("Hình ảnh"))
+                        {
+                            dgvKhachHang_KH.Columns["Hình ảnh"].Visible = false;
+                        }
+                        dgvKhachHang_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void dgvKhachHang_KH_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvKhachHang_KH.Rows[e.RowIndex];
+
+                _selectedMaKH = row.Cells["Mã KH"].Value?.ToString(); // Store MaKH in the private variable
+                txtHoTen_KH.Text = row.Cells["Họ tên"].Value?.ToString();
+                txtDiaChi_KH.Text = row.Cells["Địa chỉ"].Value?.ToString();
+                txtDonVi_KH.Text = row.Cells["Đơn vị"].Value?.ToString();
+                txtBienSo_KH.Text = row.Cells["Biển số"].Value?.ToString();
+                txtHieuXe_KH.Text = row.Cells["Hiệu xe"].Value?.ToString();
+                txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
+            }
+        }
+
+        private void SearchKhachHang_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                LoadKhachHangData();
+                e.SuppressKeyPress = true; 
+            }
+        }
+
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabControl.SelectedTab == tabKhachHang)
+            {
+                LoadKhachHangData();
+            }
+        }
+
+        private void btnThem_KH_Click(object sender, EventArgs e)
+        {
+            string newMaKH = GenerateNextMaKH();
+            if (newMaKH == null) return; // Error occurred during generation
+
+            InitializeDatabaseConnection();
+
+            string query = @"
+                INSERT INTO KhachHang (MaKH, hoten, DonVi, DiaChi, dienthoai, hopdong, chungloai, hinhanh)
+                VALUES (@makh, '', '', '', '', '', '', NULL)"; // Insert with empty strings and NULL for image
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@makh", newMaKH);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}. Vui lòng chọn dòng này và nhấn Cập nhật để điền thông tin chi tiết.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadKhachHangData(); // Refresh the DataGridView
+                        // Optionally, select the newly added row
+                        foreach (DataGridViewRow row in dgvKhachHang_KH.Rows)
+                        {
+                            if (row.Cells["Mã KH"].Value?.ToString() == newMaKH)
+                            {
+                                dgvKhachHang_KH.CurrentCell = row.Cells[0];
+                                row.Selected = true;
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể thêm khách hàng mới.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi thêm khách hàng mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnUpdate_KH_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_selectedMaKH))
+            {
+                MessageBox.Show("Vui lòng chọn một khách hàng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            InitializeDatabaseConnection();
+
+            string query = @"
+                UPDATE KhachHang
+                SET hoten = @hoten, DonVi = @donvi, DiaChi = @diachi, dienthoai = @dienthoai, hopdong = @hopdong, chungloai = @chungloai
+                WHERE MaKH = @makh";
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@makh", _selectedMaKH);
+                    command.Parameters.AddWithValue("@hoten", txtHoTen_KH.Text);
+                    command.Parameters.AddWithValue("@donvi", txtDonVi_KH.Text);
+                    command.Parameters.AddWithValue("@diachi", txtDiaChi_KH.Text);
+                    command.Parameters.AddWithValue("@dienthoai", txtDienThoai_KH.Text);
+                    command.Parameters.AddWithValue("@hopdong", txtBienSo_KH.Text);
+                    command.Parameters.AddWithValue("@chungloai", txtHieuXe_KH.Text);
+                    // hinhanh is not updated via UI, so it's omitted
+
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Cập nhật thông tin khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadKhachHangData(); // Refresh the DataGridView
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy khách hàng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi cập nhật khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnXoa_KH_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(_selectedMaKH))
+            {
+                MessageBox.Show("Vui lòng chọn một khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa khách hàng có Mã KH: {_selectedMaKH} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (confirm == DialogResult.Yes)
+            {
+                InitializeDatabaseConnection();
+
+                string query = "DELETE FROM KhachHang WHERE MaKH = @makh";
+
+                try
+                {
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@makh", _selectedMaKH);
+
+                        int rowsAffected = command.ExecuteNonQuery();
+
+                        if (rowsAffected > 0)
+                        {
+                            MessageBox.Show("Xóa khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            // Clear textboxes after deletion
+                            _selectedMaKH = string.Empty; // Clear selected MaKH
+                            txtHoTen_KH.Clear();
+                            txtDiaChi_KH.Clear();
+                            txtDonVi_KH.Clear();
+                            txtBienSo_KH.Clear();
+                            txtHieuXe_KH.Clear();
+                            txtDienThoai_KH.Clear();
+                            LoadKhachHangData(); // Refresh the DataGridView
+                        }
+                        else
+                        {
+                            MessageBox.Show("Không tìm thấy khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xóa khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void ExportKhachHangToExcel(DataTable dataTable, String filename)
+        {
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+            Excel.Range headerRange = null;
+            Excel.Range dataRange = null;
+
+            try
+            {
+                excelApp = new Excel.Application();
+                workbook = excelApp.Workbooks.Add();
+                worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                int columnCount = dataTable.Columns.Count;
+                int rowCount = dataTable.Rows.Count;
+
+                object[] header = new object[columnCount];
+                for (int col = 0; col < columnCount; col++)
+                {
+                    header[col] = dataTable.Columns[col].ColumnName;
+                }
+                headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, columnCount]];
+                headerRange.Value = header;
+                headerRange.Font.Bold = true;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                Marshal.ReleaseComObject(headerRange);
+
+                object[,] data = new object[rowCount, columnCount];
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
+                    }
+                }
+                dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
+                dataRange.Value = data;
+                Marshal.ReleaseComObject(dataRange);
+
+                worksheet.Columns.AutoFit();
+
+                string serverAddress = txtServer;
+                string sharedFolderValue = Properties.Settings.Default.SharedFolder;
+
+                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                }
+                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.InitialDirectory = networkPath;
+                    sfd.Filter = "Excel Workbook (*.xlsx)|*.xlsx|Excel 97-2003 Workbook (*.xls)|*.xls";
+                    sfd.Title = "Lưu file Excel danh sách khách hàng";
+                    sfd.FileName = $"DANH-SACH-KHACH-HANG-{DateTime.Now:dd-MM-yyyy}.xlsx";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Properties.Settings.Default.FolderCus = Path.GetDirectoryName(sfd.FileName);
+                        Properties.Settings.Default.Save();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (workbook != null) workbook.Saved = true;
+            }
+            finally
+            {
+                if (excelApp != null)
+                {
+                    excelApp.ScreenUpdating = true;
+                    excelApp.DisplayAlerts = true;
+                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+                }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
+        }
+
+        private void btnExportExcel_KH_Click(object sender, EventArgs e)
+        {
+            if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu khách hàng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
+            ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG");
+        }
+
+        private string GenerateNextMaKH()
+        {
+            string maxMaKH = "000000"; // Default if no existing customers
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string query = "SELECT MAX(MaKH) FROM KhachHang";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    object result = command.ExecuteScalar();
+                    if (result != DBNull.Value && result != null)
+                    {
+                        maxMaKH = result.ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lấy Mã KH lớn nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null; // Indicate failure
+            }
+            finally
+            {
+                // It's generally better to keep the connection open if multiple operations are expected,
+                // but for a single query, closing it here is fine.
+                // However, InitializeDatabaseConnection() ensures it's open, so we might not need to close it here.
+            }
+
+            // Parse, increment, and format
+            if (int.TryParse(maxMaKH, out int numericMaKH))
+            {
+                numericMaKH++;
+                return numericMaKH.ToString("D6"); // Format to 6 digits with leading zeros
+            }
+            else
+            {
+                // Handle cases where MaKH is not purely numeric or has unexpected format
+                // For now, return a default or throw an error
+                MessageBox.Show("Mã KH hiện tại không đúng định dạng số. Không thể tự động tăng.", "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+
+
+
+
+
+
+
+
+        private void btnExport_KH_Click(object sender, EventArgs e)
+        {
+            if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu khách hàng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+                        DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
+
+                        ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG");
+
+                    }
+
+                    #endregion // End of KHÁCH HÀNG
+
+            
+
+                    #region KHỐI DOANH THU
+
+                    private void DoanhThu_Load()        {
 
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
@@ -1198,8 +1664,7 @@ namespace IDT_PARKING
             LoadImageIntoPictureBox(ptHinhMatVaoVao, imageMatVaoPath);
             LoadImageIntoPictureBox(ptHinhXeVaoVao, imageXeVaoPath);
         }
-
-        #endregion
+        #endregion // End of KHỐI XE VÀO
 
         #region KHỐI XE RA
         private void LoadXeRaData()
@@ -1562,6 +2027,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
             }
         }
+        #endregion // End of KHỐI XE RA
 
         private string GetSingleImagePathForCurrentRow(Guna.UI2.WinForms.Guna2PictureBox clickedPictureBox)
         {
@@ -1764,8 +2230,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 e.SuppressKeyPress = true;
             }
         }
-
-        #endregion
 
         private void dgvXeRa_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
