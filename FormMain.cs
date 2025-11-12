@@ -76,19 +76,17 @@ namespace IDT_PARKING
 
             btnThem_KH.Click += new System.EventHandler(this.btnThem_KH_Click);
             btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
-            btnXoa_KH.Click += new System.EventHandler(this.btnXoa_KH_Click);
             btnExportExcel_KH.Click += new System.EventHandler(this.btnExportExcel_KH_Click);
-            btnCapThe_TTr.Click += new System.EventHandler(this.btnCapThe_TTr_Click);
+            btnUpdateBienSo_KH.Click += new System.EventHandler(this.btnUpdateBienSo_KH_Click);
+            btnUpdateLoaiThe_KH.Click += new System.EventHandler(this.btnUpdateLoaiThe_KH_Click);
+            btnUpdateDate_KH.Click += new System.EventHandler(this.btnUpdateDate_KH_Click);
 
-            // Sự kiện cho Tab Thẻ tháng (trong tab Khách hàng)
-            dgvTheThang_KH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTheThang_KH_CellClick);
-            rbSoThe_TT.Checked = true; // Default search by CardID
+            rbSoThe_TT.Checked = true;
             txtThe_TT.KeyDown += new KeyEventHandler(this.txtThe_TT_KeyDown);
             rbSoThe_TT.CheckedChanged += new EventHandler(this.rbSoThe_TT_CheckedChanged);
             rbBienSo_TT.CheckedChanged += new EventHandler(this.rbBienSo_TT_CheckedChanged);
             cbExDate_TT.CheckedChanged += new EventHandler(this.cbExDate_TT_CheckedChanged);
             cbKhoa_TT.CheckedChanged += new EventHandler(this.cbKhoa_TT_CheckedChanged);
-            btnCapThe_TTr.Click += new System.EventHandler(this.btnCapThe_TTr_Click);
 
             //LoadKhachHangData(); // Initial load for KhachHang
             //LoadTheThangData(); // Initial load for TheThang
@@ -100,8 +98,10 @@ namespace IDT_PARKING
             // Set custom format for Guna2DateTimePicker controls
             dtTu_TT.Format = DateTimePickerFormat.Custom;
             dtTu_TT.CustomFormat = "dd-MM-yyyy";
+            dtTu_TT.ShowUpDown = false; // Enable direct typing
             dtDen_TT.Format = DateTimePickerFormat.Custom;
             dtDen_TT.CustomFormat = "dd-MM-yyyy";
+            dtDen_TT.ShowUpDown = false; // Enable direct typing
             dtTu_TTr.Format = DateTimePickerFormat.Custom;
             dtTu_TTr.CustomFormat = "dd-MM-yyyy";
             dtDen_TTr.Format = DateTimePickerFormat.Custom;
@@ -182,12 +182,6 @@ namespace IDT_PARKING
         private void btnConnect_Main_Click(object sender, EventArgs e)
         {
             // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
-            //string serverAddress = "txtServer_Main.Text";
-            //string databaseName = "txtDatabase_Main.Text";
-            //string folder = "txtFolder_Main.Text";
-            //string uid = "txtUsername_Main.Text";
-            //string password = "txtPassword_Main.Text";
-
             string serverAddress = txtServer_Main.Text;
             string databaseName = txtDatabase_Main.Text;
             string folder = txtFolder_Main.Text;
@@ -217,7 +211,7 @@ namespace IDT_PARKING
             {
                 connection = new SqlConnection(connectionString);
                 connection.Open();
-                MessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // LƯU LẠI CÁC THÔNG TIN KẾT NỐI ĐẾN CƠ SỞ DỮ LIỆU
                 Properties.Settings.Default.ServerAddress = txtServer_Main.Text;
@@ -393,7 +387,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false)
+        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -420,6 +414,13 @@ namespace IDT_PARKING
                     TheThang tt
                 INNER JOIN
                     KhachHang kh ON tt.MaKH = kh.MaKH";
+
+            // Add MaKH filter if provided
+            if (!string.IsNullOrEmpty(maKHFilter))
+            {
+                whereClauses.Add("tt.MaKH = @maKHFilter");
+                parameters.Add(new SqlParameter("@maKHFilter", maKHFilter));
+            }
 
             // Conditional TTrang filter based on showLocked
             if (showLocked)
@@ -493,6 +494,64 @@ namespace IDT_PARKING
                 txtBienSo_KH.Text = row.Cells["Biển số"].Value?.ToString();
                 txtHieuXe_KH.Text = row.Cells["Hiệu xe"].Value?.ToString();
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
+
+                // Load monthly card data for the selected customer
+                LoadTheThangData(maKHFilter: _selectedMaKH);
+
+                // If there's data in dgvTheThang_KH, select the first row and populate details
+                if (dgvTheThang_KH.Rows.Count > 0)
+                {
+                    dgvTheThang_KH.CurrentCell = dgvTheThang_KH.Rows[0].Cells[0];
+                    dgvTheThang_KH.Rows[0].Selected = true;
+                    PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
+                }
+                else
+                {
+                    // Clear the monthly card detail fields if no cards found
+                    dtTu_TT.Value = DateTime.Now;
+                    dtDen_TT.Value = DateTime.Now;
+                    txtBienSo_TT.Clear();
+                    cbbLoai_TTr.SelectedIndex = -1; // Clear selection
+                }
+            }
+        }
+
+        private void PopulateTheThangDetails(DataGridViewRow row)
+        {
+            // Populate dtTu_TT with "Ngày bắt đầu"
+            if (row.Cells["Ngày bắt đầu"].Value != null && DateTime.TryParse(row.Cells["Ngày bắt đầu"].Value.ToString(), out DateTime ngayBD))
+            {
+                dtTu_TT.Value = ngayBD;
+            }
+            else
+            {
+                dtTu_TT.Value = DateTime.Now; // Default to current date if parsing fails
+            }
+
+            // Populate dtDen_TT with "Ngày kết thúc"
+            if (row.Cells["Ngày kết thúc"].Value != null && DateTime.TryParse(row.Cells["Ngày kết thúc"].Value.ToString(), out DateTime ngayKT))
+            {
+                dtDen_TT.Value = ngayKT;
+            }
+            else
+            {
+                dtDen_TT.Value = DateTime.Now; // Default to current date if parsing fails
+            }
+
+            // Populate txtBienSo_TT with "Biển số"
+            txtBienSo_TT.Text = row.Cells["Biển số"].Value?.ToString();
+
+            // Populate cbbLoai_TTr and cbbLoaiThe_TT with "Loại thẻ"
+            string maLoaiThe = row.Cells["Loại thẻ"].Value?.ToString();
+            if (!string.IsNullOrEmpty(maLoaiThe))
+            {
+                cbbLoai_TTr.SelectedValue = maLoaiThe;
+                cbbLoaiThe_TT.SelectedValue = maLoaiThe;
+            }
+            else
+            {
+                cbbLoai_TTr.SelectedIndex = -1; // Clear selection
+                cbbLoaiThe_TT.SelectedIndex = -1; // Clear selection
             }
         }
 
@@ -512,29 +571,358 @@ namespace IDT_PARKING
             if (e.RowIndex >= 0)
             {
                 DataGridViewRow row = dgvTheThang_KH.Rows[e.RowIndex];
+                PopulateTheThangDetails(row);
+            }
+        }
 
-                // Populate dtTu_TT with "Ngày bắt đầu"
-                if (row.Cells["Ngày bắt đầu"].Value != null && DateTime.TryParse(row.Cells["Ngày bắt đầu"].Value.ToString(), out DateTime ngayBD))
+        private DataGridViewRow GetSelectedTheThangRow()
+        {
+            if (dgvTheThang_KH.CurrentRow == null || dgvTheThang_KH.CurrentRow.Index < 0)
+            {
+                MessageBox.Show("Vui lòng chọn một thẻ tháng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return null;
+            }
+            return dgvTheThang_KH.CurrentRow;
+        }
+
+        private void btnUpdateBienSo_KH_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+            string newBienSo = txtBienSo_TT.Text.Trim();
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
                 {
-                    dtTu_TT.Value = ngayBD;
-                }
-                else
-                {
-                    dtTu_TT.Value = DateTime.Now; // Default to current date if parsing fails
+                    connection.Open();
                 }
 
-                // Populate dtDen_TT with "Ngày kết thúc"
-                if (row.Cells["Ngày kết thúc"].Value != null && DateTime.TryParse(row.Cells["Ngày kết thúc"].Value.ToString(), out DateTime ngayKT))
+                string query = "UPDATE TheThang SET soxe = @newBienSo WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    dtDen_TT.Value = ngayKT;
+                    command.Parameters.AddWithValue("@newBienSo", newBienSo);
+                    command.Parameters.AddWithValue("@cardID", cardID);
+                    command.Parameters.AddWithValue("@soTT", soTT);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi cập nhật biển số: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnUpdateLoaiThe_KH_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+            string newMaLoaiThe = cbbLoaiThe_TT.SelectedValue?.ToString();
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(newMaLoaiThe))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng hoặc loại thẻ mới để cập nhật. Vui lòng chọn một thẻ hợp lệ và loại thẻ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
                 {
-                    dtDen_TT.Value = DateTime.Now; // Default to current date if parsing fails
+                    connection.Open();
                 }
 
-                // Populate txtBienSo_TT with "Biển số"
-                txtBienSo_TT.Text = row.Cells["Biển số"].Value?.ToString();
+                string query = "UPDATE TheThang SET MaLoaiThe = @newMaLoaiThe WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@newMaLoaiThe", newMaLoaiThe);
+                    command.Parameters.AddWithValue("@cardID", cardID);
+                    command.Parameters.AddWithValue("@soTT", soTT);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi cập nhật loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnUpdateDate_KH_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+            DateTime newNgayBD = dtTu_TT.Value;
+            DateTime newNgayKT = dtDen_TT.Value;
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (newNgayBD > newNgayKT)
+            {
+                MessageBox.Show("Ngày bắt đầu không thể lớn hơn ngày kết thúc.", "Lỗi ngày", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string query = "UPDATE TheThang SET NgayBD = @newNgayBD, NgayKT = @newNgayKT WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@newNgayBD", newNgayBD);
+                    command.Parameters.AddWithValue("@newNgayKT", newNgayKT);
+                    command.Parameters.AddWithValue("@cardID", cardID);
+                    command.Parameters.AddWithValue("@soTT", soTT);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi cập nhật ngày hiệu lực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnKhoaThe_TT_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng để khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn khóa thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+                transaction = connection.BeginTransaction();
+
+                // Update TheThang.TTrang to 5 (Locked)
+                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 5 WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                {
+                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                    cmdTheThang.ExecuteNonQuery();
+                }
+
+                // Update Active.trangthai to 5 (Locked)
+                string updateActiveQuery = "UPDATE Active SET trangthai = 5 WHERE sttthe = @soTT";
+                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                {
+                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                    cmdActive.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+                MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        private void btnThuHoiThe_TT_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng để thu hồi. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn thu hồi thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+                transaction = connection.BeginTransaction();
+
+                // Update Active.trangthai to 1 (Active/Reclaimed)
+                string updateActiveQuery = "UPDATE Active SET trangthai = 1 WHERE sttthe = @soTT";
+                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                {
+                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                    cmdActive.ExecuteNonQuery();
+                }
+
+                // Delete from TheThang table
+                string deleteTheThangQuery = "DELETE FROM TheThang WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand cmdTheThang = new SqlCommand(deleteTheThangQuery, connection, transaction))
+                {
+                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                    cmdTheThang.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+                MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi thu hồi thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        private void btnBaoMatThe_TT_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string cardID = selectedRow.Cells["Mã thẻ"].Value?.ToString();
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+
+            if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ tháng để báo mất. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+                transaction = connection.BeginTransaction();
+
+                // Update TheThang.TTrang to 9 (Lost/Stolen)
+                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 9 WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                {
+                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                    cmdTheThang.ExecuteNonQuery();
+                }
+
+                // Update Active.trangthai to 0 (Lost/Inactive)
+                string updateActiveQuery = "UPDATE Active SET trangthai = 0 WHERE sttthe = @soTT";
+                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                {
+                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                    cmdActive.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+                MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -729,8 +1117,6 @@ namespace IDT_PARKING
             {
                 InitializeDatabaseConnection();
 
-                string query = "DELETE FROM KhachHang WHERE MaKH = @makh";
-
                 try
                 {
                     if (connection.State != ConnectionState.Open)
@@ -738,7 +1124,23 @@ namespace IDT_PARKING
                         connection.Open();
                     }
 
-                    using (SqlCommand command = new SqlCommand(query, connection))
+                    // Check if the customer has any associated monthly cards
+                    string checkCardsQuery = "SELECT COUNT(*) FROM TheThang WHERE MaKH = @makh";
+                    using (SqlCommand checkCmd = new SqlCommand(checkCardsQuery, connection))
+                    {
+                        checkCmd.Parameters.AddWithValue("@makh", _selectedMaKH);
+                        int cardCount = (int)checkCmd.ExecuteScalar();
+
+                        if (cardCount > 0)
+                        {
+                            MessageBox.Show("Không thể xóa khách hàng này vì họ có thẻ tháng liên quan. Vui lòng xóa tất cả thẻ tháng của khách hàng trước.", "Lỗi xóa", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return; // Prevent deletion
+                        }
+                    }
+
+                    // If no cards, proceed with deletion
+                    string deleteQuery = "DELETE FROM KhachHang WHERE MaKH = @makh";
+                    using (SqlCommand command = new SqlCommand(deleteQuery, connection))
                     {
                         command.Parameters.AddWithValue("@makh", _selectedMaKH);
 
@@ -756,6 +1158,7 @@ namespace IDT_PARKING
                             txtHieuXe_KH.Clear();
                             txtDienThoai_KH.Clear();
                             LoadKhachHangData(); // Refresh the DataGridView
+                            LoadTheThangData("", true, false, false); // Also refresh monthly cards, clearing the list
                         }
                         else
                         {
@@ -1033,7 +1436,14 @@ namespace IDT_PARKING
                         adapter.Fill(dataTable);
 
                         cbbLoai_TTr.DataSource = dataTable;
-                        cbbLoai_TTr.DisplayMember = "MaLoaiThe"; // Display the 'LoaiThen' column
+                        cbbLoai_TTr.DisplayMember = "MaLoaiThe"; // Display the 'MaLoaiThe' column
+                        cbbLoai_TTr.ValueMember = "MaLoaiThe"; // Use 'MaLoaiThe' as the actual value
+
+                        // Create a new DataTable for cbbLoaiThe_TT to avoid issues with shared DataSource
+                        DataTable dataTableForCbbLoaiThe_TT = dataTable.Copy();
+                        cbbLoaiThe_TT.DataSource = dataTableForCbbLoaiThe_TT;
+                        cbbLoaiThe_TT.DisplayMember = "MaLoaiThe"; // Display the 'MaLoaiThe' column
+                        cbbLoaiThe_TT.ValueMember = "MaLoaiThe"; // Use 'MaLoaiThe' as the actual value
                     }
                 }
             }
@@ -1043,136 +1453,110 @@ namespace IDT_PARKING
             }
         }
 
-        private bool isProcessing = false; // Biến trạng thái tránh chạy 2 lần
+
 
         private void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
-            if (isProcessing) return; // Nếu đang xử lý, bỏ qua
-            isProcessing = true;
-            btnCapThe_TTr.Enabled = false; // Disable nút để tránh double click
+            // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
+            string maKH = _selectedMaKH;
+            string cardID = _selectedCardID;
+            string soTT = _selectedSTT.ToString();
+            string maLoaiThe = cbbLoai_TTr.Text.Trim();
+            DateTime ngayBD = dtTu_TTr.Value;
+            DateTime ngayKT = dtDen_TTr.Value;
+            string soxe = txtBienSo_TTr.Text.Trim();
+            int tTrang = 1; // Active
+            string giatien = "0";
+            string datcoc = "0";
+            string nguoicap = "admin";
+
+            // 3. Kiểm tra dữ liệu bắt buộc
+            if (string.IsNullOrEmpty(maKH) || string.IsNullOrEmpty(soTT) ||
+                string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(maLoaiThe))
+            {
+                MessageBox.Show(
+                    $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
+                    $"Vui lòng kiểm tra lại dữ liệu:\n" +
+                    $"- Mã KH: {maKH}\n" +
+                    $"- Mã thẻ: {cardID}\n" +
+                    $"- Số thẻ: {soTT}\n" +
+                    $"- Mã loại thẻ: {maLoaiThe}",
+                    "Lỗi dữ liệu",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+                return; // Không chạy tiếp
+            }
+
+            //4.Thao tác Database với Transaction
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
 
             try
             {
-                // 1. Validation cơ bản
-                if (dgvKhachHang_KH.SelectedRows.Count == 0)
+                InitializeDatabaseConnection(); // Đảm bảo connection được khởi tạo
+
+                if (connection.State != ConnectionState.Open)
                 {
-                    MessageBox.Show("Vui lòng chọn một khách hàng từ danh sách khách hàng.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    connection.Open();
+                    connectionOpenedHere = true;
                 }
 
-                if (dgvTheTrong_KH.SelectedRows.Count == 0)
+                transaction = connection.BeginTransaction();
+
+                // 4a. Insert vào TheThang
+                string insertTheThangQuery = @"
+            INSERT INTO TheThang (CardID, SoTT, MaKH, TTrang, MaLoaiThe, NgayBD, NgayKT, soxe, nguoicap, giatien, datcoc)
+            VALUES (@CardID, @SoTT, @MaKH, @TTrang, @MaLoaiThe, @NgayBD, @NgayKT, @soxe, @nguoicap, @giatien, @datcoc)";
+
+                using (SqlCommand cmdInsert = new SqlCommand(insertTheThangQuery, connection, transaction))
                 {
-                    MessageBox.Show("Vui lòng chọn một thẻ trống từ danh sách thẻ trống.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    cmdInsert.Parameters.AddWithValue("@CardID", cardID);
+                    cmdInsert.Parameters.AddWithValue("@SoTT", soTT);
+                    cmdInsert.Parameters.AddWithValue("@MaKH", maKH);
+                    cmdInsert.Parameters.AddWithValue("@TTrang", tTrang);
+                    cmdInsert.Parameters.AddWithValue("@MaLoaiThe", maLoaiThe);
+                    cmdInsert.Parameters.AddWithValue("@NgayBD", ngayBD);
+                    cmdInsert.Parameters.AddWithValue("@NgayKT", ngayKT);
+                    cmdInsert.Parameters.AddWithValue("@soxe", soxe);
+                    cmdInsert.Parameters.AddWithValue("@nguoicap", nguoicap);
+                    cmdInsert.Parameters.AddWithValue("@giatien", giatien);
+                    cmdInsert.Parameters.AddWithValue("@datcoc", datcoc);
+
+                    cmdInsert.ExecuteNonQuery();
                 }
 
-                // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
-                string maKH = _selectedMaKH;
-                string cardID = _selectedCardID;
-                string soTT = _selectedSTT.ToString();
-                string maLoaiThe = cbbLoai_TTr.Text.Trim();
-                DateTime ngayBD = dtTu_TTr.Value;
-                DateTime ngayKT = dtDen_TTr.Value;
-                string soxe = txtBienSo_TTr.Text.Trim();
-                int tTrang = 1; // Active
-                string giatien = "0";
-                string datcoc = "0";
-                string nguoicap = "admin";
-
-                // 3. Kiểm tra dữ liệu bắt buộc
-                if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT) ||
-                    string.IsNullOrEmpty(maKH) || string.IsNullOrEmpty(maLoaiThe))
+                // 4b. Update Active table
+                string updateActiveQuery = "UPDATE Active SET trangthai = 2 WHERE CardID = @CardID";
+                using (SqlCommand cmdUpdateActive = new SqlCommand(updateActiveQuery, connection, transaction))
                 {
-                    MessageBox.Show(
-                        $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
-                        $"Vui lòng kiểm tra lại dữ liệu:\n" +
-                        $"- Mã KH: {maKH}\n" +
-                        $"- Mã thẻ: {cardID}\n" +
-                        $"- Số thẻ: {soTT}\n" +
-                        $"- Mã loại thẻ: {maLoaiThe}",
-                        "Lỗi dữ liệu",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error
-                    );
-                    return; // Không chạy tiếp
+                    cmdUpdateActive.Parameters.AddWithValue("@CardID", cardID);
+                    cmdUpdateActive.ExecuteNonQuery();
                 }
 
-                // 4. Thao tác Database với Transaction
-                SqlTransaction transaction = null;
-                bool connectionOpenedHere = false;
+                transaction.Commit();
 
-                try
-                {
-                    InitializeDatabaseConnection(); // Đảm bảo connection được khởi tạo
+                MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    if (connection.State != ConnectionState.Open)
-                    {
-                        connection.Open();
-                        connectionOpenedHere = true;
-                    }
+                // 5. Load lại dữ liệu
+                LoadTheThangData("", true, false, false);
+                LoadTheTrongData();
 
-                    transaction = connection.BeginTransaction();
-
-                    // 4a. Insert vào TheThang
-                    string insertTheThangQuery = @"
-                INSERT INTO TheThang (CardID, SoTT, MaKH, TTrang, MaLoaiThe, NgayBD, NgayKT, soxe, nguoicap, giatien, datcoc)
-                VALUES (@CardID, @SoTT, @MaKH, @TTrang, @MaLoaiThe, @NgayBD, @NgayKT, @soxe, @nguoicap, @giatien, @datcoc)";
-
-                    using (SqlCommand cmdInsert = new SqlCommand(insertTheThangQuery, connection, transaction))
-                    {
-                        cmdInsert.Parameters.AddWithValue("@CardID", cardID);
-                        cmdInsert.Parameters.AddWithValue("@SoTT", soTT);
-                        cmdInsert.Parameters.AddWithValue("@MaKH", maKH);
-                        cmdInsert.Parameters.AddWithValue("@TTrang", tTrang);
-                        cmdInsert.Parameters.AddWithValue("@MaLoaiThe", maLoaiThe);
-                        cmdInsert.Parameters.AddWithValue("@NgayBD", ngayBD);
-                        cmdInsert.Parameters.AddWithValue("@NgayKT", ngayKT);
-                        cmdInsert.Parameters.AddWithValue("@soxe", soxe);
-                        cmdInsert.Parameters.AddWithValue("@nguoicap", nguoicap);
-                        cmdInsert.Parameters.AddWithValue("@giatien", giatien);
-                        cmdInsert.Parameters.AddWithValue("@datcoc", datcoc);
-
-                        cmdInsert.ExecuteNonQuery();
-                    }
-
-                    // 4b. Update Active table
-                    string updateActiveQuery = "UPDATE Active SET trangthai = 2 WHERE CardID = @CardID";
-                    using (SqlCommand cmdUpdateActive = new SqlCommand(updateActiveQuery, connection, transaction))
-                    {
-                        cmdUpdateActive.Parameters.AddWithValue("@CardID", cardID);
-                        cmdUpdateActive.ExecuteNonQuery();
-                    }
-
-                    transaction.Commit();
-
-                    MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // 5. Load lại dữ liệu
-                    LoadTheThangData("", true, false, false);
-                    LoadTheTrongData();
-
-                    // 6. Clear UI
-                    txtThe_TTr.Clear();
-                    txtBienSo_TTr.Clear();
-                }
-                catch (Exception ex)
-                {
-                    transaction?.Rollback();
-                    MessageBox.Show($"Lỗi khi cấp thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                finally
-                {
-                    if (connectionOpenedHere && connection.State == ConnectionState.Open)
-                    {
-                        connection.Close();
-                    }
-                }
+                // 6. Clear UI
+                txtThe_TTr.Clear();
+                txtBienSo_TTr.Clear();
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi cấp thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                // Kết thúc xử lý, bật lại nút và reset trạng thái
-                btnCapThe_TTr.Enabled = true;
-                isProcessing = false;
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
             }
         }
 
@@ -2903,5 +3287,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 // Nếu không có text nào được bôi đen, không làm gì cả, để Enter tự xuống dòng
             }
         }
+
+        private void guna2Button2_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Chức năng đang được viết...", "Lỗi Kết Nối", MessageBoxButtons.OK);
+        }
+
+
     }
 }
