@@ -31,11 +31,14 @@ namespace IDT_PARKING
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabThe = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.tabKhachHang = new System.Windows.Forms.TabPage();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
             this.dtDen_TTr = new System.Windows.Forms.DateTimePicker();
@@ -90,6 +93,7 @@ namespace IDT_PARKING
             this.txtTimTen_KH = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtBienSo_TTr = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtDonVi_KH = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtDiaChi_KH = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2Panel4 = new Guna.UI2.WinForms.Guna2Panel();
             this.dtDen_TT = new System.Windows.Forms.DateTimePicker();
             this.dtTu_TT = new System.Windows.Forms.DateTimePicker();
@@ -98,24 +102,27 @@ namespace IDT_PARKING
             this.dgvTheTrong_KH = new System.Windows.Forms.DataGridView();
             this.dgvKhachHang_KH = new System.Windows.Forms.DataGridView();
             this.tabDoanhThu = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
-            this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
-            this.label6 = new System.Windows.Forms.Label();
-            this.btnUpdate = new Guna.UI2.WinForms.Guna2Button();
-            this.dateTimeEnd = new System.Windows.Forms.DateTimePicker();
-            this.btnRevenue = new Guna.UI2.WinForms.Guna2Button();
-            this.dateTimeStart = new System.Windows.Forms.DateTimePicker();
-            this.btnQuery = new Guna.UI2.WinForms.Guna2Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.btnExportRevenue = new Guna.UI2.WinForms.Guna2Button();
+            this.progressBarExport = new System.Windows.Forms.ProgressBar();
+            this.label42 = new System.Windows.Forms.Label();
+            this.label41 = new System.Windows.Forms.Label();
             this.cmbTypeDoanhThu = new System.Windows.Forms.ComboBox();
-            this.txtCount = new Guna.UI2.WinForms.Guna2TextBox();
-            this.timeTimeStart = new System.Windows.Forms.DateTimePicker();
-            this.txtSum = new Guna.UI2.WinForms.Guna2TextBox();
-            this.timeTimeEnd = new System.Windows.Forms.DateTimePicker();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dateTimeEnd = new System.Windows.Forms.DateTimePicker();
+            this.dateTimeStart = new System.Windows.Forms.DateTimePicker();
+            this.label5 = new System.Windows.Forms.Label();
+            this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
             this.dgvResults = new System.Windows.Forms.DataGridView();
+            this.timeTimeStart = new System.Windows.Forms.DateTimePicker();
+            this.btnQuery = new Guna.UI2.WinForms.Guna2Button();
+            this.timeTimeEnd = new System.Windows.Forms.DateTimePicker();
+            this.txtCount = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnUpdate = new Guna.UI2.WinForms.Guna2Button();
+            this.btnRevenue = new Guna.UI2.WinForms.Guna2Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.txtSum = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnExportRevenue = new Guna.UI2.WinForms.Guna2Button();
+            this.label10 = new System.Windows.Forms.Label();
             this.tabXeRa = new System.Windows.Forms.TabPage();
             this.txtInfoVao = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtInfoRa = new Guna.UI2.WinForms.Guna2TextBox();
@@ -163,6 +170,7 @@ namespace IDT_PARKING
             this.dgvXeVao = new System.Windows.Forms.DataGridView();
             this.tabControl = new Guna.UI2.WinForms.Guna2TabControl();
             this.tabKhac = new System.Windows.Forms.TabPage();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
             this.tabCaiDat = new System.Windows.Forms.TabPage();
             this.btnExitProgram = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
@@ -184,14 +192,6 @@ namespace IDT_PARKING
             this.txtDatabase_Main = new Guna.UI2.WinForms.Guna2TextBox();
             this.btnConnect_Main = new Guna.UI2.WinForms.Guna2Button();
             this.txtServer_Main = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtDiaChi_KH = new Guna.UI2.WinForms.Guna2TextBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.label42 = new System.Windows.Forms.Label();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.groupBox7 = new System.Windows.Forms.GroupBox();
-            this.progressBarExport = new System.Windows.Forms.ProgressBar();
             this.tabThe.SuspendLayout();
             this.tabKhachHang.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
@@ -234,6 +234,36 @@ namespace IDT_PARKING
             this.tabThe.TabIndex = 4;
             this.tabThe.Text = "Thẻ";
             this.tabThe.UseVisualStyleBackColor = true;
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox6.Location = new System.Drawing.Point(906, 6);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(430, 667);
+            this.groupBox6.TabIndex = 1;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "THẺ TÌM LẠI ĐƯỢC";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox5.Location = new System.Drawing.Point(457, 6);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(443, 667);
+            this.groupBox5.TabIndex = 1;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "THẺ MẤT";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(445, 667);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "THÔNG TIN THẺ";
             // 
             // tabKhachHang
             // 
@@ -763,6 +793,7 @@ namespace IDT_PARKING
             this.btnExportExcel_TT.Size = new System.Drawing.Size(96, 24);
             this.btnExportExcel_TT.TabIndex = 92;
             this.btnExportExcel_TT.Text = "Xuất Excel";
+            this.btnExportExcel_TT.Click += new System.EventHandler(this.btnExportExcel_TT_Click);
             // 
             // btnUpdateBienSo_KH
             // 
@@ -1080,6 +1111,27 @@ namespace IDT_PARKING
             this.txtDonVi_KH.Size = new System.Drawing.Size(116, 24);
             this.txtDonVi_KH.TabIndex = 62;
             // 
+            // txtDiaChi_KH
+            // 
+            this.txtDiaChi_KH.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtDiaChi_KH.DefaultText = "";
+            this.txtDiaChi_KH.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtDiaChi_KH.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtDiaChi_KH.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtDiaChi_KH.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtDiaChi_KH.FillColor = System.Drawing.Color.Gainsboro;
+            this.txtDiaChi_KH.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtDiaChi_KH.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtDiaChi_KH.ForeColor = System.Drawing.Color.Black;
+            this.txtDiaChi_KH.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtDiaChi_KH.Location = new System.Drawing.Point(118, 118);
+            this.txtDiaChi_KH.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtDiaChi_KH.Name = "txtDiaChi_KH";
+            this.txtDiaChi_KH.PlaceholderText = "";
+            this.txtDiaChi_KH.SelectedText = "";
+            this.txtDiaChi_KH.Size = new System.Drawing.Size(116, 24);
+            this.txtDiaChi_KH.TabIndex = 61;
+            // 
             // guna2Panel4
             // 
             this.guna2Panel4.BorderColor = System.Drawing.Color.Black;
@@ -1197,6 +1249,57 @@ namespace IDT_PARKING
             this.tabDoanhThu.Text = "Doanh thu";
             this.tabDoanhThu.UseVisualStyleBackColor = true;
             // 
+            // progressBarExport
+            // 
+            this.progressBarExport.Location = new System.Drawing.Point(5, 519);
+            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2);
+            this.progressBarExport.Name = "progressBarExport";
+            this.progressBarExport.Size = new System.Drawing.Size(392, 11);
+            this.progressBarExport.TabIndex = 65;
+            this.progressBarExport.Visible = false;
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.label42.Location = new System.Drawing.Point(304, 269);
+            this.label42.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(84, 15);
+            this.label42.TabIndex = 64;
+            this.label42.Text = "(+Giá tiền = 0)";
+            // 
+            // label41
+            // 
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.label41.Location = new System.Drawing.Point(304, 239);
+            this.label41.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(76, 15);
+            this.label41.TabIndex = 63;
+            this.label41.Text = "(Giá tiền > 0)";
+            // 
+            // cmbTypeDoanhThu
+            // 
+            this.cmbTypeDoanhThu.FormattingEnabled = true;
+            this.cmbTypeDoanhThu.Location = new System.Drawing.Point(128, 204);
+            this.cmbTypeDoanhThu.Margin = new System.Windows.Forms.Padding(2);
+            this.cmbTypeDoanhThu.Name = "cmbTypeDoanhThu";
+            this.cmbTypeDoanhThu.Size = new System.Drawing.Size(92, 21);
+            this.cmbTypeDoanhThu.TabIndex = 42;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label6.Location = new System.Drawing.Point(65, 180);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(59, 15);
+            this.label6.TabIndex = 39;
+            this.label6.Text = "Đến ngày";
+            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -1207,6 +1310,37 @@ namespace IDT_PARKING
             this.label7.Size = new System.Drawing.Size(65, 15);
             this.label7.TabIndex = 41;
             this.label7.Text = "Doanh thu";
+            // 
+            // dateTimeEnd
+            // 
+            this.dateTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimeEnd.Location = new System.Drawing.Point(128, 180);
+            this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimeEnd.Name = "dateTimeEnd";
+            this.dateTimeEnd.Size = new System.Drawing.Size(92, 20);
+            this.dateTimeEnd.TabIndex = 37;
+            this.dateTimeEnd.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dateTimeStart
+            // 
+            this.dateTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimeStart.Location = new System.Drawing.Point(128, 151);
+            this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimeStart.Name = "dateTimeStart";
+            this.dateTimeStart.Size = new System.Drawing.Size(92, 20);
+            this.dateTimeStart.TabIndex = 34;
+            this.dateTimeStart.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label5.Location = new System.Drawing.Point(73, 151);
+            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(51, 15);
+            this.label5.TabIndex = 35;
+            this.label5.Text = "Từ ngày";
             // 
             // btnDelete
             // 
@@ -1224,68 +1358,27 @@ namespace IDT_PARKING
             this.btnDelete.Text = "Xóa dữ liệu";
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // label6
+            // dgvResults
             // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(65, 180);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(59, 15);
-            this.label6.TabIndex = 39;
-            this.label6.Text = "Đến ngày";
+            this.dgvResults.BackgroundColor = System.Drawing.Color.Silver;
+            this.dgvResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvResults.Location = new System.Drawing.Point(402, 2);
+            this.dgvResults.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvResults.Name = "dgvResults";
+            this.dgvResults.RowHeadersWidth = 51;
+            this.dgvResults.Size = new System.Drawing.Size(946, 672);
+            this.dgvResults.TabIndex = 11;
             // 
-            // btnUpdate
+            // timeTimeStart
             // 
-            this.btnUpdate.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnUpdate.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnUpdate.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnUpdate.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnUpdate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnUpdate.ForeColor = System.Drawing.Color.White;
-            this.btnUpdate.Location = new System.Drawing.Point(137, 490);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(127, 24);
-            this.btnUpdate.TabIndex = 61;
-            this.btnUpdate.Text = "Cập nhật giá";
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
-            // dateTimeEnd
-            // 
-            this.dateTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeEnd.Location = new System.Drawing.Point(128, 180);
-            this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2);
-            this.dateTimeEnd.Name = "dateTimeEnd";
-            this.dateTimeEnd.Size = new System.Drawing.Size(92, 20);
-            this.dateTimeEnd.TabIndex = 37;
-            this.dateTimeEnd.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
-            // 
-            // btnRevenue
-            // 
-            this.btnRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnRevenue.ForeColor = System.Drawing.Color.White;
-            this.btnRevenue.Location = new System.Drawing.Point(128, 230);
-            this.btnRevenue.Name = "btnRevenue";
-            this.btnRevenue.Size = new System.Drawing.Size(171, 24);
-            this.btnRevenue.TabIndex = 60;
-            this.btnRevenue.Text = "Lọc doanh thu";
-            this.btnRevenue.Click += new System.EventHandler(this.btnRevenue_Click);
-            // 
-            // dateTimeStart
-            // 
-            this.dateTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeStart.Location = new System.Drawing.Point(128, 151);
-            this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2);
-            this.dateTimeStart.Name = "dateTimeStart";
-            this.dateTimeStart.Size = new System.Drawing.Size(92, 20);
-            this.dateTimeStart.TabIndex = 34;
-            this.dateTimeStart.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            this.timeTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.timeTimeStart.Location = new System.Drawing.Point(224, 151);
+            this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2);
+            this.timeTimeStart.Name = "timeTimeStart";
+            this.timeTimeStart.Size = new System.Drawing.Size(75, 20);
+            this.timeTimeStart.TabIndex = 36;
+            this.timeTimeStart.Value = new System.DateTime(2025, 8, 8, 0, 0, 0, 0);
             // 
             // btnQuery
             // 
@@ -1303,41 +1396,15 @@ namespace IDT_PARKING
             this.btnQuery.Text = "Lọc đầy đủ";
             this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
             // 
-            // label5
+            // timeTimeEnd
             // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(73, 151);
-            this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(51, 15);
-            this.label5.TabIndex = 35;
-            this.label5.Text = "Từ ngày";
-            // 
-            // btnExportRevenue
-            // 
-            this.btnExportRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnExportRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnExportRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnExportRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnExportRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.btnExportRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnExportRevenue.ForeColor = System.Drawing.Color.White;
-            this.btnExportRevenue.Location = new System.Drawing.Point(4, 490);
-            this.btnExportRevenue.Name = "btnExportRevenue";
-            this.btnExportRevenue.Size = new System.Drawing.Size(127, 24);
-            this.btnExportRevenue.TabIndex = 58;
-            this.btnExportRevenue.Text = "Xuất Excel";
-            this.btnExportRevenue.Click += new System.EventHandler(this.btnExportRevenue_Click);
-            // 
-            // cmbTypeDoanhThu
-            // 
-            this.cmbTypeDoanhThu.FormattingEnabled = true;
-            this.cmbTypeDoanhThu.Location = new System.Drawing.Point(128, 204);
-            this.cmbTypeDoanhThu.Margin = new System.Windows.Forms.Padding(2);
-            this.cmbTypeDoanhThu.Name = "cmbTypeDoanhThu";
-            this.cmbTypeDoanhThu.Size = new System.Drawing.Size(92, 21);
-            this.cmbTypeDoanhThu.TabIndex = 42;
+            this.timeTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.timeTimeEnd.Location = new System.Drawing.Point(224, 180);
+            this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2);
+            this.timeTimeEnd.Name = "timeTimeEnd";
+            this.timeTimeEnd.Size = new System.Drawing.Size(75, 20);
+            this.timeTimeEnd.TabIndex = 38;
+            this.timeTimeEnd.Value = new System.DateTime(2025, 5, 27, 6, 30, 0, 0);
             // 
             // txtCount
             // 
@@ -1358,15 +1425,48 @@ namespace IDT_PARKING
             this.txtCount.Size = new System.Drawing.Size(171, 24);
             this.txtCount.TabIndex = 57;
             // 
-            // timeTimeStart
+            // btnUpdate
             // 
-            this.timeTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeStart.Location = new System.Drawing.Point(224, 151);
-            this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2);
-            this.timeTimeStart.Name = "timeTimeStart";
-            this.timeTimeStart.Size = new System.Drawing.Size(75, 20);
-            this.timeTimeStart.TabIndex = 36;
-            this.timeTimeStart.Value = new System.DateTime(2025, 8, 8, 0, 0, 0, 0);
+            this.btnUpdate.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnUpdate.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnUpdate.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnUpdate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnUpdate.ForeColor = System.Drawing.Color.White;
+            this.btnUpdate.Location = new System.Drawing.Point(137, 490);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(127, 24);
+            this.btnUpdate.TabIndex = 61;
+            this.btnUpdate.Text = "Cập nhật giá";
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnRevenue
+            // 
+            this.btnRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnRevenue.ForeColor = System.Drawing.Color.White;
+            this.btnRevenue.Location = new System.Drawing.Point(128, 230);
+            this.btnRevenue.Name = "btnRevenue";
+            this.btnRevenue.Size = new System.Drawing.Size(171, 24);
+            this.btnRevenue.TabIndex = 60;
+            this.btnRevenue.Text = "Lọc doanh thu";
+            this.btnRevenue.Click += new System.EventHandler(this.btnRevenue_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label8.Location = new System.Drawing.Point(73, 210);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(51, 15);
+            this.label8.TabIndex = 43;
+            this.label8.Text = "Loại thẻ";
             // 
             // txtSum
             // 
@@ -1387,26 +1487,21 @@ namespace IDT_PARKING
             this.txtSum.Size = new System.Drawing.Size(171, 24);
             this.txtSum.TabIndex = 56;
             // 
-            // timeTimeEnd
+            // btnExportRevenue
             // 
-            this.timeTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeEnd.Location = new System.Drawing.Point(224, 180);
-            this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2);
-            this.timeTimeEnd.Name = "timeTimeEnd";
-            this.timeTimeEnd.Size = new System.Drawing.Size(75, 20);
-            this.timeTimeEnd.TabIndex = 38;
-            this.timeTimeEnd.Value = new System.DateTime(2025, 5, 27, 6, 30, 0, 0);
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(73, 210);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(51, 15);
-            this.label8.TabIndex = 43;
-            this.label8.Text = "Loại thẻ";
+            this.btnExportRevenue.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportRevenue.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportRevenue.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnExportRevenue.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnExportRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnExportRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnExportRevenue.ForeColor = System.Drawing.Color.White;
+            this.btnExportRevenue.Location = new System.Drawing.Point(4, 490);
+            this.btnExportRevenue.Name = "btnExportRevenue";
+            this.btnExportRevenue.Size = new System.Drawing.Size(127, 24);
+            this.btnExportRevenue.TabIndex = 58;
+            this.btnExportRevenue.Text = "Xuất Excel";
+            this.btnExportRevenue.Click += new System.EventHandler(this.btnExportRevenue_Click);
             // 
             // label10
             // 
@@ -1418,18 +1513,6 @@ namespace IDT_PARKING
             this.label10.Size = new System.Drawing.Size(93, 15);
             this.label10.TabIndex = 44;
             this.label10.Text = "Số dòng dữ liệu";
-            // 
-            // dgvResults
-            // 
-            this.dgvResults.BackgroundColor = System.Drawing.Color.Silver;
-            this.dgvResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvResults.Location = new System.Drawing.Point(402, 2);
-            this.dgvResults.Margin = new System.Windows.Forms.Padding(2);
-            this.dgvResults.Name = "dgvResults";
-            this.dgvResults.RowHeadersWidth = 51;
-            this.dgvResults.Size = new System.Drawing.Size(946, 672);
-            this.dgvResults.TabIndex = 11;
             // 
             // tabXeRa
             // 
@@ -2064,6 +2147,18 @@ namespace IDT_PARKING
             this.tabKhac.Text = "Khác";
             this.tabKhac.UseVisualStyleBackColor = true;
             // 
+            // groupBox7
+            // 
+            this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox7.Location = new System.Drawing.Point(7, 5);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Size = new System.Drawing.Size(1335, 671);
+            this.groupBox7.TabIndex = 31;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "CHƯA BIẾT NÊN LÀM THÊM TÍNH NĂNG GÌ NỮA";
+            // 
             // tabCaiDat
             // 
             this.tabCaiDat.Controls.Add(this.btnExitProgram);
@@ -2110,27 +2205,27 @@ namespace IDT_PARKING
             // 
             // dgvQuery_CaiDat
             // 
-            dataGridViewCellStyle7.BackColor = System.Drawing.Color.White;
-            this.dgvQuery_CaiDat.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
+            this.dgvQuery_CaiDat.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvQuery_CaiDat.BackgroundColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvQuery_CaiDat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQuery_CaiDat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvQuery_CaiDat.ColumnHeadersHeight = 4;
             this.dgvQuery_CaiDat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvQuery_CaiDat.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvQuery_CaiDat.DefaultCellStyle = dataGridViewCellStyle3;
             this.dgvQuery_CaiDat.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvQuery_CaiDat.Location = new System.Drawing.Point(4, 21);
             this.dgvQuery_CaiDat.Margin = new System.Windows.Forms.Padding(2);
@@ -2437,100 +2532,6 @@ namespace IDT_PARKING
             this.txtServer_Main.SelectedText = "";
             this.txtServer_Main.Size = new System.Drawing.Size(162, 24);
             this.txtServer_Main.TabIndex = 82;
-            // 
-            // txtDiaChi_KH
-            // 
-            this.txtDiaChi_KH.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtDiaChi_KH.DefaultText = "";
-            this.txtDiaChi_KH.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtDiaChi_KH.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtDiaChi_KH.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtDiaChi_KH.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtDiaChi_KH.FillColor = System.Drawing.Color.Gainsboro;
-            this.txtDiaChi_KH.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtDiaChi_KH.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtDiaChi_KH.ForeColor = System.Drawing.Color.Black;
-            this.txtDiaChi_KH.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtDiaChi_KH.Location = new System.Drawing.Point(118, 118);
-            this.txtDiaChi_KH.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtDiaChi_KH.Name = "txtDiaChi_KH";
-            this.txtDiaChi_KH.PlaceholderText = "";
-            this.txtDiaChi_KH.SelectedText = "";
-            this.txtDiaChi_KH.Size = new System.Drawing.Size(116, 24);
-            this.txtDiaChi_KH.TabIndex = 61;
-            // 
-            // label41
-            // 
-            this.label41.AutoSize = true;
-            this.label41.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            this.label41.Location = new System.Drawing.Point(304, 239);
-            this.label41.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(76, 15);
-            this.label41.TabIndex = 63;
-            this.label41.Text = "(Giá tiền > 0)";
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
-            this.label42.Location = new System.Drawing.Point(304, 269);
-            this.label42.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(84, 15);
-            this.label42.TabIndex = 64;
-            this.label42.Text = "(+Giá tiền = 0)";
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox3.Location = new System.Drawing.Point(6, 6);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(445, 667);
-            this.groupBox3.TabIndex = 0;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "THÔNG TIN THẺ";
-            // 
-            // groupBox5
-            // 
-            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.groupBox5.Location = new System.Drawing.Point(457, 6);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(443, 667);
-            this.groupBox5.TabIndex = 1;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "THẺ MẤT";
-            // 
-            // groupBox6
-            // 
-            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
-            this.groupBox6.Location = new System.Drawing.Point(906, 6);
-            this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(430, 667);
-            this.groupBox6.TabIndex = 1;
-            this.groupBox6.TabStop = false;
-            this.groupBox6.Text = "THẺ TÌM LẠI ĐƯỢC";
-            // 
-            // groupBox7
-            // 
-            this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.groupBox7.Location = new System.Drawing.Point(7, 5);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox7.Size = new System.Drawing.Size(1335, 671);
-            this.groupBox7.TabIndex = 31;
-            this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "CHƯA BIẾT NÊN LÀM THÊM TÍNH NĂNG GÌ NỮA";
-            // 
-            // progressBarExport
-            // 
-            this.progressBarExport.Location = new System.Drawing.Point(5, 519);
-            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2);
-            this.progressBarExport.Name = "progressBarExport";
-            this.progressBarExport.Size = new System.Drawing.Size(392, 11);
-            this.progressBarExport.TabIndex = 65;
-            this.progressBarExport.Visible = false;
             // 
             // FormMain
             // 

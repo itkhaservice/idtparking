@@ -1282,6 +1282,115 @@ namespace IDT_PARKING
             }
         }
 
+        private void ExportTheThangToExcel(DataTable dataTable, String filename)
+        {
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+            Excel.Range headerRange = null;
+            Excel.Range dataRange = null;
+
+            try
+            {
+                excelApp = new Excel.Application();
+                workbook = excelApp.Workbooks.Add();
+                worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                int columnCount = dataTable.Columns.Count;
+                int rowCount = dataTable.Rows.Count;
+
+                object[] header = new object[columnCount];
+                for (int col = 0; col < columnCount; col++)
+                {
+                    header[col] = dataTable.Columns[col].ColumnName;
+                }
+                headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, columnCount]];
+                headerRange.Value = header;
+                headerRange.Font.Bold = true;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                Marshal.ReleaseComObject(headerRange);
+
+                object[,] data = new object[rowCount, columnCount];
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
+                    }
+                }
+                dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
+                dataRange.Value = data;
+                Marshal.ReleaseComObject(dataRange);
+
+                worksheet.Columns.AutoFit();
+
+                string serverAddress = txtServer;
+                string sharedFolderValue = Properties.Settings.Default.SharedFolder;
+
+                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                }
+                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.InitialDirectory = networkPath;
+                    sfd.Filter = "Excel Workbook (*.xlsx)|*.xlsx|Excel 97-2003 Workbook (*.xls)|*.xls";
+                    sfd.Title = "Lưu file Excel danh sách thẻ tháng";
+                    sfd.FileName = $"XUAT-DU-LIEU-DANH-SACH-THE-THANG-{DateTime.Now:dd-MM-yyyy}.xlsx";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Properties.Settings.Default.FolderCus = Path.GetDirectoryName(sfd.FileName);
+                        Properties.Settings.Default.Save();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (workbook != null) workbook.Saved = true;
+            }
+            finally
+            {
+                if (excelApp != null)
+                {
+                    excelApp.ScreenUpdating = true;
+                    excelApp.DisplayAlerts = true;
+                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+                }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
+        }
+
         private void btnExportExcel_KH_Click(object sender, EventArgs e)
         {
             if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
@@ -3295,6 +3404,18 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void btnExitProgram_Click(object sender, EventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnExportExcel_TT_Click(object sender, EventArgs e)
+        {
+            if (dgvTheThang_KH.DataSource == null || !(dgvTheThang_KH.DataSource is DataTable) || ((DataTable)dgvTheThang_KH.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu thẻ tháng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
+            ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG");
         }
     }
 }
