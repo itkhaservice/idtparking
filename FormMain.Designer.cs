@@ -1,3 +1,5 @@
+using System;
+
 namespace IDT_PARKING
 {
     partial class FormMain
@@ -29,13 +31,15 @@ namespace IDT_PARKING
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.tabThe = new System.Windows.Forms.TabPage();
             this.tabKhachHang = new System.Windows.Forms.TabPage();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
+            this.dtDen_TTr = new System.Windows.Forms.DateTimePicker();
+            this.dtTu_TTr = new System.Windows.Forms.DateTimePicker();
             this.btnBaoMatThe_TT = new Guna.UI2.WinForms.Guna2Button();
             this.cbKhoa_TT = new Guna.UI2.WinForms.Guna2CheckBox();
             this.txtTimBS_KH = new Guna.UI2.WinForms.Guna2TextBox();
@@ -66,7 +70,7 @@ namespace IDT_PARKING
             this.btnExportExcel_KH = new Guna.UI2.WinForms.Guna2Button();
             this.btnKhoaThe_TT = new Guna.UI2.WinForms.Guna2Button();
             this.btnThuHoiThe_TT = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2Button7 = new Guna.UI2.WinForms.Guna2Button();
+            this.btnExportExcel_TT = new Guna.UI2.WinForms.Guna2Button();
             this.btnUpdateBienSo_KH = new Guna.UI2.WinForms.Guna2Button();
             this.btnUpdateLoaiThe_KH = new Guna.UI2.WinForms.Guna2Button();
             this.btnUpdateDate_KH = new Guna.UI2.WinForms.Guna2Button();
@@ -86,14 +90,14 @@ namespace IDT_PARKING
             this.txtTimTen_KH = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtBienSo_TTr = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtDonVi_KH = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtDiaChi_KH = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2Panel4 = new Guna.UI2.WinForms.Guna2Panel();
+            this.dtDen_TT = new System.Windows.Forms.DateTimePicker();
+            this.dtTu_TT = new System.Windows.Forms.DateTimePicker();
             this.guna2Panel5 = new Guna.UI2.WinForms.Guna2Panel();
             this.dgvTheThang_KH = new System.Windows.Forms.DataGridView();
             this.dgvTheTrong_KH = new System.Windows.Forms.DataGridView();
             this.dgvKhachHang_KH = new System.Windows.Forms.DataGridView();
             this.tabDoanhThu = new System.Windows.Forms.TabPage();
-            this.guna2Panel1 = new Guna.UI2.WinForms.Guna2Panel();
             this.label7 = new System.Windows.Forms.Label();
             this.btnDelete = new Guna.UI2.WinForms.Guna2Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -109,7 +113,6 @@ namespace IDT_PARKING
             this.timeTimeStart = new System.Windows.Forms.DateTimePicker();
             this.txtSum = new Guna.UI2.WinForms.Guna2TextBox();
             this.timeTimeEnd = new System.Windows.Forms.DateTimePicker();
-            this.progressBarExport = new System.Windows.Forms.ProgressBar();
             this.label8 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.dgvResults = new System.Windows.Forms.DataGridView();
@@ -161,12 +164,12 @@ namespace IDT_PARKING
             this.tabControl = new Guna.UI2.WinForms.Guna2TabControl();
             this.tabKhac = new System.Windows.Forms.TabPage();
             this.tabCaiDat = new System.Windows.Forms.TabPage();
+            this.btnExitProgram = new Guna.UI2.WinForms.Guna2Button();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.dgvQuery_CaiDat = new Guna.UI2.WinForms.Guna2DataGridView();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.dgvLoaiThe_CaiDat = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.txtQuerry_CaiDat = new Guna.UI2.WinForms.Guna2TextBox();
-            this.guna2Panel6 = new Guna.UI2.WinForms.Guna2Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.btnClearConnect = new Guna.UI2.WinForms.Guna2Button();
             this.label40 = new System.Windows.Forms.Label();
@@ -181,10 +184,15 @@ namespace IDT_PARKING
             this.txtDatabase_Main = new Guna.UI2.WinForms.Guna2TextBox();
             this.btnConnect_Main = new Guna.UI2.WinForms.Guna2Button();
             this.txtServer_Main = new Guna.UI2.WinForms.Guna2TextBox();
-            this.dtTu_TTr = new System.Windows.Forms.DateTimePicker();
-            this.dtDen_TTr = new System.Windows.Forms.DateTimePicker();
-            this.dtTu_TT = new System.Windows.Forms.DateTimePicker();
-            this.dtDen_TT = new System.Windows.Forms.DateTimePicker();
+            this.txtDiaChi_KH = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.label42 = new System.Windows.Forms.Label();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.progressBarExport = new System.Windows.Forms.ProgressBar();
+            this.tabThe.SuspendLayout();
             this.tabKhachHang.SuspendLayout();
             this.guna2Panel3.SuspendLayout();
             this.guna2Panel4.SuspendLayout();
@@ -192,7 +200,6 @@ namespace IDT_PARKING
             ((System.ComponentModel.ISupportInitialize)(this.dgvTheTrong_KH)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKhachHang_KH)).BeginInit();
             this.tabDoanhThu.SuspendLayout();
-            this.guna2Panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).BeginInit();
             this.tabXeRa.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).BeginInit();
@@ -207,6 +214,7 @@ namespace IDT_PARKING
             this.guna2Panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvXeVao)).BeginInit();
             this.tabControl.SuspendLayout();
+            this.tabKhac.SuspendLayout();
             this.tabCaiDat.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuery_CaiDat)).BeginInit();
@@ -216,6 +224,9 @@ namespace IDT_PARKING
             // 
             // tabThe
             // 
+            this.tabThe.Controls.Add(this.groupBox6);
+            this.tabThe.Controls.Add(this.groupBox5);
+            this.tabThe.Controls.Add(this.groupBox3);
             this.tabThe.Location = new System.Drawing.Point(4, 44);
             this.tabThe.Name = "tabThe";
             this.tabThe.Padding = new System.Windows.Forms.Padding(3);
@@ -272,7 +283,7 @@ namespace IDT_PARKING
             this.guna2Panel3.Controls.Add(this.btnExportExcel_KH);
             this.guna2Panel3.Controls.Add(this.btnKhoaThe_TT);
             this.guna2Panel3.Controls.Add(this.btnThuHoiThe_TT);
-            this.guna2Panel3.Controls.Add(this.guna2Button7);
+            this.guna2Panel3.Controls.Add(this.btnExportExcel_TT);
             this.guna2Panel3.Controls.Add(this.btnUpdateBienSo_KH);
             this.guna2Panel3.Controls.Add(this.btnUpdateLoaiThe_KH);
             this.guna2Panel3.Controls.Add(this.btnUpdateDate_KH);
@@ -299,6 +310,26 @@ namespace IDT_PARKING
             this.guna2Panel3.Name = "guna2Panel3";
             this.guna2Panel3.Size = new System.Drawing.Size(1332, 177);
             this.guna2Panel3.TabIndex = 15;
+            // 
+            // dtDen_TTr
+            // 
+            this.dtDen_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtDen_TTr.Location = new System.Drawing.Point(596, 63);
+            this.dtDen_TTr.Margin = new System.Windows.Forms.Padding(2);
+            this.dtDen_TTr.Name = "dtDen_TTr";
+            this.dtDen_TTr.Size = new System.Drawing.Size(116, 20);
+            this.dtDen_TTr.TabIndex = 127;
+            this.dtDen_TTr.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dtTu_TTr
+            // 
+            this.dtTu_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtTu_TTr.Location = new System.Drawing.Point(595, 34);
+            this.dtTu_TTr.Margin = new System.Windows.Forms.Padding(2);
+            this.dtTu_TTr.Name = "dtTu_TTr";
+            this.dtTu_TTr.Size = new System.Drawing.Size(116, 20);
+            this.dtTu_TTr.TabIndex = 126;
+            this.dtTu_TTr.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
             // 
             // btnBaoMatThe_TT
             // 
@@ -718,20 +749,20 @@ namespace IDT_PARKING
             this.btnThuHoiThe_TT.Text = "Thu hồi thẻ";
             this.btnThuHoiThe_TT.Click += new System.EventHandler(this.btnThuHoiThe_TT_Click);
             // 
-            // guna2Button7
+            // btnExportExcel_TT
             // 
-            this.guna2Button7.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.guna2Button7.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.guna2Button7.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.guna2Button7.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.guna2Button7.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.guna2Button7.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.guna2Button7.ForeColor = System.Drawing.Color.White;
-            this.guna2Button7.Location = new System.Drawing.Point(905, 150);
-            this.guna2Button7.Name = "guna2Button7";
-            this.guna2Button7.Size = new System.Drawing.Size(96, 24);
-            this.guna2Button7.TabIndex = 92;
-            this.guna2Button7.Text = "Xuất Excel";
+            this.btnExportExcel_TT.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportExcel_TT.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnExportExcel_TT.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnExportExcel_TT.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnExportExcel_TT.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnExportExcel_TT.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnExportExcel_TT.ForeColor = System.Drawing.Color.White;
+            this.btnExportExcel_TT.Location = new System.Drawing.Point(905, 150);
+            this.btnExportExcel_TT.Name = "btnExportExcel_TT";
+            this.btnExportExcel_TT.Size = new System.Drawing.Size(96, 24);
+            this.btnExportExcel_TT.TabIndex = 92;
+            this.btnExportExcel_TT.Text = "Xuất Excel";
             // 
             // btnUpdateBienSo_KH
             // 
@@ -1049,27 +1080,6 @@ namespace IDT_PARKING
             this.txtDonVi_KH.Size = new System.Drawing.Size(116, 24);
             this.txtDonVi_KH.TabIndex = 62;
             // 
-            // txtDiaChi_KH
-            // 
-            this.txtDiaChi_KH.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtDiaChi_KH.DefaultText = "";
-            this.txtDiaChi_KH.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
-            this.txtDiaChi_KH.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
-            this.txtDiaChi_KH.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtDiaChi_KH.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
-            this.txtDiaChi_KH.FillColor = System.Drawing.Color.Gainsboro;
-            this.txtDiaChi_KH.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtDiaChi_KH.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtDiaChi_KH.ForeColor = System.Drawing.Color.Black;
-            this.txtDiaChi_KH.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtDiaChi_KH.Location = new System.Drawing.Point(118, 118);
-            this.txtDiaChi_KH.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txtDiaChi_KH.Name = "txtDiaChi_KH";
-            this.txtDiaChi_KH.PlaceholderText = "";
-            this.txtDiaChi_KH.SelectedText = "";
-            this.txtDiaChi_KH.Size = new System.Drawing.Size(116, 24);
-            this.txtDiaChi_KH.TabIndex = 61;
-            // 
             // guna2Panel4
             // 
             this.guna2Panel4.BorderColor = System.Drawing.Color.Black;
@@ -1081,6 +1091,26 @@ namespace IDT_PARKING
             this.guna2Panel4.Name = "guna2Panel4";
             this.guna2Panel4.Size = new System.Drawing.Size(247, 90);
             this.guna2Panel4.TabIndex = 119;
+            // 
+            // dtDen_TT
+            // 
+            this.dtDen_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtDen_TT.Location = new System.Drawing.Point(73, 37);
+            this.dtDen_TT.Margin = new System.Windows.Forms.Padding(2);
+            this.dtDen_TT.Name = "dtDen_TT";
+            this.dtDen_TT.Size = new System.Drawing.Size(159, 20);
+            this.dtDen_TT.TabIndex = 129;
+            this.dtDen_TT.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dtTu_TT
+            // 
+            this.dtTu_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtTu_TT.Location = new System.Drawing.Point(73, 6);
+            this.dtTu_TT.Margin = new System.Windows.Forms.Padding(2);
+            this.dtTu_TT.Name = "dtTu_TT";
+            this.dtTu_TT.Size = new System.Drawing.Size(159, 20);
+            this.dtTu_TT.TabIndex = 128;
+            this.dtTu_TT.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
             // 
             // guna2Panel5
             // 
@@ -1138,8 +1168,27 @@ namespace IDT_PARKING
             // 
             // tabDoanhThu
             // 
-            this.tabDoanhThu.Controls.Add(this.guna2Panel1);
+            this.tabDoanhThu.Controls.Add(this.progressBarExport);
+            this.tabDoanhThu.Controls.Add(this.label42);
+            this.tabDoanhThu.Controls.Add(this.label41);
+            this.tabDoanhThu.Controls.Add(this.cmbTypeDoanhThu);
+            this.tabDoanhThu.Controls.Add(this.label6);
+            this.tabDoanhThu.Controls.Add(this.label7);
+            this.tabDoanhThu.Controls.Add(this.dateTimeEnd);
+            this.tabDoanhThu.Controls.Add(this.dateTimeStart);
+            this.tabDoanhThu.Controls.Add(this.label5);
+            this.tabDoanhThu.Controls.Add(this.btnDelete);
             this.tabDoanhThu.Controls.Add(this.dgvResults);
+            this.tabDoanhThu.Controls.Add(this.timeTimeStart);
+            this.tabDoanhThu.Controls.Add(this.btnQuery);
+            this.tabDoanhThu.Controls.Add(this.timeTimeEnd);
+            this.tabDoanhThu.Controls.Add(this.txtCount);
+            this.tabDoanhThu.Controls.Add(this.btnUpdate);
+            this.tabDoanhThu.Controls.Add(this.btnRevenue);
+            this.tabDoanhThu.Controls.Add(this.label8);
+            this.tabDoanhThu.Controls.Add(this.txtSum);
+            this.tabDoanhThu.Controls.Add(this.btnExportRevenue);
+            this.tabDoanhThu.Controls.Add(this.label10);
             this.tabDoanhThu.Location = new System.Drawing.Point(4, 44);
             this.tabDoanhThu.Name = "tabDoanhThu";
             this.tabDoanhThu.Padding = new System.Windows.Forms.Padding(3);
@@ -1148,41 +1197,16 @@ namespace IDT_PARKING
             this.tabDoanhThu.Text = "Doanh thu";
             this.tabDoanhThu.UseVisualStyleBackColor = true;
             // 
-            // guna2Panel1
-            // 
-            this.guna2Panel1.Controls.Add(this.label7);
-            this.guna2Panel1.Controls.Add(this.btnDelete);
-            this.guna2Panel1.Controls.Add(this.label6);
-            this.guna2Panel1.Controls.Add(this.btnUpdate);
-            this.guna2Panel1.Controls.Add(this.dateTimeEnd);
-            this.guna2Panel1.Controls.Add(this.btnRevenue);
-            this.guna2Panel1.Controls.Add(this.dateTimeStart);
-            this.guna2Panel1.Controls.Add(this.btnQuery);
-            this.guna2Panel1.Controls.Add(this.label5);
-            this.guna2Panel1.Controls.Add(this.btnExportRevenue);
-            this.guna2Panel1.Controls.Add(this.cmbTypeDoanhThu);
-            this.guna2Panel1.Controls.Add(this.txtCount);
-            this.guna2Panel1.Controls.Add(this.timeTimeStart);
-            this.guna2Panel1.Controls.Add(this.txtSum);
-            this.guna2Panel1.Controls.Add(this.timeTimeEnd);
-            this.guna2Panel1.Controls.Add(this.progressBarExport);
-            this.guna2Panel1.Controls.Add(this.label8);
-            this.guna2Panel1.Controls.Add(this.label10);
-            this.guna2Panel1.Location = new System.Drawing.Point(4, 589);
-            this.guna2Panel1.Name = "guna2Panel1";
-            this.guna2Panel1.Size = new System.Drawing.Size(1337, 86);
-            this.guna2Panel1.TabIndex = 63;
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label7.Location = new System.Drawing.Point(24, 11);
+            this.label7.Location = new System.Drawing.Point(58, 98);
             this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(75, 15);
+            this.label7.Size = new System.Drawing.Size(65, 15);
             this.label7.TabIndex = 41;
-            this.label7.Text = "Tổng số tiền";
+            this.label7.Text = "Doanh thu";
             // 
             // btnDelete
             // 
@@ -1193,7 +1217,7 @@ namespace IDT_PARKING
             this.btnDelete.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.Location = new System.Drawing.Point(1133, 7);
+            this.btnDelete.Location = new System.Drawing.Point(270, 490);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(127, 24);
             this.btnDelete.TabIndex = 62;
@@ -1204,7 +1228,7 @@ namespace IDT_PARKING
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label6.Location = new System.Drawing.Point(209, 40);
+            this.label6.Location = new System.Drawing.Point(65, 180);
             this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(59, 15);
@@ -1220,7 +1244,7 @@ namespace IDT_PARKING
             this.btnUpdate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnUpdate.ForeColor = System.Drawing.Color.White;
-            this.btnUpdate.Location = new System.Drawing.Point(1000, 7);
+            this.btnUpdate.Location = new System.Drawing.Point(137, 490);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(127, 24);
             this.btnUpdate.TabIndex = 61;
@@ -1230,7 +1254,7 @@ namespace IDT_PARKING
             // dateTimeEnd
             // 
             this.dateTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeEnd.Location = new System.Drawing.Point(272, 40);
+            this.dateTimeEnd.Location = new System.Drawing.Point(128, 180);
             this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeEnd.Name = "dateTimeEnd";
             this.dateTimeEnd.Size = new System.Drawing.Size(92, 20);
@@ -1246,9 +1270,9 @@ namespace IDT_PARKING
             this.btnRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnRevenue.ForeColor = System.Drawing.Color.White;
-            this.btnRevenue.Location = new System.Drawing.Point(734, 7);
+            this.btnRevenue.Location = new System.Drawing.Point(128, 230);
             this.btnRevenue.Name = "btnRevenue";
-            this.btnRevenue.Size = new System.Drawing.Size(127, 24);
+            this.btnRevenue.Size = new System.Drawing.Size(171, 24);
             this.btnRevenue.TabIndex = 60;
             this.btnRevenue.Text = "Lọc doanh thu";
             this.btnRevenue.Click += new System.EventHandler(this.btnRevenue_Click);
@@ -1256,7 +1280,7 @@ namespace IDT_PARKING
             // dateTimeStart
             // 
             this.dateTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dateTimeStart.Location = new System.Drawing.Point(272, 11);
+            this.dateTimeStart.Location = new System.Drawing.Point(128, 151);
             this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeStart.Name = "dateTimeStart";
             this.dateTimeStart.Size = new System.Drawing.Size(92, 20);
@@ -1272,9 +1296,9 @@ namespace IDT_PARKING
             this.btnQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnQuery.ForeColor = System.Drawing.Color.White;
-            this.btnQuery.Location = new System.Drawing.Point(601, 7);
+            this.btnQuery.Location = new System.Drawing.Point(129, 260);
             this.btnQuery.Name = "btnQuery";
-            this.btnQuery.Size = new System.Drawing.Size(127, 24);
+            this.btnQuery.Size = new System.Drawing.Size(170, 24);
             this.btnQuery.TabIndex = 59;
             this.btnQuery.Text = "Lọc đầy đủ";
             this.btnQuery.Click += new System.EventHandler(this.btnQuery_Click);
@@ -1283,7 +1307,7 @@ namespace IDT_PARKING
             // 
             this.label5.AutoSize = true;
             this.label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label5.Location = new System.Drawing.Point(217, 11);
+            this.label5.Location = new System.Drawing.Point(73, 151);
             this.label5.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(51, 15);
@@ -1299,7 +1323,7 @@ namespace IDT_PARKING
             this.btnExportRevenue.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnExportRevenue.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnExportRevenue.ForeColor = System.Drawing.Color.White;
-            this.btnExportRevenue.Location = new System.Drawing.Point(867, 7);
+            this.btnExportRevenue.Location = new System.Drawing.Point(4, 490);
             this.btnExportRevenue.Name = "btnExportRevenue";
             this.btnExportRevenue.Size = new System.Drawing.Size(127, 24);
             this.btnExportRevenue.TabIndex = 58;
@@ -1309,10 +1333,10 @@ namespace IDT_PARKING
             // cmbTypeDoanhThu
             // 
             this.cmbTypeDoanhThu.FormattingEnabled = true;
-            this.cmbTypeDoanhThu.Location = new System.Drawing.Point(517, 9);
+            this.cmbTypeDoanhThu.Location = new System.Drawing.Point(128, 204);
             this.cmbTypeDoanhThu.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTypeDoanhThu.Name = "cmbTypeDoanhThu";
-            this.cmbTypeDoanhThu.Size = new System.Drawing.Size(75, 21);
+            this.cmbTypeDoanhThu.Size = new System.Drawing.Size(92, 21);
             this.cmbTypeDoanhThu.TabIndex = 42;
             // 
             // txtCount
@@ -1326,18 +1350,18 @@ namespace IDT_PARKING
             this.txtCount.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtCount.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtCount.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtCount.Location = new System.Drawing.Point(104, 37);
+            this.txtCount.Location = new System.Drawing.Point(128, 121);
             this.txtCount.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtCount.Name = "txtCount";
             this.txtCount.PlaceholderText = "";
             this.txtCount.SelectedText = "";
-            this.txtCount.Size = new System.Drawing.Size(96, 24);
+            this.txtCount.Size = new System.Drawing.Size(171, 24);
             this.txtCount.TabIndex = 57;
             // 
             // timeTimeStart
             // 
             this.timeTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeStart.Location = new System.Drawing.Point(368, 11);
+            this.timeTimeStart.Location = new System.Drawing.Point(224, 151);
             this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeStart.Name = "timeTimeStart";
             this.timeTimeStart.Size = new System.Drawing.Size(75, 20);
@@ -1355,38 +1379,29 @@ namespace IDT_PARKING
             this.txtSum.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSum.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtSum.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSum.Location = new System.Drawing.Point(104, 9);
+            this.txtSum.Location = new System.Drawing.Point(128, 89);
             this.txtSum.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSum.Name = "txtSum";
             this.txtSum.PlaceholderText = "";
             this.txtSum.SelectedText = "";
-            this.txtSum.Size = new System.Drawing.Size(96, 24);
+            this.txtSum.Size = new System.Drawing.Size(171, 24);
             this.txtSum.TabIndex = 56;
             // 
             // timeTimeEnd
             // 
             this.timeTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.timeTimeEnd.Location = new System.Drawing.Point(368, 40);
+            this.timeTimeEnd.Location = new System.Drawing.Point(224, 180);
             this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeEnd.Name = "timeTimeEnd";
             this.timeTimeEnd.Size = new System.Drawing.Size(75, 20);
             this.timeTimeEnd.TabIndex = 38;
             this.timeTimeEnd.Value = new System.DateTime(2025, 5, 27, 6, 30, 0, 0);
             // 
-            // progressBarExport
-            // 
-            this.progressBarExport.Location = new System.Drawing.Point(8, 67);
-            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2);
-            this.progressBarExport.Name = "progressBarExport";
-            this.progressBarExport.Size = new System.Drawing.Size(1325, 11);
-            this.progressBarExport.TabIndex = 55;
-            this.progressBarExport.Visible = false;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label8.Location = new System.Drawing.Point(461, 12);
+            this.label8.Location = new System.Drawing.Point(73, 210);
             this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(51, 15);
@@ -1397,7 +1412,7 @@ namespace IDT_PARKING
             // 
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label10.Location = new System.Drawing.Point(6, 40);
+            this.label10.Location = new System.Drawing.Point(30, 130);
             this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(93, 15);
@@ -1409,11 +1424,11 @@ namespace IDT_PARKING
             this.dgvResults.BackgroundColor = System.Drawing.Color.Silver;
             this.dgvResults.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvResults.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvResults.Location = new System.Drawing.Point(2, 2);
+            this.dgvResults.Location = new System.Drawing.Point(402, 2);
             this.dgvResults.Margin = new System.Windows.Forms.Padding(2);
             this.dgvResults.Name = "dgvResults";
             this.dgvResults.RowHeadersWidth = 51;
-            this.dgvResults.Size = new System.Drawing.Size(1346, 582);
+            this.dgvResults.Size = new System.Drawing.Size(946, 672);
             this.dgvResults.TabIndex = 11;
             // 
             // tabXeRa
@@ -2040,6 +2055,7 @@ namespace IDT_PARKING
             // 
             // tabKhac
             // 
+            this.tabKhac.Controls.Add(this.groupBox7);
             this.tabKhac.Location = new System.Drawing.Point(4, 44);
             this.tabKhac.Name = "tabKhac";
             this.tabKhac.Padding = new System.Windows.Forms.Padding(3);
@@ -2050,10 +2066,10 @@ namespace IDT_PARKING
             // 
             // tabCaiDat
             // 
+            this.tabCaiDat.Controls.Add(this.btnExitProgram);
             this.tabCaiDat.Controls.Add(this.groupBox4);
-            this.tabCaiDat.Controls.Add(this.groupBox3);
+            this.tabCaiDat.Controls.Add(this.dgvLoaiThe_CaiDat);
             this.tabCaiDat.Controls.Add(this.groupBox2);
-            this.tabCaiDat.Controls.Add(this.guna2Panel6);
             this.tabCaiDat.Controls.Add(this.groupBox1);
             this.tabCaiDat.Location = new System.Drawing.Point(4, 44);
             this.tabCaiDat.Name = "tabCaiDat";
@@ -2062,6 +2078,22 @@ namespace IDT_PARKING
             this.tabCaiDat.TabIndex = 6;
             this.tabCaiDat.Text = "Cài đặt";
             this.tabCaiDat.UseVisualStyleBackColor = true;
+            // 
+            // btnExitProgram
+            // 
+            this.btnExitProgram.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnExitProgram.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnExitProgram.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnExitProgram.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnExitProgram.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnExitProgram.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnExitProgram.ForeColor = System.Drawing.Color.White;
+            this.btnExitProgram.Location = new System.Drawing.Point(1200, 6);
+            this.btnExitProgram.Name = "btnExitProgram";
+            this.btnExitProgram.Size = new System.Drawing.Size(134, 25);
+            this.btnExitProgram.TabIndex = 92;
+            this.btnExitProgram.Text = "Tắt chương trình";
+            this.btnExitProgram.Click += new System.EventHandler(this.btnExitProgram_Click);
             // 
             // groupBox4
             // 
@@ -2078,27 +2110,27 @@ namespace IDT_PARKING
             // 
             // dgvQuery_CaiDat
             // 
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.dgvQuery_CaiDat.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle7.BackColor = System.Drawing.Color.White;
+            this.dgvQuery_CaiDat.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
             this.dgvQuery_CaiDat.BackgroundColor = System.Drawing.Color.Gainsboro;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvQuery_CaiDat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(88)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvQuery_CaiDat.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
             this.dgvQuery_CaiDat.ColumnHeadersHeight = 4;
             this.dgvQuery_CaiDat.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvQuery_CaiDat.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle9.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            dataGridViewCellStyle9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvQuery_CaiDat.DefaultCellStyle = dataGridViewCellStyle9;
             this.dgvQuery_CaiDat.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvQuery_CaiDat.Location = new System.Drawing.Point(4, 21);
             this.dgvQuery_CaiDat.Margin = new System.Windows.Forms.Padding(2);
@@ -2130,17 +2162,17 @@ namespace IDT_PARKING
             this.dgvQuery_CaiDat.ThemeStyle.RowsStyle.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvQuery_CaiDat.ThemeStyle.RowsStyle.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
             // 
-            // groupBox3
+            // dgvLoaiThe_CaiDat
             // 
-            this.groupBox3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.groupBox3.Location = new System.Drawing.Point(6, 329);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox3.Size = new System.Drawing.Size(399, 354);
-            this.groupBox3.TabIndex = 30;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "THÔNG TIN CÁC LOẠI THẺ";
+            this.dgvLoaiThe_CaiDat.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.dgvLoaiThe_CaiDat.Location = new System.Drawing.Point(6, 329);
+            this.dgvLoaiThe_CaiDat.Margin = new System.Windows.Forms.Padding(2);
+            this.dgvLoaiThe_CaiDat.Name = "dgvLoaiThe_CaiDat";
+            this.dgvLoaiThe_CaiDat.Padding = new System.Windows.Forms.Padding(2);
+            this.dgvLoaiThe_CaiDat.Size = new System.Drawing.Size(399, 345);
+            this.dgvLoaiThe_CaiDat.TabIndex = 30;
+            this.dgvLoaiThe_CaiDat.TabStop = false;
+            this.dgvLoaiThe_CaiDat.Text = "THÔNG TIN CÁC LOẠI THẺ";
             // 
             // groupBox2
             // 
@@ -2175,13 +2207,6 @@ namespace IDT_PARKING
             this.txtQuerry_CaiDat.SelectedText = "";
             this.txtQuerry_CaiDat.Size = new System.Drawing.Size(1318, 249);
             this.txtQuerry_CaiDat.TabIndex = 0;
-            // 
-            // guna2Panel6
-            // 
-            this.guna2Panel6.Location = new System.Drawing.Point(411, 5);
-            this.guna2Panel6.Name = "guna2Panel6";
-            this.guna2Panel6.Size = new System.Drawing.Size(925, 31);
-            this.guna2Panel6.TabIndex = 25;
             // 
             // groupBox1
             // 
@@ -2336,7 +2361,7 @@ namespace IDT_PARKING
             // txtFolder_Main
             // 
             this.txtFolder_Main.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtFolder_Main.DefaultText = "\\\\192.168.1.99\\HINH1";
+            this.txtFolder_Main.DefaultText = "\\\\192.168.1.48\\Hinh";
             this.txtFolder_Main.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
             this.txtFolder_Main.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
             this.txtFolder_Main.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
@@ -2413,45 +2438,99 @@ namespace IDT_PARKING
             this.txtServer_Main.Size = new System.Drawing.Size(162, 24);
             this.txtServer_Main.TabIndex = 82;
             // 
-            // dtTu_TTr
+            // txtDiaChi_KH
             // 
-            this.dtTu_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtTu_TTr.Location = new System.Drawing.Point(595, 34);
-            this.dtTu_TTr.Margin = new System.Windows.Forms.Padding(2);
-            this.dtTu_TTr.Name = "dtTu_TTr";
-            this.dtTu_TTr.Size = new System.Drawing.Size(116, 20);
-            this.dtTu_TTr.TabIndex = 126;
-            this.dtTu_TTr.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            this.txtDiaChi_KH.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtDiaChi_KH.DefaultText = "";
+            this.txtDiaChi_KH.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtDiaChi_KH.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtDiaChi_KH.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtDiaChi_KH.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtDiaChi_KH.FillColor = System.Drawing.Color.Gainsboro;
+            this.txtDiaChi_KH.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtDiaChi_KH.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtDiaChi_KH.ForeColor = System.Drawing.Color.Black;
+            this.txtDiaChi_KH.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtDiaChi_KH.Location = new System.Drawing.Point(118, 118);
+            this.txtDiaChi_KH.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtDiaChi_KH.Name = "txtDiaChi_KH";
+            this.txtDiaChi_KH.PlaceholderText = "";
+            this.txtDiaChi_KH.SelectedText = "";
+            this.txtDiaChi_KH.Size = new System.Drawing.Size(116, 24);
+            this.txtDiaChi_KH.TabIndex = 61;
             // 
-            // dtDen_TTr
+            // label41
             // 
-            this.dtDen_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtDen_TTr.Location = new System.Drawing.Point(596, 63);
-            this.dtDen_TTr.Margin = new System.Windows.Forms.Padding(2);
-            this.dtDen_TTr.Name = "dtDen_TTr";
-            this.dtDen_TTr.Size = new System.Drawing.Size(116, 20);
-            this.dtDen_TTr.TabIndex = 127;
-            this.dtDen_TTr.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            this.label41.AutoSize = true;
+            this.label41.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.label41.Location = new System.Drawing.Point(304, 239);
+            this.label41.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(76, 15);
+            this.label41.TabIndex = 63;
+            this.label41.Text = "(Giá tiền > 0)";
             // 
-            // dtTu_TT
+            // label42
             // 
-            this.dtTu_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtTu_TT.Location = new System.Drawing.Point(73, 6);
-            this.dtTu_TT.Margin = new System.Windows.Forms.Padding(2);
-            this.dtTu_TT.Name = "dtTu_TT";
-            this.dtTu_TT.Size = new System.Drawing.Size(159, 20);
-            this.dtTu_TT.TabIndex = 128;
-            this.dtTu_TT.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            this.label42.AutoSize = true;
+            this.label42.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
+            this.label42.Location = new System.Drawing.Point(304, 269);
+            this.label42.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(84, 15);
+            this.label42.TabIndex = 64;
+            this.label42.Text = "(+Giá tiền = 0)";
             // 
-            // dtDen_TT
+            // groupBox3
             // 
-            this.dtDen_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtDen_TT.Location = new System.Drawing.Point(73, 37);
-            this.dtDen_TT.Margin = new System.Windows.Forms.Padding(2);
-            this.dtDen_TT.Name = "dtDen_TT";
-            this.dtDen_TT.Size = new System.Drawing.Size(159, 20);
-            this.dtDen_TT.TabIndex = 129;
-            this.dtDen_TT.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            this.groupBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox3.Location = new System.Drawing.Point(6, 6);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(445, 667);
+            this.groupBox3.TabIndex = 0;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "THÔNG TIN THẺ";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox5.Location = new System.Drawing.Point(457, 6);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(443, 667);
+            this.groupBox5.TabIndex = 1;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "THẺ MẤT";
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox6.Location = new System.Drawing.Point(906, 6);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(430, 667);
+            this.groupBox6.TabIndex = 1;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "THẺ TÌM LẠI ĐƯỢC";
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.groupBox7.Location = new System.Drawing.Point(7, 5);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox7.Size = new System.Drawing.Size(1335, 671);
+            this.groupBox7.TabIndex = 31;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "CHƯA BIẾT NÊN LÀM THÊM TÍNH NĂNG GÌ NỮA";
+            // 
+            // progressBarExport
+            // 
+            this.progressBarExport.Location = new System.Drawing.Point(5, 519);
+            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2);
+            this.progressBarExport.Name = "progressBarExport";
+            this.progressBarExport.Size = new System.Drawing.Size(392, 11);
+            this.progressBarExport.TabIndex = 65;
+            this.progressBarExport.Visible = false;
             // 
             // FormMain
             // 
@@ -2463,6 +2542,7 @@ namespace IDT_PARKING
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormMain";
+            this.tabThe.ResumeLayout(false);
             this.tabKhachHang.ResumeLayout(false);
             this.guna2Panel3.ResumeLayout(false);
             this.guna2Panel3.PerformLayout();
@@ -2471,8 +2551,7 @@ namespace IDT_PARKING
             ((System.ComponentModel.ISupportInitialize)(this.dgvTheTrong_KH)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvKhachHang_KH)).EndInit();
             this.tabDoanhThu.ResumeLayout(false);
-            this.guna2Panel1.ResumeLayout(false);
-            this.guna2Panel1.PerformLayout();
+            this.tabDoanhThu.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvResults)).EndInit();
             this.tabXeRa.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.ptHinhMatVao)).EndInit();
@@ -2489,6 +2568,7 @@ namespace IDT_PARKING
             this.guna2Panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvXeVao)).EndInit();
             this.tabControl.ResumeLayout(false);
+            this.tabKhac.ResumeLayout(false);
             this.tabCaiDat.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuery_CaiDat)).EndInit();
@@ -2531,7 +2611,7 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2Button btnExportExcel_KH;
         private Guna.UI2.WinForms.Guna2Button btnKhoaThe_TT;
         private Guna.UI2.WinForms.Guna2Button btnThuHoiThe_TT;
-        private Guna.UI2.WinForms.Guna2Button guna2Button7;
+        private Guna.UI2.WinForms.Guna2Button btnExportExcel_TT;
         private Guna.UI2.WinForms.Guna2Button btnUpdateBienSo_KH;
         private Guna.UI2.WinForms.Guna2Button btnUpdateLoaiThe_KH;
         private Guna.UI2.WinForms.Guna2Button btnUpdateDate_KH;
@@ -2551,14 +2631,12 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2TextBox txtTimTen_KH;
         private Guna.UI2.WinForms.Guna2TextBox txtBienSo_TTr;
         private Guna.UI2.WinForms.Guna2TextBox txtDonVi_KH;
-        private Guna.UI2.WinForms.Guna2TextBox txtDiaChi_KH;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel4;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel5;
         private System.Windows.Forms.DataGridView dgvTheThang_KH;
         private System.Windows.Forms.DataGridView dgvTheTrong_KH;
         private System.Windows.Forms.DataGridView dgvKhachHang_KH;
         private System.Windows.Forms.TabPage tabDoanhThu;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel1;
         private System.Windows.Forms.Label label7;
         private Guna.UI2.WinForms.Guna2Button btnDelete;
         private System.Windows.Forms.Label label6;
@@ -2574,7 +2652,6 @@ namespace IDT_PARKING
         private System.Windows.Forms.DateTimePicker timeTimeStart;
         private Guna.UI2.WinForms.Guna2TextBox txtSum;
         private System.Windows.Forms.DateTimePicker timeTimeEnd;
-        private System.Windows.Forms.ProgressBar progressBarExport;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.DataGridView dgvResults;
@@ -2628,7 +2705,6 @@ namespace IDT_PARKING
         private System.Windows.Forms.Label label34;
         private Guna.UI2.WinForms.Guna2TextBox txtTimBS_KH;
         private System.Windows.Forms.TabPage tabCaiDat;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel6;
         private System.Windows.Forms.GroupBox groupBox1;
         private Guna.UI2.WinForms.Guna2Button btnClearConnect;
         private System.Windows.Forms.Label label40;
@@ -2644,7 +2720,7 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2Button btnConnect_Main;
         private Guna.UI2.WinForms.Guna2TextBox txtServer_Main;
         private System.Windows.Forms.GroupBox groupBox4;
-        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox dgvLoaiThe_CaiDat;
         private System.Windows.Forms.GroupBox groupBox2;
         private Guna.UI2.WinForms.Guna2DataGridView dgvQuery_CaiDat;
         private Guna.UI2.WinForms.Guna2TextBox txtQuerry_CaiDat;
@@ -2654,5 +2730,14 @@ namespace IDT_PARKING
         private System.Windows.Forms.DateTimePicker dtTu_TTr;
         private System.Windows.Forms.DateTimePicker dtDen_TT;
         private System.Windows.Forms.DateTimePicker dtTu_TT;
+        private Guna.UI2.WinForms.Guna2Button btnExitProgram;
+        private Guna.UI2.WinForms.Guna2TextBox txtDiaChi_KH;
+        private System.Windows.Forms.Label label42;
+        private System.Windows.Forms.Label label41;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.ProgressBar progressBarExport;
     }
 }

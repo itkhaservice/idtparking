@@ -1357,8 +1357,7 @@ namespace IDT_PARKING
             string query = @"
                 SELECT
                     sttthe AS 'Số thẻ',
-                    CardID AS 'Mã thẻ',
-                    trangthai AS 'Trạng thái'
+                    CardID AS 'Mã thẻ'
                 FROM
                     Active
                 WHERE trangthai = 1"; // Assuming 'Active' is the table name
@@ -1581,8 +1580,8 @@ namespace IDT_PARKING
             dateTimeEnd.Value = firstDayOfMonth; // Or DateTime.Now, depending on desired default end date
 
             // Set timeTimeStart and timeTimeEnd to 00:00:00
-            timeTimeStart.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
-            timeTimeEnd.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 0, 0, 0);
+            timeTimeStart.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 06, 0, 0);
+            timeTimeEnd.Value = new DateTime(firstDayOfMonth.Year, firstDayOfMonth.Month, firstDayOfMonth.Day, 06, 0, 0);
 
             // Set custom format for time pickers
             timeTimeStart.Format = DateTimePickerFormat.Custom;
@@ -3293,6 +3292,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             MessageBox.Show("Chức năng đang được viết...", "Lỗi Kết Nối", MessageBoxButtons.OK);
         }
 
-
+        private void btnExitProgram_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
