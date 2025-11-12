@@ -27,7 +27,9 @@ namespace IDT_PARKING
         public const string ALL_MATERIAL_TYPE = "ALL";
         public const string PRICE_COLUMN_NAME = "PRICE";
         private SqlConnection connection;
-        private string _selectedMaKH = string.Empty; // To store the MaKH of the selected customer
+        private string _selectedMaKH = string.Empty;
+        private string _selectedCardID = string.Empty;
+        private int _selectedSTT = 0;// To store the MaKH of the selected customer
         private ImageViewerForm imageViewerInstance = null;
         private Guna.UI2.WinForms.Guna2PictureBox lastClickedPictureBox = null;
         //private SqlConnection _connection;
@@ -36,6 +38,7 @@ namespace IDT_PARKING
         public FormMain()
         {
             InitializeComponent();
+            txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
             this.tabControl.Selecting += new TabControlCancelEventHandler(this.tabControl_Selecting);
             SetupAndConnect();
             btnConnect_Main.Click += new System.EventHandler(this.btnConnect_Main_Click);
@@ -75,6 +78,7 @@ namespace IDT_PARKING
             btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
             btnXoa_KH.Click += new System.EventHandler(this.btnXoa_KH_Click);
             btnExportExcel_KH.Click += new System.EventHandler(this.btnExportExcel_KH_Click);
+            btnCapThe_TTr.Click += new System.EventHandler(this.btnCapThe_TTr_Click);
 
             // Sự kiện cho Tab Thẻ tháng (trong tab Khách hàng)
             dgvTheThang_KH.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvTheThang_KH_CellClick);
@@ -82,6 +86,9 @@ namespace IDT_PARKING
             txtThe_TT.KeyDown += new KeyEventHandler(this.txtThe_TT_KeyDown);
             rbSoThe_TT.CheckedChanged += new EventHandler(this.rbSoThe_TT_CheckedChanged);
             rbBienSo_TT.CheckedChanged += new EventHandler(this.rbBienSo_TT_CheckedChanged);
+            cbExDate_TT.CheckedChanged += new EventHandler(this.cbExDate_TT_CheckedChanged);
+            cbKhoa_TT.CheckedChanged += new EventHandler(this.cbKhoa_TT_CheckedChanged);
+            btnCapThe_TTr.Click += new System.EventHandler(this.btnCapThe_TTr_Click);
 
             //LoadKhachHangData(); // Initial load for KhachHang
             //LoadTheThangData(); // Initial load for TheThang
@@ -95,10 +102,12 @@ namespace IDT_PARKING
             dtTu_TT.CustomFormat = "dd-MM-yyyy";
             dtDen_TT.Format = DateTimePickerFormat.Custom;
             dtDen_TT.CustomFormat = "dd-MM-yyyy";
-            guna2DateTimePicker1.Format = DateTimePickerFormat.Custom;
-            guna2DateTimePicker1.CustomFormat = "dd-MM-yyyy";
-            guna2DateTimePicker2.Format = DateTimePickerFormat.Custom;
-            guna2DateTimePicker2.CustomFormat = "dd-MM-yyyy";
+            dtTu_TTr.Format = DateTimePickerFormat.Custom;
+            dtTu_TTr.CustomFormat = "dd-MM-yyyy";
+            dtDen_TTr.Format = DateTimePickerFormat.Custom;
+            dtDen_TTr.CustomFormat = "dd-MM-yyyy";
+
+            txtQuerry_CaiDat.KeyDown += new KeyEventHandler(txtQuerry_CaiDat_KeyDown);
         }
 
         private void SetTabStates(bool enabled)
@@ -128,46 +137,46 @@ namespace IDT_PARKING
             SetTabStates(false); // Initially disable all tabs except settings
 
             // Check if settings are already saved
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress))
-            {
-                // Populate textboxes from settings
-                txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
-                txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
-                txtUsername_Main.Text = Properties.Settings.Default.Username;
-                txtPassword_Main.Text = Properties.Settings.Default.Password;
-                txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
+            //if (string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress))
+            //{
+            //    // Populate textboxes from settings
+            //    txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
+            //    txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
+            //    txtUsername_Main.Text = Properties.Settings.Default.Username;
+            //    txtPassword_Main.Text = Properties.Settings.Default.Password;
+            //    txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
 
-                // Try to connect automatically
-                try
-                {
-                    InitializeDatabaseConnection();
-                    if (connection.State != ConnectionState.Open)
-                    {
-                        connection.Open();
-                    }
-                    // If connection is successful, switch to the main tab and enable other tabs
-                    SetTabStates(true);
-                    tabControl.SelectedTab = tabXeVao;
-                }
-                catch (Exception ex)
-                {
-                    // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
-                    MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tabControl.SelectedTab = tabCaiDat;
-                    SetTabStates(false);
-                }
-            }
-            else
-            {
-                // First time launch: clear textboxes and stay on settings tab, keep other tabs disabled
-                txtServer_Main.Text = "";
-                txtDatabase_Main.Text = "";
-                txtUsername_Main.Text = "";
-                txtPassword_Main.Text = "";
-                txtFolder_Main.Text = "";
-                tabControl.SelectedTab = tabCaiDat;
-                SetTabStates(false);
-            }
+            //    // Try to connect automatically
+            //    try
+            //    {
+            //        InitializeDatabaseConnection();
+            //        if (connection.State != ConnectionState.Open)
+            //        {
+            //            connection.Open();
+            //        }
+            //        // If connection is successful, switch to the main tab and enable other tabs
+            //        SetTabStates(true);
+            //        tabControl.SelectedTab = tabXeVao;
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
+            //        MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //        tabControl.SelectedTab = tabCaiDat;
+            //        SetTabStates(false);
+            //    }
+            //}
+            //else
+            //{
+            //    // First time launch: clear textboxes and stay on settings tab, keep other tabs disabled
+            //    txtServer_Main.Text = "";
+            //    txtDatabase_Main.Text = "";
+            //    txtUsername_Main.Text = "";
+            //    txtPassword_Main.Text = "";
+            //    txtFolder_Main.Text = "";
+            //    tabControl.SelectedTab = tabCaiDat;
+            //    SetTabStates(false);
+            //}
         }
 
         private void btnConnect_Main_Click(object sender, EventArgs e)
@@ -384,7 +393,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true)
+        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false)
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -411,6 +420,22 @@ namespace IDT_PARKING
                     TheThang tt
                 INNER JOIN
                     KhachHang kh ON tt.MaKH = kh.MaKH";
+
+            // Conditional TTrang filter based on showLocked
+            if (showLocked)
+            {
+                whereClauses.Add("tt.TTrang = 5");
+            }
+            else
+            {
+                whereClauses.Add("tt.TTrang = 1");
+            }
+
+            // Conditional NgayKT filter based on showExpired
+            if (showExpired)
+            {
+                whereClauses.Add("tt.NgayKT < GETDATE()");
+            }
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -468,6 +493,17 @@ namespace IDT_PARKING
                 txtBienSo_KH.Text = row.Cells["Biển số"].Value?.ToString();
                 txtHieuXe_KH.Text = row.Cells["Hiệu xe"].Value?.ToString();
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
+            }
+        }
+
+        private void dgvTheTrong_KH_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvTheTrong_KH.Rows[e.RowIndex];
+
+                _selectedCardID = row.Cells["Mã thẻ"].Value?.ToString();
+                _selectedSTT = Convert.ToInt32(row.Cells["Số thẻ"].Value);
             }
         }
 
@@ -542,16 +578,37 @@ namespace IDT_PARKING
         {
             string searchTerm = txtThe_TT.Text.Trim();
             bool searchByCardID = rbSoThe_TT.Checked;
-            LoadTheThangData(searchTerm, searchByCardID);
+            bool showExpired = cbExDate_TT.Checked; // Get state of cbExDate_TT
+            bool showLocked = cbKhoa_TT.Checked;   // Get state of cbKhoa_TT
+            LoadTheThangData(searchTerm, searchByCardID, showExpired, showLocked);
         }
+
+        private void cbExDate_TT_CheckedChanged(object sender, EventArgs e)
+        {
+            PerformTheThangSearch();
+        }
+
+        private void cbKhoa_TT_CheckedChanged(object sender, EventArgs e)
+        {
+            PerformTheThangSearch();
+        }
+
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == tabKhachHang)
             {
                 LoadKhachHangData();
-                LoadTheThangData();
+                // Pass default values for showExpired and showLocked (false, false)
+                LoadTheThangData("", true, false, false); // Assuming default search by CardID, not expired, not locked
                 LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
+
+                // Set dtTu_TTr and dtDen_TTr to current date
+                dtTu_TTr.Value = DateTime.Now;
+                dtDen_TTr.Value = DateTime.Now;
+
+                // Load LoaiThe data for cbbLoai_TTr
+                LoadLoaiTheData();
             }
         }
 
@@ -900,7 +957,8 @@ namespace IDT_PARKING
                     CardID AS 'Mã thẻ',
                     trangthai AS 'Trạng thái'
                 FROM
-                    Active"; // Assuming 'Active' is the table name
+                    Active
+                WHERE trangthai = 1"; // Assuming 'Active' is the table name
 
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
@@ -913,7 +971,7 @@ namespace IDT_PARKING
 
             if (whereClauses.Any())
             {
-                query += " WHERE " + string.Join(" AND ", whereClauses);
+                query += " AND " + string.Join(" AND ", whereClauses);
             }
 
             try
@@ -957,13 +1015,174 @@ namespace IDT_PARKING
             }
         }
 
+        private void LoadLoaiTheData()
+        {
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string query = "SELECT MaLoaiThe, LoaiThe FROM LoaiThe";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        cbbLoai_TTr.DataSource = dataTable;
+                        cbbLoai_TTr.DisplayMember = "MaLoaiThe"; // Display the 'LoaiThen' column
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool isProcessing = false; // Biến trạng thái tránh chạy 2 lần
+
+        private void btnCapThe_TTr_Click(object sender, EventArgs e)
+        {
+            if (isProcessing) return; // Nếu đang xử lý, bỏ qua
+            isProcessing = true;
+            btnCapThe_TTr.Enabled = false; // Disable nút để tránh double click
+
+            try
+            {
+                // 1. Validation cơ bản
+                if (dgvKhachHang_KH.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một khách hàng từ danh sách khách hàng.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                if (dgvTheTrong_KH.SelectedRows.Count == 0)
+                {
+                    MessageBox.Show("Vui lòng chọn một thẻ trống từ danh sách thẻ trống.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
+                string maKH = _selectedMaKH;
+                string cardID = _selectedCardID;
+                string soTT = _selectedSTT.ToString();
+                string maLoaiThe = cbbLoai_TTr.Text.Trim();
+                DateTime ngayBD = dtTu_TTr.Value;
+                DateTime ngayKT = dtDen_TTr.Value;
+                string soxe = txtBienSo_TTr.Text.Trim();
+                int tTrang = 1; // Active
+                string giatien = "0";
+                string datcoc = "0";
+                string nguoicap = "admin";
+
+                // 3. Kiểm tra dữ liệu bắt buộc
+                if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT) ||
+                    string.IsNullOrEmpty(maKH) || string.IsNullOrEmpty(maLoaiThe))
+                {
+                    MessageBox.Show(
+                        $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
+                        $"Vui lòng kiểm tra lại dữ liệu:\n" +
+                        $"- Mã KH: {maKH}\n" +
+                        $"- Mã thẻ: {cardID}\n" +
+                        $"- Số thẻ: {soTT}\n" +
+                        $"- Mã loại thẻ: {maLoaiThe}",
+                        "Lỗi dữ liệu",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error
+                    );
+                    return; // Không chạy tiếp
+                }
+
+                // 4. Thao tác Database với Transaction
+                SqlTransaction transaction = null;
+                bool connectionOpenedHere = false;
+
+                try
+                {
+                    InitializeDatabaseConnection(); // Đảm bảo connection được khởi tạo
+
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                        connectionOpenedHere = true;
+                    }
+
+                    transaction = connection.BeginTransaction();
+
+                    // 4a. Insert vào TheThang
+                    string insertTheThangQuery = @"
+                INSERT INTO TheThang (CardID, SoTT, MaKH, TTrang, MaLoaiThe, NgayBD, NgayKT, soxe, nguoicap, giatien, datcoc)
+                VALUES (@CardID, @SoTT, @MaKH, @TTrang, @MaLoaiThe, @NgayBD, @NgayKT, @soxe, @nguoicap, @giatien, @datcoc)";
+
+                    using (SqlCommand cmdInsert = new SqlCommand(insertTheThangQuery, connection, transaction))
+                    {
+                        cmdInsert.Parameters.AddWithValue("@CardID", cardID);
+                        cmdInsert.Parameters.AddWithValue("@SoTT", soTT);
+                        cmdInsert.Parameters.AddWithValue("@MaKH", maKH);
+                        cmdInsert.Parameters.AddWithValue("@TTrang", tTrang);
+                        cmdInsert.Parameters.AddWithValue("@MaLoaiThe", maLoaiThe);
+                        cmdInsert.Parameters.AddWithValue("@NgayBD", ngayBD);
+                        cmdInsert.Parameters.AddWithValue("@NgayKT", ngayKT);
+                        cmdInsert.Parameters.AddWithValue("@soxe", soxe);
+                        cmdInsert.Parameters.AddWithValue("@nguoicap", nguoicap);
+                        cmdInsert.Parameters.AddWithValue("@giatien", giatien);
+                        cmdInsert.Parameters.AddWithValue("@datcoc", datcoc);
+
+                        cmdInsert.ExecuteNonQuery();
+                    }
+
+                    // 4b. Update Active table
+                    string updateActiveQuery = "UPDATE Active SET trangthai = 2 WHERE CardID = @CardID";
+                    using (SqlCommand cmdUpdateActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                    {
+                        cmdUpdateActive.Parameters.AddWithValue("@CardID", cardID);
+                        cmdUpdateActive.ExecuteNonQuery();
+                    }
+
+                    transaction.Commit();
+
+                    MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 5. Load lại dữ liệu
+                    LoadTheThangData("", true, false, false);
+                    LoadTheTrongData();
+
+                    // 6. Clear UI
+                    txtThe_TTr.Clear();
+                    txtBienSo_TTr.Clear();
+                }
+                catch (Exception ex)
+                {
+                    transaction?.Rollback();
+                    MessageBox.Show($"Lỗi khi cấp thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                    {
+                        connection.Close();
+                    }
+                }
+            }
+            finally
+            {
+                // Kết thúc xử lý, bật lại nút và reset trạng thái
+                btnCapThe_TTr.Enabled = true;
+                isProcessing = false;
+            }
+        }
+
         #endregion // End of KHÁCH HÀNG
 
-            
 
-            #region KHỐI DOANH THU
 
-            private void DoanhThu_Load()        
+        #region KHỐI DOANH THU
+
+        private void DoanhThu_Load()        
         {
 
             progressBarExport.Visible = false;
@@ -1600,6 +1819,7 @@ namespace IDT_PARKING
                     }
                 }
             }
+                        
             catch (Exception ex)
             {
                 try { connection?.Close(); } catch { }
@@ -2642,6 +2862,46 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void btnClearConnect_Click(object sender, EventArgs e)
         {
             ClearAllSettings();
+        }
+
+        private void txtQuerry_CaiDat_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                string query = txtQuerry_CaiDat.SelectedText.Trim();
+                if (!string.IsNullOrEmpty(query))
+                {
+                    try
+                    {
+                        if (connection == null || connection.State != ConnectionState.Open)
+                        {
+                            MessageBox.Show("Vui lòng kết nối cơ sở dữ liệu trước khi thực hiện truy vấn.", "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        using (SqlCommand command = new SqlCommand(query, connection))
+                        {
+                            using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                            {
+                                DataTable dataTable = new DataTable();
+                                adapter.Fill(dataTable);
+                                dgvQuery_CaiDat.DataSource = dataTable;
+                            }
+                        }
+                    }
+                    catch (SqlException ex)
+                    {
+                        MessageBox.Show("Lỗi truy vấn SQL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                    e.SuppressKeyPress = true; // Chỉ chặn Enter khi có truy vấn được thực thi
+                }
+                // Nếu không có text nào được bôi đen, không làm gì cả, để Enter tự xuống dòng
+            }
         }
     }
 }
