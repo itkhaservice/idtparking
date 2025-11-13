@@ -43,19 +43,12 @@ namespace IDT_PARKING
         public FormMain()
         {
             InitializeComponent();
-            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
-            this.IsMdiContainer = true;
-            this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.ResizeRedraw, true);
-        }
-
+       
             txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
-            this.tabControl.Selecting += new TabControlCancelEventHandler(this.tabControl_Selecting);
             SetupAndConnect();
-            btnConnect_Main.Click += new System.EventHandler(this.btnConnect_Main_Click);
-            this.tabControl.SelectedTab = tabCaiDat;
+            //this.tabControl.SelectedTab = tabCaiDat;
             
-            DoanhThu_Load();
+
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
 
 
@@ -149,51 +142,64 @@ namespace IDT_PARKING
             if ((connection == null || connection.State != ConnectionState.Open) && e.TabPage != tabCaiDat)
             {
                 e.Cancel = true;
-                MessageBox.Show("Vui lòng kết nối cơ sở dữ liệu trước khi truy cập các chức năng khác.", "Yêu cầu kết nối", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
         }
 
         private void SetupAndConnect()
         {
             SetTabStates(false); // Initially disable all tabs except settings
+            string serverAddress = Properties.Settings.Default.ServerAddress;
+            string databaseName = Properties.Settings.Default.DatabaseName;
+            string folder = Properties.Settings.Default.SharedFolder;
+            string uid = Properties.Settings.Default.Username;
+            string password = Properties.Settings.Default.Password;
 
-            // Populate textboxes from settings
-            txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
-            txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
-            txtUsername_Main.Text = Properties.Settings.Default.Username;
-            txtPassword_Main.Text = Properties.Settings.Default.Password;
-            txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
-
-            // Check if settings are already saved
-            if (!string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress) &&
-                !string.IsNullOrEmpty(Properties.Settings.Default.DatabaseName))
+            if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(databaseName))
             {
-                // Try to connect automatically
-                try
-                {
-                    InitializeDatabaseConnection();
-                    if (connection.State != ConnectionState.Open)
-                    {
-                        connection.Open();
-                    }
-                    EnsureItKhaTableExists(); // Ensure ITKHA table exists on auto-connect
-                    // If connection is successful, switch to the main tab and enable other tabs
-                    SetTabStates(true);
-                    tabControl.SelectedTab = tabXeVao;
-                }
-                catch (Exception ex)
-                {
-                    // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
-                    MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    tabControl.SelectedTab = tabCaiDat;
-                    SetTabStates(false);
-                }
+                tabControl.SelectedTab = tabCaiDat;
+                SetTabStates(false);
             }
             else
             {
-                // No saved settings or incomplete settings: stay on settings tab, keep other tabs disabled
-                tabControl.SelectedTab = tabCaiDat;
-                SetTabStates(false);
+                string connectionString;
+                if (string.IsNullOrWhiteSpace(uid))
+                {
+                    connectionString = $"Server={serverAddress};Database={databaseName};Integrated Security=True;TrustServerCertificate=True;";
+                }
+                else
+                {
+                    connectionString = $"Server={serverAddress};Database={databaseName};User ID={uid};Password={password};TrustServerCertificate=True;";
+                }
+
+                try
+                {
+
+                    connection = new SqlConnection(connectionString);
+                    connection.Open();
+                    EnsureItKhaTableExists();
+
+                    txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
+                    txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
+                    txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
+                    txtUsername_Main.Text = Properties.Settings.Default.Username;
+                    txtPassword_Main.Text = Properties.Settings.Default.Password;
+
+                    SetTabStates(true);
+                    DoanhThu_Load();
+                    LoadKhachHangData();
+                    LoadTheThangData("", true, false, false);
+                    LoadTheTrongData();
+                    dtTu_TTr.Value = DateTime.Now;
+                    dtDen_TTr.Value = DateTime.Now;
+                    //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
+                    tabControl.SelectedTab = tabKhachHang;
+                }
+                catch (Exception ex)
+                {
+                    tabControl.SelectedTab = tabCaiDat;
+                    SetTabStates(false);
+                }
             }
         }
 
@@ -250,14 +256,18 @@ namespace IDT_PARKING
                 Properties.Settings.Default.Password = txtPassword_Main.Text;
                 Properties.Settings.Default.Save();
                 EnsureItKhaTableExists();
-
-                // Chuyển sang tab chính và kích hoạt các tab khác
+                DoanhThu_Load();
                 SetTabStates(true);
-                tabControl.SelectedTab = tabXeVao;
+                LoadKhachHangData();
+                LoadTheThangData("", true, false, false);
+                LoadTheTrongData();
+                dtTu_TTr.Value = DateTime.Now;
+                dtDen_TTr.Value = DateTime.Now;
+                tabControl.SelectedTab = tabKhachHang;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Connection error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Connection errorrrr: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 SetTabStates(false); // Keep other tabs disabled on connection failure
             }
         }
@@ -1564,74 +1574,6 @@ namespace IDT_PARKING
 
 
 
-
-        private void LoadTheTrongData(string searchTerm = "")
-        {
-            // InitializeDatabaseConnection(); // Ensure connection is open
-
-            string query = @"
-                SELECT
-                    sttthe AS 'Số thẻ',
-                    CardID AS 'Mã thẻ'
-                FROM
-                    Active
-                WHERE trangthai = 1"; // Assuming 'Active' is the table name
-
-            var whereClauses = new List<string>();
-            var parameters = new List<SqlParameter>();
-
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                whereClauses.Add("sttthe LIKE @searchTerm");
-                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
-            }
-
-            if (whereClauses.Any())
-            {
-                query += " AND " + string.Join(" AND ", whereClauses);
-            }
-
-            try
-            {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddRange(parameters.ToArray());
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvTheTrong_KH.DataSource = dataTable;
-                        dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-                    private void PerformTheTrongSearch()
-        {
-            string searchTerm = txtThe_TTr.Text.Trim();
-            LoadTheTrongData(searchTerm);
-        }
-
-        private void txtThe_TTr_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                PerformTheTrongSearch();
-                e.SuppressKeyPress = true;
-            }
-        }
-
         private void LoadLoaiTheData()
         {
             try
@@ -1690,8 +1632,74 @@ namespace IDT_PARKING
                 MessageBox.Show($"Lỗi khi tải dữ liệu loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+        private void LoadTheTrongData(string searchTerm = "")
+        {
+            // InitializeDatabaseConnection(); // Ensure connection is open
 
+            string query = @"
+                SELECT
+                    sttthe AS 'Số thẻ',
+                    CardID AS 'Mã thẻ'
+                FROM
+                    Active
+                WHERE trangthai = 1"; // Assuming 'Active' is the table name
 
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                whereClauses.Add("sttthe LIKE @searchTerm");
+                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
+            }
+
+            if (whereClauses.Any())
+            {
+                query += " AND " + string.Join(" AND ", whereClauses);
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+
+                        dgvTheTrong_KH.DataSource = dataTable;
+                        dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void PerformTheTrongSearch()
+        {
+            string searchTerm = txtThe_TTr.Text.Trim();
+            LoadTheTrongData(searchTerm);
+        }
+
+        private void txtThe_TTr_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                PerformTheTrongSearch();
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        
 
         private void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
@@ -1956,7 +1964,7 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.SelectedItem?.ToString();
+            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
             string query = @"
                         SELECT
@@ -2225,7 +2233,7 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.SelectedItem?.ToString();
+            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
             // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
             string query = @"
@@ -2718,7 +2726,7 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cbbXeVao.SelectedItem?.ToString();
+            string selectedMaterialType = cbbXeVao.Text.Trim();
             string soTheXeVao = txtSoTheXeVao.Text.Trim();
             string bienSoXeVao = txtBienSoXeVao.Text.Trim();
 
@@ -2925,7 +2933,7 @@ namespace IDT_PARKING
                 endTimeFromPicker.Minute,
                 endTimeFromPicker.Second);
 
-            string selectedMaterialType = cbbXeRa.SelectedItem?.ToString();
+            string selectedMaterialType = cbbXeRa.Text.Trim();
             string soTheXeRa = txtSoTheXeRa.Text.Trim();
             string bienSoXeRa = txtBienSoXeRa.Text.Trim();
 
