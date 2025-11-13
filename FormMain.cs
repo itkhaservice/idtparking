@@ -32,12 +32,23 @@ namespace IDT_PARKING
         private int _selectedSTT = 0;// To store the MaKH of the selected customer
         private ImageViewerForm imageViewerInstance = null;
         private Guna.UI2.WinForms.Guna2PictureBox lastClickedPictureBox = null;
+        private string kh_export_path;
+        private string tt_export_path;
+        private string dt_export_path;
+        private bool isDragging = false;
+        private Point lastCursorPos;
         //private SqlConnection _connection;
         //private DataTable _currentQueryResult;
 
         public FormMain()
         {
             InitializeComponent();
+            this.MaximizedBounds = Screen.FromHandle(this.Handle).WorkingArea;
+            this.IsMdiContainer = true;
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+        }
+
             txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
             this.tabControl.Selecting += new TabControlCancelEventHandler(this.tabControl_Selecting);
             SetupAndConnect();
@@ -73,6 +84,7 @@ namespace IDT_PARKING
             txtTimTen_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
             txtTimDVDC_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
             txtTimBS_KH.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchKhachHang_KeyDown);
+            cbChuaThe_KH.CheckedChanged += new System.EventHandler(this.cbChuaThe_KH_CheckedChanged);
 
             btnThem_KH.Click += new System.EventHandler(this.btnThem_KH_Click);
             btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
@@ -80,6 +92,15 @@ namespace IDT_PARKING
             btnUpdateBienSo_KH.Click += new System.EventHandler(this.btnUpdateBienSo_KH_Click);
             btnUpdateLoaiThe_KH.Click += new System.EventHandler(this.btnUpdateLoaiThe_KH_Click);
             btnUpdateDate_KH.Click += new System.EventHandler(this.btnUpdateDate_KH_Click);
+
+            btnMo_KH.Click += new System.EventHandler(this.btnMo_KH_Click);
+            btnMo_TT.Click += new System.EventHandler(this.btnMo_TT_Click);
+            btnMo_DT.Click += new System.EventHandler(this.btnMo_DT_Click);
+
+            // Wire up mouse events for dragging the form
+            this.tabControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl_MouseDown);
+            this.tabControl.MouseMove += new System.Windows.Forms.MouseEventHandler(this.tabControl_MouseMove);
+            this.tabControl.MouseUp += new System.Windows.Forms.MouseEventHandler(this.tabControl_MouseUp);
 
             rbSoThe_TT.Checked = true;
             txtThe_TT.KeyDown += new KeyEventHandler(this.txtThe_TT_KeyDown);
@@ -136,47 +157,55 @@ namespace IDT_PARKING
         {
             SetTabStates(false); // Initially disable all tabs except settings
 
-            // Check if settings are already saved
-            //if (string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress))
-            //{
-            //    // Populate textboxes from settings
-            //    txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
-            //    txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
-            //    txtUsername_Main.Text = Properties.Settings.Default.Username;
-            //    txtPassword_Main.Text = Properties.Settings.Default.Password;
-            //    txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
+            // Populate textboxes from settings
+            txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
+            txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
+            txtUsername_Main.Text = Properties.Settings.Default.Username;
+            txtPassword_Main.Text = Properties.Settings.Default.Password;
+            txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
 
-            //    // Try to connect automatically
-            //    try
-            //    {
-            //        InitializeDatabaseConnection();
-            //        if (connection.State != ConnectionState.Open)
-            //        {
-            //            connection.Open();
-            //        }
-            //        // If connection is successful, switch to the main tab and enable other tabs
-            //        SetTabStates(true);
-            //        tabControl.SelectedTab = tabXeVao;
-            //    }
-            //    catch (Exception ex)
-            //    {
-            //        // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
-            //        MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //        tabControl.SelectedTab = tabCaiDat;
-            //        SetTabStates(false);
-            //    }
-            //}
-            //else
-            //{
-            //    // First time launch: clear textboxes and stay on settings tab, keep other tabs disabled
-            //    txtServer_Main.Text = "";
-            //    txtDatabase_Main.Text = "";
-            //    txtUsername_Main.Text = "";
-            //    txtPassword_Main.Text = "";
-            //    txtFolder_Main.Text = "";
-            //    tabControl.SelectedTab = tabCaiDat;
-            //    SetTabStates(false);
-            //}
+            // Check if settings are already saved
+            if (!string.IsNullOrEmpty(Properties.Settings.Default.ServerAddress) &&
+                !string.IsNullOrEmpty(Properties.Settings.Default.DatabaseName))
+            {
+                // Try to connect automatically
+                try
+                {
+                    InitializeDatabaseConnection();
+                    if (connection.State != ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
+                    EnsureItKhaTableExists(); // Ensure ITKHA table exists on auto-connect
+                    // If connection is successful, switch to the main tab and enable other tabs
+                    SetTabStates(true);
+                    tabControl.SelectedTab = tabXeVao;
+                }
+                catch (Exception ex)
+                {
+                    // If auto-connect fails, show error and stay on settings tab, keep other tabs disabled
+                    MessageBox.Show($"Tự động kết nối thất bại: {ex.Message}\nVui lòng kiểm tra lại cài đặt.", "Lỗi Kết nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    tabControl.SelectedTab = tabCaiDat;
+                    SetTabStates(false);
+                }
+            }
+            else
+            {
+                // No saved settings or incomplete settings: stay on settings tab, keep other tabs disabled
+                tabControl.SelectedTab = tabCaiDat;
+                SetTabStates(false);
+            }
+        }
+
+        private void btnSaveConnect_Click(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ServerAddress = txtServer_Main.Text;
+            Properties.Settings.Default.DatabaseName = txtDatabase_Main.Text;
+            Properties.Settings.Default.Username = txtUsername_Main.Text;
+            Properties.Settings.Default.SharedFolder = txtFolder_Main.Text;
+            Properties.Settings.Default.Password = txtPassword_Main.Text;
+            Properties.Settings.Default.Save();
+            MessageBox.Show("Thông tin kết nối đã được lưu thành công!", "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnConnect_Main_Click(object sender, EventArgs e)
@@ -324,8 +353,6 @@ namespace IDT_PARKING
 
         private void LoadKhachHangData()
         {
-            // InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
-
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
 
@@ -347,6 +374,11 @@ namespace IDT_PARKING
             {
                 whereClauses.Add("hopdong LIKE @hopdong");
                 parameters.Add(new SqlParameter("@hopdong", "%" + txtTimBS_KH.Text + "%"));
+            }
+
+            if (cbChuaThe_KH.Checked)
+            {
+                whereClauses.Add("NOT EXISTS (SELECT 1 FROM TheThang tt WHERE tt.MaKH = KhachHang.MaKH)");
             }
 
             string finalQuery = baseQuery;
@@ -734,6 +766,77 @@ namespace IDT_PARKING
             }
         }
 
+        private void btnGiaHan_TT_Click(object sender, EventArgs e)
+        {
+            if (dgvTheThang_KH.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một thẻ để gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            DateTime newNgayKT = dtDen_TT.Value;
+            int selectedCount = dgvTheThang_KH.SelectedRows.Count;
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn gia hạn {selectedCount} thẻ đã chọn đến ngày {newNgayKT:dd/MM/yyyy} không?", "Xác nhận gia hạn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No)
+            {
+                return;
+            }
+
+            List<string> soTTList = new List<string>();
+            foreach (DataGridViewRow row in dgvTheThang_KH.SelectedRows)
+            {
+                string soTT = row.Cells["Số thẻ"].Value?.ToString();
+                if (!string.IsNullOrEmpty(soTT))
+                {
+                    soTTList.Add(soTT);
+                }
+            }
+
+            if (soTTList.Count == 0)
+            {
+                MessageBox.Show("Không có thẻ hợp lệ nào được chọn để gia hạn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                // Build the parameter names for the IN clause
+                List<string> paramNames = new List<string>();
+                SqlCommand command = new SqlCommand();
+                for (int i = 0; i < soTTList.Count; i++)
+                {
+                    string paramName = "@soTT" + i;
+                    paramNames.Add(paramName);
+                    command.Parameters.AddWithValue(paramName, soTTList[i]);
+                }
+
+                string query = $"UPDATE TheThang SET NgayKT = @newNgayKT WHERE SoTT IN ({string.Join(", ", paramNames)})";
+                command.CommandText = query;
+                command.Connection = connection;
+                command.Parameters.AddWithValue("@newNgayKT", newNgayKT);
+
+                int rowsAffected = command.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    MessageBox.Show($"Gia hạn thành công cho {rowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    PerformTheThangSearch(); // Refresh data
+                }
+                else
+                {
+                    MessageBox.Show("Không có thẻ nào được gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi gia hạn thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
         private void btnKhoaThe_TT_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
@@ -935,6 +1038,11 @@ namespace IDT_PARKING
             }
         }
 
+        private void cbChuaThe_KH_CheckedChanged(object sender, EventArgs e)
+        {
+            LoadKhachHangData();
+        }
+
         private void txtThe_TT_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
@@ -996,7 +1104,7 @@ namespace IDT_PARKING
                 dtDen_TTr.Value = DateTime.Now;
 
                 // Load LoaiThe data for cbbLoai_TTr
-                LoadLoaiTheData();
+                // LoadLoaiTheData(); // Removed as it's now called in DoanhThu_Load()
             }
         }
 
@@ -1231,14 +1339,13 @@ namespace IDT_PARKING
                     sfd.InitialDirectory = networkPath;
                     sfd.Filter = "Excel Workbook (*.xlsx)|*.xlsx|Excel 97-2003 Workbook (*.xls)|*.xls";
                     sfd.Title = "Lưu file Excel danh sách khách hàng";
-                    sfd.FileName = $"DANH-SACH-KHACH-HANG-{DateTime.Now:dd-MM-yyyy}.xlsx";
+                    sfd.FileName = $"XUAT-DU-LIEU-DANH-SACH-KHACH-HANG-{DateTime.Now:dd-MM-yyyy}.xlsx";
 
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
                         MessageBox.Show("Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        Properties.Settings.Default.FolderCus = Path.GetDirectoryName(sfd.FileName);
-                        Properties.Settings.Default.Save();
+                        kh_export_path = Path.GetDirectoryName(sfd.FileName);
                     }
                 }
             }
@@ -1346,8 +1453,7 @@ namespace IDT_PARKING
                     {
                         workbook.SaveAs(sfd.FileName);
                         MessageBox.Show("Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        Properties.Settings.Default.FolderCus = Path.GetDirectoryName(sfd.FileName);
-                        Properties.Settings.Default.Save();
+                        tt_export_path = Path.GetDirectoryName(sfd.FileName);
                     }
                 }
             }
@@ -1543,6 +1649,12 @@ namespace IDT_PARKING
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
 
+                        // Add "All" option to the DataTable
+                        DataRow allRow = dataTable.NewRow();
+                        allRow["MaLoaiThe"] = ALL_MATERIAL_TYPE;
+                        allRow["LoaiThe"] = ALL_MATERIAL_TYPE;
+                        dataTable.Rows.InsertAt(allRow, 0);
+
                         cbbLoai_TTr.DataSource = dataTable;
                         cbbLoai_TTr.DisplayMember = "MaLoaiThe"; // Display the 'MaLoaiThe' column
                         cbbLoai_TTr.ValueMember = "MaLoaiThe"; // Use 'MaLoaiThe' as the actual value
@@ -1552,6 +1664,24 @@ namespace IDT_PARKING
                         cbbLoaiThe_TT.DataSource = dataTableForCbbLoaiThe_TT;
                         cbbLoaiThe_TT.DisplayMember = "MaLoaiThe"; // Display the 'MaLoaiThe' column
                         cbbLoaiThe_TT.ValueMember = "MaLoaiThe"; // Use 'MaLoaiThe' as the actual value
+
+                        // Create a new DataTable for cmbTypeDoanhThu
+                        DataTable dataTableForCmbTypeDoanhThu = dataTable.Copy();
+                        cmbTypeDoanhThu.DataSource = dataTableForCmbTypeDoanhThu;
+                        cmbTypeDoanhThu.DisplayMember = "MaLoaiThe";
+                        cmbTypeDoanhThu.ValueMember = "MaLoaiThe";
+
+                        // Create a new DataTable for cbbXeVao
+                        DataTable dataTableForCbbXeVao = dataTable.Copy();
+                        cbbXeVao.DataSource = dataTableForCbbXeVao;
+                        cbbXeVao.DisplayMember = "MaLoaiThe";
+                        cbbXeVao.ValueMember = "MaLoaiThe";
+
+                        // Create a new DataTable for cbbXeRa
+                        DataTable dataTableForCbbXeRa = dataTable.Copy();
+                        cbbXeRa.DataSource = dataTableForCbbXeRa;
+                        cbbXeRa.DisplayMember = "MaLoaiThe";
+                        cbbXeRa.ValueMember = "MaLoaiThe";
                     }
                 }
             }
@@ -1676,11 +1806,9 @@ namespace IDT_PARKING
 
         private void DoanhThu_Load()        
         {
-
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
 
-            //_currentQueryResult = new DataTable();
             SetInitialControlStates();
 
             // Set dateTimeStart to the first day of the current month
@@ -1706,19 +1834,25 @@ namespace IDT_PARKING
             dateTimeEnd.Format = DateTimePickerFormat.Custom;
             dateTimeEnd.CustomFormat = "dd-MM-yyyy";
 
-            cmbTypeDoanhThu.Items.Add("VL");
-            cmbTypeDoanhThu.Items.Add("VL-XD");
-            cmbTypeDoanhThu.Items.Add("VL-XM");
-            cmbTypeDoanhThu.Items.Add("VL-XH");
-            cmbTypeDoanhThu.Items.Add("VT-XH");
-            cmbTypeDoanhThu.Items.Add("VT-XM");
-            cmbTypeDoanhThu.Items.Add("VT");
-            cmbTypeDoanhThu.Items.Add("VT-XD");
-            cmbTypeDoanhThu.Items.Add("All");
+            // Load LoaiThe data for all relevant combo boxes
+            LoadLoaiTheData();
 
+            // Set "All" as selected for cmbTypeDoanhThu (it's already added in LoadLoaiTheData at index 0)
             if (cmbTypeDoanhThu.Items.Count > 0)
             {
                 cmbTypeDoanhThu.SelectedIndex = 0;
+            }
+
+            // Set "All" as selected for cbbXeRa (it's already added in LoadLoaiTheData at index 0)
+            if (cbbXeRa.Items.Count > 0)
+            {
+                cbbXeRa.SelectedIndex = 0;
+            }
+
+            // Set "All" as selected for cbbXeVao (it's already added in LoadLoaiTheData at index 0)
+            if (cbbXeVao.Items.Count > 0)
+            {
+                cbbXeVao.SelectedIndex = 0;
             }
 
             // Initialize Xe Ra tab controls
@@ -1739,21 +1873,6 @@ namespace IDT_PARKING
             dtXeRaDenDate.Format = DateTimePickerFormat.Custom;
             dtXeRaDenDate.CustomFormat = "dd-MM-yyyy";
 
-            cbbXeRa.Items.Add("VL");
-            cbbXeRa.Items.Add("VL-XD");
-            cbbXeRa.Items.Add("VL-XM");
-            cbbXeRa.Items.Add("VL-XH");
-            cbbXeRa.Items.Add("VT-XH");
-            cbbXeRa.Items.Add("VT-XM");
-            cbbXeRa.Items.Add("VT");
-            cbbXeRa.Items.Add("VT-XD");
-            cbbXeRa.Items.Add("All");
-
-            if (cbbXeRa.Items.Count > 0)
-            {
-                cbbXeRa.SelectedIndex = 0;
-            }
-
             // Initialize Xe Vao tab controls
             dtXeVaoTuDate.Value = firstDayOfMonth;
             dtXeVaoDenDate.Value = firstDayOfMonth;
@@ -1771,38 +1890,14 @@ namespace IDT_PARKING
             dtXeVaoTuDate.CustomFormat = "dd-MM-yyyy";
             dtXeVaoDenDate.Format = DateTimePickerFormat.Custom;
             dtXeVaoDenDate.CustomFormat = "dd-MM-yyyy";
-
-            cbbXeVao.Items.Add("VL");
-            cbbXeVao.Items.Add("VL-XD");
-            cbbXeVao.Items.Add("VL-XM");
-            cbbXeVao.Items.Add("VL-XH");
-            cbbXeVao.Items.Add("VT-XH");
-            cbbXeVao.Items.Add("VT-XM");
-            cbbXeVao.Items.Add("VT");
-            cbbXeVao.Items.Add("VT-XD");
-            cbbXeVao.Items.Add("All");
-
-            if (cbbXeVao.Items.Count > 0)
-            {
-                cbbXeVao.SelectedIndex = 0;
-            }
         }
 
         private void SetInitialControlStates()
         {
             btnUpdate.Enabled = false;
             btnDelete.Enabled = false;
-            if (!cmbTypeDoanhThu.Items.Contains(ALL_MATERIAL_TYPE))
-            {
-                cmbTypeDoanhThu.Items.Insert(0, ALL_MATERIAL_TYPE);
-            }
-            cmbTypeDoanhThu.SelectedIndex = 0;
-
-            if (!cbbXeRa.Items.Contains(ALL_MATERIAL_TYPE))
-            {
-                cbbXeRa.Items.Insert(0, ALL_MATERIAL_TYPE);
-            }
-            cbbXeRa.SelectedIndex = 0;
+            // The "All" option and SelectedIndex for cmbTypeDoanhThu, cbbXeRa, cbbXeVao are now handled in DoanhThu_Load()
+            // after LoadLoaiTheData() has populated them.
         }
 
         private void InitializeDatabaseConnection()
@@ -1814,10 +1909,10 @@ namespace IDT_PARKING
 
             try
             {
-                string serverAddress = txtServer;
-                string databaseName = txtDatabase;
-                string uid = txtUsername;
-                string password = Properties.Settings.Default.Password; // Ensure password is retrieved from settings
+                string serverAddress = Properties.Settings.Default.ServerAddress;
+                string databaseName = Properties.Settings.Default.DatabaseName;
+                string uid = Properties.Settings.Default.Username;
+                string password = Properties.Settings.Default.Password;
                 string connectionString;
                 if (string.IsNullOrWhiteSpace(uid))
                 {
@@ -1997,69 +2092,112 @@ namespace IDT_PARKING
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show("Bạn có chắc chắn muốn xóa các dòng đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            int selectedCount = dgvResults.SelectedRows.Count;
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)
                 return;
 
-            int successCount = 0, failCount = 0;
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
 
-            foreach (DataGridViewRow row in dgvResults.SelectedRows)
+            try
             {
-                if (row.IsNewRow) continue;
+                InitializeDatabaseConnection();
 
-                string cardId = row.Cells["Mã thẻ"].Value?.ToString();
-                string idXe = row.Cells["Mã xe"].Value?.ToString();
-                string idMat = row.Cells["Mã mặt"].Value?.ToString();
-
-                if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                if (connection.State != ConnectionState.Open)
                 {
-                    failCount++;
-                    continue;
+                    connection.Open();
+                    connectionOpenedHere = true;
                 }
 
-                try
+                transaction = connection.BeginTransaction();
+
+                StringBuilder whereClauseBuilder = new StringBuilder();
+                List<SqlParameter> logParameters = new List<SqlParameter>();
+                List<SqlParameter> deleteParameters = new List<SqlParameter>();
+
+                int paramIndex = 0;
+                foreach (DataGridViewRow row in dgvResults.SelectedRows)
                 {
-                    // 🔹 Ghi log trước khi xóa
-                    string insertLogQuery = @"
+                    if (row.IsNewRow) continue;
+
+                    string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+                    string idXe = row.Cells["IDXe"].Value?.ToString();
+                    string idMat = row.Cells["Mã mặt"].Value?.ToString();
+
+                    if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                    {
+                        // Skip rows with incomplete data, but don't count as failure for the user message
+                        continue;
+                    }
+
+                    string cardIdParam = "@cardId" + paramIndex;
+                    string idXeParam = "@idXe" + paramIndex;
+                    string idMatParam = "@idMat" + paramIndex;
+
+                    if (whereClauseBuilder.Length > 0)
+                    {
+                        whereClauseBuilder.Append(" OR ");
+                    }
+                    whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+
+                    logParameters.Add(new SqlParameter(cardIdParam, cardId));
+                    logParameters.Add(new SqlParameter(idXeParam, idXe));
+                    logParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                    deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
+                    deleteParameters.Add(new SqlParameter(idXeParam, idXe));
+                    deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                    paramIndex++;
+                }
+
+                if (whereClauseBuilder.Length == 0)
+                {
+                    MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    transaction.Rollback();
+                    return;
+                }
+
+                // 🔹 Ghi log trước khi xóa (batch insert)
+                string insertLogQuery = $@"
                     INSERT INTO [dbo].[ITKHA]
                     (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
                     SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
                     FROM [dbo].[Ra]
-                    WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
+                    WHERE {whereClauseBuilder.ToString()};";
 
-                    using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection))
-                    {
-                        logCmd.Parameters.AddWithValue("@cardId", cardId);
-                        logCmd.Parameters.AddWithValue("@idXe", idXe);
-                        logCmd.Parameters.AddWithValue("@idMat", idMat);
-                        logCmd.ExecuteNonQuery();
-                    }
-
-                    // 🔹 Thực hiện xóa
-                    string deleteQuery = "DELETE FROM [dbo].[Ra] WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat";
-                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection))
-                    {
-                        deleteCmd.Parameters.AddWithValue("@cardId", cardId);
-                        deleteCmd.Parameters.AddWithValue("@idXe", idXe);
-                        deleteCmd.Parameters.AddWithValue("@idMat", idMat);
-
-                        int rowsAffected = deleteCmd.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            dgvResults.Rows.Remove(row);
-                            successCount++;
-                        }
-                        else failCount++;
-                    }
+                using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
+                {
+                    logCmd.Parameters.AddRange(logParameters.ToArray());
+                    logCmd.ExecuteNonQuery();
                 }
-                catch
-                                {
-                    failCount++;
+
+                // 🔹 Thực hiện xóa (batch delete)
+                string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                {
+                    deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
+                    int rowsAffected = deleteCmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+
+                    MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btnRevenue_Click(this, EventArgs.Empty); // Refresh the DataGridView
                 }
             }
-
-            MessageBox.Show($"Xóa hoàn tất.\nThành công: {successCount}\nThất bại: {failCount}", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
         }
 
         private void btnQuery_Click(object sender, EventArgs e)
@@ -2406,26 +2544,23 @@ namespace IDT_PARKING
                         string startTime = fullStartDateTime.ToString("HHmmss");
                         string endDate = fullEndDateTime.ToString("ddMMyyyy");
                         string endTime = fullEndDateTime.ToString("HHmmss");
-                        sfd.FileName = $"DOANH-THU-TU-{startDate}-{startTime}-DEN-{endDate}-{endTime}.xlsx";
+                        sfd.FileName = $"XUAT-DU-LIEU-DOANH-THU-TU-{startDate}-{startTime}-DEN-{endDate}-{endTime}.xlsx";
                     }
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
                         MessageBox.Show("Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                        // Lấy đường dẫn thư mục chứa file
+                        // Lấy đường dẫn thư mục chứa file và lưu vào biến tương ứng
                         string folderPath = Path.GetDirectoryName(sfd.FileName);
                         if (filename == "DANH-SACH-THE-THANG")
                         {
-                            //btnOpenCus.Enabled = true; // btnOpenCus does not exist in FormMain
-                            Properties.Settings.Default.FolderCus = folderPath;
+                            tt_export_path = folderPath;
                         }
                         else if (filename == "DOANH-THU-VANG-LAI")
                         {
-                            //btnOpenRevenue.Enabled = true; // btnOpenRevenue does not exist in FormMain
-                            Properties.Settings.Default.FolderRevenue = folderPath;
+                            dt_export_path = folderPath;
                         }
-                        Properties.Settings.Default.Save(); // Save settings after updating folder paths
                     }
                 }
                 progressBarExport.Value = 100; // Hoàn thành
@@ -3416,6 +3551,65 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
             ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG");
+        }
+
+        private void btnMo_KH_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(kh_export_path) && Directory.Exists(kh_export_path))
+            {
+                System.Diagnostics.Process.Start("explorer.exe", kh_export_path);
+            }
+            else
+            {
+                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnMo_TT_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tt_export_path) && Directory.Exists(tt_export_path))
+            {
+                System.Diagnostics.Process.Start("explorer.exe", tt_export_path);
+            }
+            else
+            {
+                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnMo_DT_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(dt_export_path) && Directory.Exists(dt_export_path))
+            {
+                System.Diagnostics.Process.Start("explorer.exe", dt_export_path);
+            }
+            else
+            {
+                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tabControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                lastCursorPos = new Point(e.X, e.Y);
+            }
+        }
+
+        private void tabControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                this.Location = new Point(this.Location.X + (e.X - lastCursorPos.X),
+                                          this.Location.Y + (e.Y - lastCursorPos.Y));
+            }
+        }
+
+        private void tabControl_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
         }
     }
 }
