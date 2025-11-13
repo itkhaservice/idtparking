@@ -1806,6 +1806,359 @@ namespace IDT_PARKING
             }
         }
 
+        private void btnTim_TTT_Click(object sender, EventArgs e)
+        {
+            txtTinhTrang_TTT1.Text = "Không có dữ liệu"; // Reset
+            txtTinhTrang_TTT2.Text = "Không có dữ liệu"; // Reset
+            // Clear the input fields if they were populated by a previous search
+            // This ensures that if a new search is performed, only the current input is considered.
+            // If the user wants to keep the previously found values, they should not clear these.
+            // So, we will only update them if they were empty initially.
+
+            string initialSoThe = txtSoThe_TTT.Text.Trim();
+            string initialMaThe = txtMaThe_TTT.Text.Trim();
+
+            if (string.IsNullOrEmpty(initialSoThe) && string.IsNullOrEmpty(initialMaThe))
+            {
+                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
+
+            if (connection.State != ConnectionState.Open)
+            {
+                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // --- Tìm kiếm trong bảng Active ---
+            string queryActive = "SELECT sttthe, CardID, trangthai FROM Active WHERE ";
+            List<SqlParameter> parametersActive = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(initialSoThe))
+            {
+                queryActive += "sttthe = @soThe";
+                parametersActive.Add(new SqlParameter("@soThe", initialSoThe));
+            }
+            else if (!string.IsNullOrEmpty(initialMaThe))
+            {
+                queryActive += "CardID = @maThe";
+                parametersActive.Add(new SqlParameter("@maThe", initialMaThe));
+            }
+
+            try
+            {
+                using (SqlCommand commandActive = new SqlCommand(queryActive, connection))
+                {
+                    commandActive.Parameters.AddRange(parametersActive.ToArray());
+                    using (SqlDataReader readerActive = commandActive.ExecuteReader())
+                    {
+                        if (readerActive.Read())
+                        {
+                            string foundSoThe = readerActive["sttthe"].ToString();
+                            string foundMaThe = readerActive["CardID"].ToString();
+                            int trangThai = Convert.ToInt32(readerActive["trangthai"]);
+
+                            // Update input textboxes if they were empty or if the found value is different
+                            if (string.IsNullOrEmpty(initialSoThe)) txtSoThe_TTT.Text = foundSoThe;
+                            if (string.IsNullOrEmpty(initialMaThe)) txtMaThe_TTT.Text = foundMaThe;
+
+                            switch (trangThai)
+                            {
+                                case 1:
+                                    txtTinhTrang_TTT1.Text = "Thẻ lượt";
+                                    break;
+                                case 2:
+                                    txtTinhTrang_TTT1.Text = "Thẻ tháng";
+                                    break;
+                                case 0:
+                                    txtTinhTrang_TTT1.Text = "Thẻ mất";
+                                    break;
+                                default:
+                                    txtTinhTrang_TTT1.Text = "Trạng thái không xác định";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            txtTinhTrang_TTT1.Text = "Không có dữ liệu";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tìm kiếm trong bảng Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtTinhTrang_TTT1.Text = "Lỗi truy vấn";
+            }
+
+            // --- Tìm kiếm trong bảng TheThang ---
+            string queryTheThang = "SELECT SoTT, CardID, TTrang FROM TheThang WHERE ";
+            List<SqlParameter> parametersTheThang = new List<SqlParameter>();
+
+            // Use the values that might have been updated from the Active table search,
+            // or the initial input if Active table search yielded no results.
+            string currentSoThe = txtSoThe_TTT.Text.Trim();
+            string currentMaThe = txtMaThe_TTT.Text.Trim();
+
+            if (!string.IsNullOrEmpty(currentSoThe))
+            {
+                queryTheThang += "SoTT = @soThe";
+                parametersTheThang.Add(new SqlParameter("@soThe", currentSoThe));
+            }
+            else if (!string.IsNullOrEmpty(currentMaThe))
+            {
+                queryTheThang += "CardID = @maThe";
+                parametersTheThang.Add(new SqlParameter("@maThe", currentMaThe));
+            }
+            else // This case should ideally not be reached if initial check passed, but for safety
+            {
+                txtTinhTrang_TTT2.Text = "Không có dữ liệu";
+                return;
+            }
+
+            try
+            {
+                using (SqlCommand commandTheThang = new SqlCommand(queryTheThang, connection))
+                {
+                    commandTheThang.Parameters.AddRange(parametersTheThang.ToArray());
+                    using (SqlDataReader readerTheThang = commandTheThang.ExecuteReader())
+                    {
+                        if (readerTheThang.Read())
+                        {
+                            string foundSoTT = readerTheThang["SoTT"].ToString();
+                            string foundCardID = readerTheThang["CardID"].ToString();
+                            int tTrang = Convert.ToInt32(readerTheThang["TTrang"]);
+
+                            // Update input textboxes if they were empty or if the found value is different
+                            if (string.IsNullOrEmpty(initialSoThe) && string.IsNullOrEmpty(txtSoThe_TTT.Text.Trim())) txtSoThe_TTT.Text = foundSoTT;
+                            if (string.IsNullOrEmpty(initialMaThe) && string.IsNullOrEmpty(txtMaThe_TTT.Text.Trim())) txtMaThe_TTT.Text = foundCardID;
+
+                            switch (tTrang)
+                            {
+                                case 1:
+                                    txtTinhTrang_TTT2.Text = "Đang sử dụng";
+                                    break;
+                                case 5:
+                                    txtTinhTrang_TTT2.Text = "Đã bị khóa";
+                                    break;
+                                default:
+                                    txtTinhTrang_TTT2.Text = "Trạng thái không xác định";
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            txtTinhTrang_TTT2.Text = "Không có dữ liệu";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tìm kiếm trong bảng TheThang: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtTinhTrang_TTT2.Text = "Lỗi truy vấn";
+            }
+        }
+
+        private (string soTT, string cardID) GetCardIdentifiers(string soTheInput, string maTheInput)
+        {
+            string soTT = string.Empty;
+            string cardID = string.Empty;
+
+            InitializeDatabaseConnection();
+            if (connection.State != ConnectionState.Open)
+            {
+                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return (string.Empty, string.Empty);
+            }
+
+            string query = "SELECT sttthe, CardID FROM Active WHERE ";
+            List<SqlParameter> parameters = new List<SqlParameter>();
+
+            if (!string.IsNullOrEmpty(soTheInput))
+            {
+                query += "sttthe = @soThe";
+                parameters.Add(new SqlParameter("@soThe", soTheInput));
+            }
+            else if (!string.IsNullOrEmpty(maTheInput))
+            {
+                query += "CardID = @maThe";
+                parameters.Add(new SqlParameter("@maThe", maTheInput));
+            }
+            else
+            {
+                return (string.Empty, string.Empty); // Should not happen if initial check is done
+            }
+
+            try
+            {
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            soTT = reader["sttthe"].ToString();
+                            cardID = reader["CardID"].ToString();
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi lấy thông tin thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return (soTT, cardID);
+        }
+
+        private void btnBaoMat_TTT_Click(object sender, EventArgs e)
+        {
+            string soTheInput = txtSoThe_TTT.Text.Trim();
+            string maTheInput = txtMaThe_TTT.Text.Trim();
+
+            if (string.IsNullOrEmpty(soTheInput) && string.IsNullOrEmpty(maTheInput))
+            {
+                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để báo mất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            (string soTT, string cardID) = GetCardIdentifiers(soTheInput, maTheInput);
+
+            if (string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(cardID))
+            {
+                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Số thẻ: {soTT} - Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+                transaction = connection.BeginTransaction();
+
+                // Update TheThang.TTrang to 9 (Lost/Stolen)
+                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 9 WHERE CardID = @cardID AND SoTT = @soTT";
+                using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                {
+                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                    cmdTheThang.ExecuteNonQuery();
+                }
+
+                // Update Active.trangthai to 0 (Lost/Inactive)
+                string updateActiveQuery = "UPDATE Active SET trangthai = 0 WHERE sttthe = @soTT";
+                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                {
+                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                    cmdActive.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+                MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Optionally refresh related data or clear fields
+                txtTinhTrang_TTT1.Text = "Thẻ mất";
+                txtTinhTrang_TTT2.Text = "Trạng thái không xác định"; // TheThang.TTrang = 9 is not directly mapped to a display string here
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        private void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
+        {
+            string soTheInput = txtSoThe_TTT.Text.Trim();
+            string maTheInput = txtMaThe_TTT.Text.Trim();
+
+            if (string.IsNullOrEmpty(soTheInput) && string.IsNullOrEmpty(maTheInput))
+            {
+                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để khôi phục.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            (string soTT, string cardID) = GetCardIdentifiers(soTheInput, maTheInput);
+
+            if (string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(cardID))
+            {
+                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn khôi phục thẻ có Số thẻ: {soTT} -  Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm == DialogResult.No) return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+                transaction = connection.BeginTransaction();
+
+                // Update Active.trangthai to 1 (Active)
+                string updateActiveQuery = "UPDATE Active SET trangthai = 1 WHERE sttthe = @soTT";
+                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                {
+                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                    cmdActive.ExecuteNonQuery();
+                }
+
+                // Also update TheThang.TTrang to 1 (Đang sử dụng) if it was previously 9 (Lost/Stolen) or 5 (Locked)
+                // This ensures consistency between Active and TheThang tables.
+                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 1 WHERE CardID = @cardID AND SoTT = @soTT AND (TTrang = 9 OR TTrang = 5)";
+                using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                {
+                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                    cmdTheThang.ExecuteNonQuery();
+                }
+
+                transaction.Commit();
+                MessageBox.Show("Khôi phục thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Optionally refresh related data or clear fields
+                txtTinhTrang_TTT1.Text = "Thẻ lượt"; // Assuming 1 means "Thẻ lượt"
+                txtTinhTrang_TTT2.Text = "Đang sử dụng"; // Assuming 1 means "Đang sử dụng"
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi khôi phục thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
         #endregion // End of KHÁCH HÀNG
 
 
