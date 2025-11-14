@@ -2320,30 +2320,33 @@ namespace IDT_PARKING
             string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
             string query = @"
-                        SELECT
-                            STTThe AS 'Số thẻ',
-                            NgayRa AS 'Ngày ra',
-                            -- Sử dụng các hàm chuỗi cơ bản để tạo định dạng thời gian HH:MM:SS.FF
-                            FORMAT(DATEADD(second, CAST(GioRa AS INT) % 100, DATEADD(minute, (CAST(GioRa AS INT) / 100) % 100, DATEADD(hour, CAST(GioRa AS INT) / 10000, '00:00:00'))), 'HH:mm:ss.ff') AS 'Giờ ra',
-                            MaLoaiThe AS 'Loại thẻ',
-                            GiaTien AS 'Tiền thu',
-                            CardID AS 'Mã thẻ',
-                            IDXe AS 'Mã xe',
-                            IDMat AS 'Mã mặt',
-                            soxe AS 'Xe vào',
-                            soxera AS 'Xe ra'
-                        FROM [dbo].[Ra]
-                        WHERE GiaTien > 0 AND ";
+SELECT
+    Ra.STTThe AS 'Số thẻ',
+    Ra.CardID AS 'Mã thẻ',
+    Vao.NgayVao AS 'Ngày vào',
+    CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS 'Thời gian vào',
+    Ra.NgayRa AS 'Ngày ra',
+    CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
+    Ra.MaLoaiThe AS 'Loại thẻ',
+    Ra.GiaTien AS 'Tiền thu',
+    Ra.IDXe,
+    Ra.IDMat,
+    Ra.soxe AS 'Biển số vào',
+    Ra.soxera AS 'Biển số ra'
+FROM
+[dbo].[Ra]
+INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
+                WHERE 1=1 ";
 
-            query += @" (
-                    CAST(NgayRa AS DATETIME) +
-                    CAST( -- Cast chuỗi thời gian được tạo từ GioRa thành DATETIME
-                        RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                        RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                        RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                        RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
-                    AS DATETIME)
-                ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+            query += @" AND (
+                CAST(NgayRa AS DATETIME) +
+                CAST(
+                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                AS DATETIME)
+            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
             if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
             {
@@ -2590,31 +2593,33 @@ namespace IDT_PARKING
 
             // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
             string query = @"
-                            SELECT
-                                STTThe AS 'Số thẻ',
-                                NgayRa AS 'Ngày ra',
-                                -- Sử dụng các hàm chuỗi cơ bản để tạo định dạng thời gian HH:MM:SS.FF
-                                RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                                RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                                RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                                RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2) AS 'Giờ ra',
-                                MaLoaiThe AS 'Loại thẻ',
-                                GiaTien AS 'Tiền thu',
-                                CardID AS 'Mã thẻ',
-                                IDXe AS 'Mã xe',
-                                IDMat AS 'Mã mặt',
-                                soxe AS 'Xe vào',
-                                soxera AS 'Xe ra'
-                            FROM [dbo].[Ra]
-                            WHERE";
+SELECT
+    Ra.STTThe AS 'Số thẻ',
+    Ra.CardID AS 'Mã thẻ',
+    Vao.NgayVao AS 'Ngày vào',
+    CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS 'Thời gian vào',
+    Ra.NgayRa AS 'Ngày ra',
+    CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
+    Ra.MaLoaiThe AS 'Loại thẻ',
+    Ra.GiaTien AS 'Tiền thu',
+    Ra.IDXe,
+    Ra.IDMat,
+    Ra.soxe AS 'Biển số vào',
+    Ra.soxera AS 'Biển số ra'
+FROM
+[dbo].[Ra]
+INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
+                WHERE 1=1 ";
 
-            // Phần điều kiện WHERE cũng được sửa đổi để tương thích
-            query += @" (
-                            CAST(NgayRa AS DATETIME) +
-                            CAST( -- Cast chuỗi thời gian được tạo từ GioRa thành DATETIME
-                                FORMAT(DATEADD(second, CAST(GioRa AS INT) % 100, DATEADD(minute, (CAST(GioRa AS INT) / 100) % 100, DATEADD(hour, CAST(GioRa AS INT) / 10000, '00:00:00'))), 'HH:mm:ss.ff')
-                            AS DATETIME)
-                        ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+            query += @" AND (
+                CAST(NgayRa AS DATETIME) +
+                CAST(
+                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                AS DATETIME)
+            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
             // Giữ nguyên logic thêm điều kiện lọc theo loại vật liệu
             if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
@@ -3307,9 +3312,8 @@ SELECT
 FROM
 [dbo].[Ra]
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
-                WHERE 1=1 "; // Start with a true condition to easily append AND clauses
+                WHERE 1=1 "; 
 
-            // Add date/time filter
             query += @" AND (
                 CAST(NgayRa AS DATETIME) +
                 CAST(
