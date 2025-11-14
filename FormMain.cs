@@ -35,6 +35,7 @@ namespace IDT_PARKING
         private string kh_export_path;
         private string tt_export_path;
         private string dt_export_path;
+        private string active_export_path;
         private bool isDragging = false;
         private Point lastCursorPos;
         //private SqlConnection _connection;
@@ -81,14 +82,9 @@ namespace IDT_PARKING
 
             btnThem_KH.Click += new System.EventHandler(this.btnThem_KH_Click);
             btnUpdate_KH.Click += new System.EventHandler(this.btnUpdate_KH_Click);
-            btnExportExcel_KH.Click += new System.EventHandler(this.btnExportExcel_KH_Click);
             btnUpdateBienSo_KH.Click += new System.EventHandler(this.btnUpdateBienSo_KH_Click);
             btnUpdateLoaiThe_KH.Click += new System.EventHandler(this.btnUpdateLoaiThe_KH_Click);
             btnUpdateDate_KH.Click += new System.EventHandler(this.btnUpdateDate_KH_Click);
-
-            btnMo_KH.Click += new System.EventHandler(this.btnMo_KH_Click);
-            btnMo_TT.Click += new System.EventHandler(this.btnMo_TT_Click);
-            btnMo_DT.Click += new System.EventHandler(this.btnMo_DT_Click);
 
             // Wire up mouse events for dragging the form
             this.tabControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.tabControl_MouseDown);
@@ -195,7 +191,7 @@ namespace IDT_PARKING
                     //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
                     tabControl.SelectedTab = tabKhachHang;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     tabControl.SelectedTab = tabCaiDat;
                     SetTabStates(false);
@@ -534,6 +530,7 @@ namespace IDT_PARKING
                 txtDiaChi_KH.Text = row.Cells["Địa chỉ"].Value?.ToString();
                 txtDonVi_KH.Text = row.Cells["Đơn vị"].Value?.ToString();
                 txtBienSo_KH.Text = row.Cells["Biển số"].Value?.ToString();
+                txtBienSo_TTr.Text = txtBienSo_KH.Text;
                 txtHieuXe_KH.Text = row.Cells["Hiệu xe"].Value?.ToString();
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
 
@@ -886,12 +883,12 @@ namespace IDT_PARKING
                 }
 
                 // Update Active.trangthai to 5 (Locked)
-                string updateActiveQuery = "UPDATE Active SET trangthai = 5 WHERE sttthe = @soTT";
-                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
-                {
-                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
-                    cmdActive.ExecuteNonQuery();
-                }
+                //string updateActiveQuery = "UPDATE Active SET trangthai = 5 WHERE sttthe = @soTT";
+                //using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                //{
+                //    cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                //    cmdActive.ExecuteNonQuery();
+                //}
 
                 transaction.Commit();
                 MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -960,6 +957,7 @@ namespace IDT_PARKING
                 transaction.Commit();
                 MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                LoadTheTrongData("");
             }
             catch (Exception ex)
             {
@@ -1005,7 +1003,7 @@ namespace IDT_PARKING
                 transaction = connection.BeginTransaction();
 
                 // Update TheThang.TTrang to 9 (Lost/Stolen)
-                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 9 WHERE CardID = @cardID AND SoTT = @soTT";
+                string updateTheThangQuery = "DELETE TheThang WHERE CardID = @cardID AND SoTT = @soTT";
                 using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
                 {
                     cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
@@ -1024,6 +1022,7 @@ namespace IDT_PARKING
                 transaction.Commit();
                 MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -1178,6 +1177,20 @@ namespace IDT_PARKING
             }
 
             InitializeDatabaseConnection();
+
+            // Check for duplicate license plate
+            string checkDuplicateBienSoQuery = "SELECT COUNT(*) FROM KhachHang WHERE hopdong = @hopdong AND MaKH != @makh";
+            using (SqlCommand checkCmd = new SqlCommand(checkDuplicateBienSoQuery, connection))
+            {
+                checkCmd.Parameters.AddWithValue("@hopdong", txtBienSo_KH.Text.Trim());
+                checkCmd.Parameters.AddWithValue("@makh", _selectedMaKH);
+                int duplicateCount = (int)checkCmd.ExecuteScalar();
+                if (duplicateCount > 0)
+                {
+                    MessageBox.Show("Biển số này đã tồn tại cho một khách hàng khác. Vui lòng nhập biển số khác.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
 
             string query = @"
                 UPDATE KhachHang
@@ -1675,6 +1688,14 @@ namespace IDT_PARKING
 
                         dgvTheTrong_KH.DataSource = dataTable;
                         dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
+
+                        // If exactly one row is returned, automatically select it and trigger CellClick
+                        if (dataTable.Rows.Count == 1)
+                        {
+                            dgvTheTrong_KH.CurrentCell = dgvTheTrong_KH.Rows[0].Cells[0];
+                            dgvTheTrong_KH.Rows[0].Selected = true;
+                            dgvTheTrong_KH_CellClick(dgvTheTrong_KH, new DataGridViewCellEventArgs(0, 0)); // Simulate click on the first cell
+                        }
                     }
                 }
             }
@@ -1742,10 +1763,43 @@ namespace IDT_PARKING
             {
                 InitializeDatabaseConnection(); // Đảm bảo connection được khởi tạo
 
+            if (connection.State != ConnectionState.Open)
+            {
+                connection.Open();
+                connectionOpenedHere = true;
+            }
+
+            // Check if MaKH already has a card in TheThang
+            string checkMaKHQuery = "SELECT COUNT(*) FROM TheThang WHERE MaKH = @MaKH AND TTrang = 1";
+            using (SqlCommand checkMaKHCmd = new SqlCommand(checkMaKHQuery, connection))
+            {
+                checkMaKHCmd.Parameters.AddWithValue("@MaKH", maKH);
+                int existingMaKHCount = (int)checkMaKHCmd.ExecuteScalar();
+                if (existingMaKHCount > 0)
+                {
+                    MessageBox.Show($"Mã khách hàng '{maKH}' đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
                     connectionOpenedHere = true;
+                }
+
+                // Check for uniqueness in TheThang before inserting
+                string checkUniqueQuery = "SELECT COUNT(*) FROM TheThang WHERE SoTT = @SoTT OR CardID = @CardID";
+                using (SqlCommand checkUniqueCmd = new SqlCommand(checkUniqueQuery, connection))
+                {
+                    checkUniqueCmd.Parameters.AddWithValue("@SoTT", soTT);
+                    checkUniqueCmd.Parameters.AddWithValue("@CardID", cardID);
+                    int existingCount = (int)checkUniqueCmd.ExecuteScalar();
+                    if (existingCount > 0)
+                    {
+                        MessageBox.Show("Số thẻ hoặc Mã thẻ đã tồn tại trong bảng Thẻ Tháng. Vui lòng kiểm tra lại.", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return; // Exit the method if not unique
+                    }
                 }
 
                 transaction = connection.BeginTransaction();
@@ -2101,7 +2155,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(cardID))
             {
-                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập trong bảng Active.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2121,29 +2175,71 @@ namespace IDT_PARKING
                 }
                 transaction = connection.BeginTransaction();
 
-                // Update Active.trangthai to 1 (Active)
-                string updateActiveQuery = "UPDATE Active SET trangthai = 1 WHERE sttthe = @soTT";
-                using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                // --- Step 1: Check if card exists in TheThang ---
+                string checkTheThangQuery = "SELECT COUNT(*) FROM TheThang WHERE SoTT = @soTT OR CardID = @cardID";
+                int theThangCount;
+                using (SqlCommand checkCmd = new SqlCommand(checkTheThangQuery, connection, transaction))
                 {
-                    cmdActive.Parameters.AddWithValue("@soTT", soTT);
-                    cmdActive.ExecuteNonQuery();
+                    checkCmd.Parameters.AddWithValue("@soTT", soTT);
+                    checkCmd.Parameters.AddWithValue("@cardID", cardID);
+                    theThangCount = (int)checkCmd.ExecuteScalar();
                 }
 
-                // Also update TheThang.TTrang to 1 (Đang sử dụng) if it was previously 9 (Lost/Stolen) or 5 (Locked)
-                // This ensures consistency between Active and TheThang tables.
-                string updateTheThangQuery = "UPDATE TheThang SET TTrang = 1 WHERE CardID = @cardID AND SoTT = @soTT AND (TTrang = 9 OR TTrang = 5)";
-                using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                if (theThangCount > 0)
                 {
-                    cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
-                    cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
-                    cmdTheThang.ExecuteNonQuery();
+                    // --- Scenario A: Card exists in TheThang. Now check Active.trangthai = 2 ---
+                    string checkActiveStatusQuery = "SELECT trangthai FROM Active WHERE sttthe = @soTT OR CardID = @cardID";
+                    int activeTrangThai = -1; // Default to an invalid state
+                    using (SqlCommand checkActiveCmd = new SqlCommand(checkActiveStatusQuery, connection, transaction))
+                    {
+                        checkActiveCmd.Parameters.AddWithValue("@soTT", soTT);
+                        checkActiveCmd.Parameters.AddWithValue("@cardID", cardID);
+                        object result = checkActiveCmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
+                        {
+                            activeTrangThai = Convert.ToInt32(result);
+                        }
+                    }
+
+                    if (activeTrangThai == 2)
+                    {
+                        // Update TheThang.TTrang to 1
+                        string updateTheThangQuery = "UPDATE TheThang SET TTrang = 1 WHERE SoTT = @soTT OR CardID = @cardID";
+                        using (SqlCommand cmdTheThang = new SqlCommand(updateTheThangQuery, connection, transaction))
+                        {
+                            cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
+                            cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
+                            cmdTheThang.ExecuteNonQuery();
+                        }
+                        MessageBox.Show("Khôi phục thẻ thành công! Trạng thái thẻ tháng đã được cập nhật.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        txtTinhTrang_TTT1.Text = "Thẻ tháng"; // Assuming 2 means "Thẻ tháng"
+                        txtTinhTrang_TTT2.Text = "Đang sử dụng"; // Assuming 1 means "Đang sử dụng"
+                    }
+                    else
+                    {
+                        // Card exists in TheThang but Active.trangthai is not 2.
+                        // This is an edge case not explicitly covered by user's request.
+                        // For now, I will just inform the user.
+                        MessageBox.Show($"Thẻ tồn tại trong bảng Thẻ Tháng nhưng trạng thái trong Active không phải là 'Thẻ tháng' (trạng thái hiện tại: {activeTrangThai}). Không thực hiện thay đổi nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    // --- Scenario B: Card does NOT exist in TheThang ---
+                    // Update Active.trangthai to 1
+                    string updateActiveQuery = "UPDATE Active SET trangthai = 1 WHERE sttthe = @soTT OR CardID = @cardID";
+                    using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
+                    {
+                        cmdActive.Parameters.AddWithValue("@soTT", soTT);
+                        cmdActive.Parameters.AddWithValue("@cardID", cardID);
+                        cmdActive.ExecuteNonQuery();
+                    }
+                    MessageBox.Show("Khôi phục thẻ thành công! Thẻ đã sẵn sàng để được cấp lại.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    txtTinhTrang_TTT1.Text = "Thẻ lượt";
+                    txtTinhTrang_TTT2.Text = "Không có dữ liệu"; // Since it's not in TheThang
                 }
 
                 transaction.Commit();
-                MessageBox.Show("Khôi phục thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                // Optionally refresh related data or clear fields
-                txtTinhTrang_TTT1.Text = "Thẻ lượt"; // Assuming 1 means "Thẻ lượt"
-                txtTinhTrang_TTT2.Text = "Đang sử dụng"; // Assuming 1 means "Đang sử dụng"
             }
             catch (Exception ex)
             {
@@ -2336,7 +2432,7 @@ SELECT
 FROM
 [dbo].[Ra]
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
-                WHERE 1=1 ";
+                WHERE 1=1 AND GiaTien > 0";
 
             query += @" AND (
                 CAST(NgayRa AS DATETIME) +
@@ -3918,41 +4014,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG");
         }
 
-        private void btnMo_KH_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(kh_export_path) && Directory.Exists(kh_export_path))
-            {
-                System.Diagnostics.Process.Start("explorer.exe", kh_export_path);
-            }
-            else
-            {
-                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnMo_TT_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(tt_export_path) && Directory.Exists(tt_export_path))
-            {
-                System.Diagnostics.Process.Start("explorer.exe", tt_export_path);
-            }
-            else
-            {
-                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
-
-        private void btnMo_DT_Click(object sender, EventArgs e)
-        {
-            if (!string.IsNullOrEmpty(dt_export_path) && Directory.Exists(dt_export_path))
-            {
-                System.Diagnostics.Process.Start("explorer.exe", dt_export_path);
-            }
-            else
-            {
-                MessageBox.Show("Chưa có thư mục nào được lưu cho mục này hoặc thư mục không tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
 
         private void tabControl_MouseDown(object sender, MouseEventArgs e)
         {
@@ -3975,6 +4036,263 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void tabControl_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+        }
+
+        private void txtSoThe_TTT_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnTim_TTT_Click(btnTim_TTT, new EventArgs());
+            }
+        }
+
+
+        private void txtMaThe_TTT_KeyDown(object sender, KeyEventArgs e) 
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnTim_TTT_Click(btnTim_TTT, new EventArgs());
+            }
+        }
+
+        private void btnMo_TT_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(tt_export_path))
+            {
+                if (Directory.Exists(tt_export_path))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(tt_export_path);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnMo_DT_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(dt_export_path))
+            {
+                if (Directory.Exists(dt_export_path))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(dt_export_path);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnMo_KH_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(kh_export_path))
+            {
+                if (Directory.Exists(kh_export_path))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(kh_export_path);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK); 
+            }
+        }
+
+        private void ExportActiveToExcel(DataTable dataTable)
+        {
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            Excel.Worksheet worksheet = null;
+            Excel.Range headerRange = null;
+            Excel.Range dataRange = null;
+
+            try
+            {
+                excelApp = new Excel.Application();
+                workbook = excelApp.Workbooks.Add();
+                worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                int columnCount = dataTable.Columns.Count;
+                int rowCount = dataTable.Rows.Count;
+
+                object[] header = new object[columnCount];
+                for (int col = 0; col < columnCount; col++)
+                {
+                    header[col] = dataTable.Columns[col].ColumnName;
+                }
+                headerRange = worksheet.Range[worksheet.Cells[1, 1], worksheet.Cells[1, columnCount]];
+                headerRange.Value = header;
+                headerRange.Font.Bold = true;
+                headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                Marshal.ReleaseComObject(headerRange);
+
+                object[,] data = new object[rowCount, columnCount];
+                for (int row = 0; row < rowCount; row++)
+                {
+                    for (int col = 0; col < columnCount; col++)
+                    {
+                        data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
+                    }
+                }
+                dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
+                dataRange.Value = data;
+                Marshal.ReleaseComObject(dataRange);
+
+                worksheet.Columns.AutoFit();
+
+                string serverAddress = txtServer;
+                string sharedFolderValue = Properties.Settings.Default.SharedFolder;
+
+                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                if (index != -1)
+                {
+                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                }
+                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+
+                using (SaveFileDialog sfd = new SaveFileDialog())
+                {
+                    sfd.InitialDirectory = networkPath;
+                    sfd.Filter = "Excel Workbook (*.xlsx)|*.xlsx|Excel 97-2003 Workbook (*.xls)|*.xls";
+                    sfd.Title = "Lưu file Excel danh sách Active";
+                    sfd.FileName = $"XUAT-DANH-SACH-ACTIVE-{DateTime.Now:ddMMyyyy}.xlsx";
+
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        workbook.SaveAs(sfd.FileName);
+                        MessageBox.Show("Xuất dữ liệu Active ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        active_export_path = sfd.FileName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu Active ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (workbook != null) workbook.Saved = true;
+            }
+            finally
+            {
+                if (excelApp != null)
+                {
+                    excelApp.ScreenUpdating = true;
+                    excelApp.DisplayAlerts = true;
+                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+                }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null)
+                {
+                    Marshal.ReleaseComObject(worksheet);
+                    worksheet = null;
+                }
+                if (workbook != null)
+                {
+                    workbook.Close(false);
+                    Marshal.ReleaseComObject(workbook);
+                    workbook = null;
+                }
+                if (excelApp != null)
+                {
+                    excelApp.Quit();
+                    Marshal.ReleaseComObject(excelApp);
+                    excelApp = null;
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
+            }
+        }
+        private void btnExport_TTT_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string query = "SELECT * FROM Active";
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        ExportActiveToExcel(dataTable);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void btnOpen_TTT_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(active_export_path))
+            {
+                string folderPath = Path.GetDirectoryName(active_export_path);
+                if (Directory.Exists(folderPath))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(folderPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn file nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK);
+            }
         }
     }
 }

@@ -54,7 +54,7 @@ namespace IDT_PARKING
             // 
             // btnDoanhThu
             // 
-            this.btnDoanhThu.BorderRadius = 8;
+            this.btnDoanhThu.BorderRadius = 4;
             this.btnDoanhThu.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnDoanhThu.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnDoanhThu.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -71,7 +71,7 @@ namespace IDT_PARKING
             // 
             // btnXeThang
             // 
-            this.btnXeThang.BorderRadius = 8;
+            this.btnXeThang.BorderRadius = 4;
             this.btnXeThang.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnXeThang.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnXeThang.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -88,7 +88,7 @@ namespace IDT_PARKING
             // 
             // btnXeRa
             // 
-            this.btnXeRa.BorderRadius = 8;
+            this.btnXeRa.BorderRadius = 4;
             this.btnXeRa.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnXeRa.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnXeRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -105,7 +105,7 @@ namespace IDT_PARKING
             // 
             // btnXeVao
             // 
-            this.btnXeVao.BorderRadius = 8;
+            this.btnXeVao.BorderRadius = 4;
             this.btnXeVao.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnXeVao.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnXeVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
@@ -122,7 +122,7 @@ namespace IDT_PARKING
             // 
             // btnCaiDat
             // 
-            this.btnCaiDat.BorderRadius = 8;
+            this.btnCaiDat.BorderRadius = 4;
             this.btnCaiDat.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
             this.btnCaiDat.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnCaiDat.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
