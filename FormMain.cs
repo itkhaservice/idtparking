@@ -107,6 +107,7 @@ namespace IDT_PARKING
             rbBienSo_TT.CheckedChanged += new EventHandler(this.rbBienSo_TT_CheckedChanged);
             cbExDate_TT.CheckedChanged += new EventHandler(this.cbExDate_TT_CheckedChanged);
             cbKhoa_TT.CheckedChanged += new EventHandler(this.cbKhoa_TT_CheckedChanged);
+            btnMoThe_TT.Click += new System.EventHandler(this.btnMoThe_TT_Click);
 
             //LoadKhachHangData(); // Initial load for KhachHang
             //LoadTheThangData(); // Initial load for TheThang
@@ -131,6 +132,8 @@ namespace IDT_PARKING
 
             // Disable search by MaThe
             txtMaThe_TTT.Enabled = false;
+            txtTinhTrang_TTT1.Enabled = true;
+            txtTinhTrang_TTT2.Enabled = true;
             txtMaThe_TTT.PlaceholderText = "Chỉ tìm kiếm bằng Số thẻ";
         }
 
@@ -175,10 +178,6 @@ namespace IDT_PARKING
 
                 // Load LoaiThe data for cbbLoai_TTr
                 // LoadLoaiTheData(); // Removed as it's now called in DoanhThu_Load()
-            }
-            if (tabControl.SelectedTab == tabThe)
-            {
-                LoadActiveDataGrid("");
             }
         }
 
@@ -1153,12 +1152,12 @@ namespace IDT_PARKING
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
 
-                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                int index = serverAddress.IndexOf(@"\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
-                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                    serverAddress = serverAddress.Remove(index, @"\SQLEXPRESS".Length).Trim();
                 }
-                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+                string networkPath = Path.Combine("\\" + serverAddress, sharedFolderValue);
 
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -1916,12 +1915,12 @@ namespace IDT_PARKING
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
 
-                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                int index = serverAddress.IndexOf(@"\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
-                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                    serverAddress = serverAddress.Remove(index, @"\SQLEXPRESS".Length).Trim();
                 }
-                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+                string networkPath = Path.Combine("\\" + serverAddress, sharedFolderValue);
 
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -2013,6 +2012,71 @@ namespace IDT_PARKING
             else
             {
                 MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void btnMoThe_TT_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = GetSelectedTheThangRow();
+            if (selectedRow == null) return;
+
+            string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
+            if (string.IsNullOrEmpty(soTT))
+            {
+                MessageBox.Show("Không thể xác định thẻ để mở khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            try
+            {
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                // Check current status
+                int currentTTrang = -1;
+                string checkStatusQuery = "SELECT TTrang FROM TheThang WHERE SoTT = @soTT";
+                using (SqlCommand checkCmd = new SqlCommand(checkStatusQuery, connection))
+                {
+                    checkCmd.Parameters.AddWithValue("@soTT", soTT);
+                    object result = checkCmd.ExecuteScalar();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        currentTTrang = Convert.ToInt32(result);
+                    }
+                }
+
+                if (currentTTrang != 5)
+                {
+                    MessageBox.Show("Thẻ này không bị khóa. Không cần thực hiện hành động.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn mở khóa thẻ có Số thẻ: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm == DialogResult.No) return;
+
+                string updateQuery = "UPDATE TheThang SET TTrang = 1 WHERE SoTT = @soTT";
+                using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@soTT", soTT);
+
+                    int rowsAffected = command.ExecuteNonQuery();
+                    if (rowsAffected > 0)
+                    {
+                        MessageBox.Show("Mở khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        PerformTheThangSearch(); // Refresh data to show the change
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không tìm thấy thẻ để mở khóa hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2127,7 +2191,7 @@ namespace IDT_PARKING
             {
                 MessageBox.Show(
                     $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
-                    $"Vui lòng chọn Khách hàng và Số thẻ muốn cấp!:\n",
+                    "Vui lòng chọn Khách hàng và Số thẻ muốn cấp!:\n",
                     "Lỗi dữ liệu",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
@@ -2295,163 +2359,126 @@ namespace IDT_PARKING
 
         private void btnTim_TTT_Click(object sender, EventArgs e)
         {
-            txtTinhTrang_TTT1.Text = "Không có dữ liệu"; // Reset
-            txtTinhTrang_TTT2.Text = "Không có dữ liệu"; // Reset
-            // Clear the input fields if they were populated by a previous search
-            // This ensures that if a new search is performed, only the current input is considered.
-            // If the user wants to keep the previously found values, they should not clear these.
-            // So, we will only update them if they were empty initially.
+            // 1. Reset UI elements
+            txtMaThe_TTT.Clear();
+            txtTinhTrang_TTT1.Text = "Chưa tìm kiếm";
+            txtTinhTrang_TTT2.Text = "Chưa tìm kiếm";
+            guna2DataGridView3.DataSource = null;
+            btnBaoMat_TTT.Enabled = false;
+            btnKhoiPhuc_TTT.Enabled = false;
 
-            string initialSoThe = txtSoThe_TTT.Text.Trim();
-            string initialMaThe = txtMaThe_TTT.Text.Trim();
+            string soThe = txtSoThe_TTT.Text.Trim();
 
-            if (string.IsNullOrEmpty(initialSoThe) && string.IsNullOrEmpty(initialMaThe))
+            if (string.IsNullOrEmpty(soThe))
             {
-                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập Số thẻ để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                LoadActiveDataGrid(); // Load all cards if search is cleared
                 return;
-            }
-
-            InitializeDatabaseConnection(); // Đảm bảo kết nối được mở
-
-            if (connection.State != ConnectionState.Open)
-            {
-                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // --- Tìm kiếm trong bảng Active ---
-            string queryActive = "SELECT sttthe, CardID, trangthai FROM Active WHERE ";
-            List<SqlParameter> parametersActive = new List<SqlParameter>();
-
-            if (!string.IsNullOrEmpty(initialSoThe))
-            {
-                queryActive += "sttthe = @soThe";
-                parametersActive.Add(new SqlParameter("@soThe", initialSoThe));
-            }
-            else if (!string.IsNullOrEmpty(initialMaThe))
-            {
-                //queryActive += "CardID = @maThe";
-                //parametersActive.Add(new SqlParameter("@maThe", initialMaThe));
             }
 
             try
             {
-                using (SqlCommand commandActive = new SqlCommand(queryActive, connection))
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
                 {
-                    commandActive.Parameters.AddRange(parametersActive.ToArray());
-                    using (SqlDataReader readerActive = commandActive.ExecuteReader())
+                    connection.Open();
+                }
+
+                string cardID = "";
+                int trangThai = -1;
+
+                // 2. Query Active table
+                string queryActive = "SELECT CardID, trangthai FROM Active WHERE sttthe = @soThe";
+                using (SqlCommand cmdActive = new SqlCommand(queryActive, connection))
+                {
+                    cmdActive.Parameters.AddWithValue("@soThe", soThe);
+                    using (SqlDataReader readerActive = cmdActive.ExecuteReader())
                     {
                         if (readerActive.Read())
                         {
-                            string foundSoThe = readerActive["sttthe"].ToString();
-                            string foundMaThe = readerActive["CardID"].ToString();
-                            int trangThai = Convert.ToInt32(readerActive["trangthai"]);
-
-                            // Update input textboxes if they were empty or if the found value is different
-                            if (string.IsNullOrEmpty(initialSoThe)) txtSoThe_TTT.Text = foundSoThe;
-                            if (string.IsNullOrEmpty(initialMaThe)) txtMaThe_TTT.Text = foundMaThe;
-
-                            switch (trangThai)
-                            {
-                                case 1:
-                                    txtTinhTrang_TTT1.Text = "Thẻ lượt";
-                                    break;
-                                case 2:
-                                    txtTinhTrang_TTT1.Text = "Thẻ tháng";
-                                    break;
-                                case 0:
-                                    txtTinhTrang_TTT1.Text = "Thẻ mất";
-                                    break;
-                                default:
-                                    txtTinhTrang_TTT1.Text = "Trạng thái không xác định";
-                                    break;
-                            }
-
-                            LoadActiveDataGrid(foundSoThe);
+                            cardID = readerActive["CardID"].ToString();
+                            trangThai = Convert.ToInt32(readerActive["trangthai"]);
                         }
-                        else
-                        {
-                            txtTinhTrang_TTT1.Text = "Không có dữ liệu";
-                        }
-                    }
+                    } // readerActive is closed here
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi tìm kiếm trong bảng Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtTinhTrang_TTT1.Text = "Lỗi truy vấn";
-            }
 
-            // --- Tìm kiếm trong bảng TheThang ---
-            string queryTheThang = "SELECT SoTT, CardID, TTrang FROM TheThang WHERE ";
-            List<SqlParameter> parametersTheThang = new List<SqlParameter>();
-
-            // Use the values that might have been updated from the Active table search,
-            // or the initial input if Active table search yielded no results.
-            string currentSoThe = txtSoThe_TTT.Text.Trim();
-            string currentMaThe = txtMaThe_TTT.Text.Trim();
-
-            if (!string.IsNullOrEmpty(currentSoThe))
-            {
-                queryTheThang += "SoTT = @soThe";
-                parametersTheThang.Add(new SqlParameter("@soThe", currentSoThe));
-            }
-            else if (!string.IsNullOrEmpty(currentMaThe))
-            {
-                queryTheThang += "CardID = @maThe";
-                parametersTheThang.Add(new SqlParameter("@maThe", currentMaThe));
-            }
-            else // This case should ideally not be reached if initial check passed, but for safety
-            {
-                txtTinhTrang_TTT2.Text = "Không có dữ liệu";
-                return;
-            }
-
-            try
-            {
-                using (SqlCommand commandTheThang = new SqlCommand(queryTheThang, connection))
+                // 3. Process the results
+                if (trangThai != -1)
                 {
-                    commandTheThang.Parameters.AddRange(parametersTheThang.ToArray());
-                    using (SqlDataReader readerTheThang = commandTheThang.ExecuteReader())
+                    txtMaThe_TTT.Text = cardID;
+
+                    switch (trangThai)
                     {
-                        if (readerTheThang.Read())
-                        {
-                            string foundSoTT = readerTheThang["SoTT"].ToString();
-                            string foundCardID = readerTheThang["CardID"].ToString();
-                            int tTrang = Convert.ToInt32(readerTheThang["TTrang"]);
-
-                            // Update input textboxes if they were empty or if the found value is different
-                            if (string.IsNullOrEmpty(initialSoThe) && string.IsNullOrEmpty(txtSoThe_TTT.Text.Trim())) txtSoThe_TTT.Text = foundSoTT;
-                            if (string.IsNullOrEmpty(initialMaThe) && string.IsNullOrEmpty(txtMaThe_TTT.Text.Trim())) txtMaThe_TTT.Text = foundCardID;
-
-                            switch (tTrang)
+                        case 0:
+                            txtTinhTrang_TTT1.Text = "Thẻ mất";
+                            txtTinhTrang_TTT2.Text = "Không áp dụng";
+                            btnBaoMat_TTT.Enabled = false;
+                            btnKhoiPhuc_TTT.Enabled = true;
+                            break;
+                        case 1:
+                            txtTinhTrang_TTT1.Text = "Thẻ lượt";
+                            txtTinhTrang_TTT2.Text = "Không áp dụng";
+                            btnBaoMat_TTT.Enabled = true;
+                            btnKhoiPhuc_TTT.Enabled = false;
+                            break;
+                        case 2:
+                            txtTinhTrang_TTT1.Text = "Thẻ tháng";
+                            btnBaoMat_TTT.Enabled = true;
+                            btnKhoiPhuc_TTT.Enabled = false;
+                            // Now query TheThang for the second status
+                            string queryTheThang = "SELECT TTrang FROM TheThang WHERE SoTT = @soThe";
+                            using (SqlCommand cmdTheThang = new SqlCommand(queryTheThang, connection))
                             {
-                                case 1:
-                                    txtTinhTrang_TTT2.Text = "Đang sử dụng";
-                                    break;
-                                case 5:
-                                    txtTinhTrang_TTT2.Text = "Đã bị khóa";
-                                    break;
-                                default:
-                                    txtTinhTrang_TTT2.Text = "Trạng thái không xác định";
-                                    break;
+                                cmdTheThang.Parameters.AddWithValue("@soThe", soThe);
+                                object result = cmdTheThang.ExecuteScalar();
+
+                                if (result != null)
+                                {
+                                    int ttrang = Convert.ToInt32(result);
+                                    switch (ttrang)
+                                    {
+                                        case 1:
+                                            txtTinhTrang_TTT2.Text = "Đang sử dụng";
+                                            break;
+                                        case 5:
+                                            txtTinhTrang_TTT2.Text = "Đang bị khóa";
+                                            btnBaoMat_TTT.Enabled = false; // Cannot report a locked card as lost
+                                            btnKhoiPhuc_TTT.Enabled = true; // Can restore a locked card
+                                            break;
+                                        default:
+                                            txtTinhTrang_TTT2.Text = "Trạng thái không xác định";
+                                            break;
+                                    }
+                                }
+                                else
+                                {
+                                    txtTinhTrang_TTT2.Text = "Lỗi: Không tìm thấy trong TheThang";
+                                }
                             }
-                        }
-                        else
-                        {
-                            txtTinhTrang_TTT2.Text = "Không có dữ liệu";
-                        }
+                            break;
+                        default:
+                            txtTinhTrang_TTT1.Text = "Trạng thái không xác định";
+                            txtTinhTrang_TTT2.Text = "Không áp dụng";
+                            break;
                     }
+
+                    // 4. Update the DataGridView to show only the found card
+                    LoadActiveDataGrid(soThe);
+                }
+                else
+                {
+                    txtTinhTrang_TTT1.Text = "Không tìm thấy thẻ";
+                    txtTinhTrang_TTT2.Text = "Không áp dụng";
+                    MessageBox.Show("Không tìm thấy thông tin cho số thẻ này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tìm kiếm trong bảng TheThang: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                txtTinhTrang_TTT2.Text = "Lỗi truy vấn";
+                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            LoadActiveDataGrid(txtSoThe_TTT.Text.Trim());
         }
+
+
 
         private (string soTT, string cardID) GetCardIdentifiers(string soTheInput, string maTheInput)
         {
@@ -2756,12 +2783,12 @@ namespace IDT_PARKING
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
 
-                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                int index = serverAddress.IndexOf(@"\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
-                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                    serverAddress = serverAddress.Remove(index, @"\SQLEXPRESS".Length).Trim();
                 }
-                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+                string networkPath = Path.Combine("\\" + serverAddress, sharedFolderValue);
 
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -2834,7 +2861,7 @@ namespace IDT_PARKING
 
         #region Doanh Thu (Revenue) Tab
 
-        private void DoanhThu_Load()        
+        private void DoanhThu_Load()
         {
             progressBarExport.Visible = false;
             progressBarExport.Value = 0;
@@ -3221,12 +3248,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
 
                 // 🔹 Ghi log trước khi xóa (batch insert)
-                string insertLogQuery = $@"
-                    INSERT INTO [dbo].[ITKHA]
-                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
-                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
-                    FROM [dbo].[Ra]
-                    WHERE {whereClauseBuilder.ToString()};";
+                string insertLogQuery = $"\n                    INSERT INTO [dbo].[ITKHA]\n                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)\n                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()\n                    FROM [dbo].[Ra]\n                    WHERE {whereClauseBuilder.ToString()}";
 
                 using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
                 {
@@ -3487,10 +3509,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             return;
                         }
 
-                        string updateQuery = $@"
-                            UPDATE [dbo].[Ra]
-                            SET {string.Join(", ", updateFields)}
-                            WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
+                        string updateQuery = $"\n                            UPDATE [dbo].[Ra]\n                            SET {string.Join(", ", updateFields)}\n                            WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
 
                         updateCmd.CommandText = updateQuery;
                         updateCmd.Parameters.AddWithValue("@cardId", cardId);
@@ -3584,12 +3603,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
 
-                int index = serverAddress.IndexOf("\\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
+                int index = serverAddress.IndexOf(@"\SQLEXPRESS", StringComparison.OrdinalIgnoreCase);
                 if (index != -1)
                 {
-                    serverAddress = serverAddress.Remove(index, "\\SQLEXPRESS".Length).Trim();
+                    serverAddress = serverAddress.Remove(index, @"\SQLEXPRESS".Length).Trim();
                 }
-                string networkPath = Path.Combine("\\\\" + serverAddress, sharedFolderValue);
+                string networkPath = Path.Combine("\\" + serverAddress, sharedFolderValue);
 
                 using (SaveFileDialog sfd = new SaveFileDialog())
                 {
@@ -4337,8 +4356,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             string fileNameMat = idMat + cardId;
             string fileNameXe = idXe + cardId;
 
-            //string imageMatPath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "mat", yearMonthDay, fileNameMat + ".jpg");
-            //string imageXePath = Path.Combine("\\\\192.168.1.99\\Hinh", "out", "xe", yearMonthDay, fileNameXe + ".jpg");
+            //string imageMatPath = Path.Combine("\\192.168.1.99\Hinh", "out", "mat", yearMonthDay, fileNameMat + ".jpg");
+            //string imageXePath = Path.Combine("\\192.168.1.99\Hinh", "out", "xe", yearMonthDay, fileNameXe + ".jpg");
             string imageMatPath = Path.Combine(folderPath, "out", "mat", yearMonthDay, fileNameMat + ".jpg");
             string imageXePath = Path.Combine(folderPath, "out", "xe", yearMonthDay, fileNameXe + ".jpg");
             string imageMatVaoPath = Path.Combine(folderPath, "in", "mat", yearMonthDay, fileNameMat + ".jpg");
@@ -4499,12 +4518,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
 
                 // 🔹 Ghi log trước khi xóa (batch insert)
-                string insertLogQuery = $@"
-                    INSERT INTO [dbo].[ITKHA]
-                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
-                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
-                    FROM [dbo].[Ra]
-                    WHERE {whereClauseBuilder.ToString()};";
+                string insertLogQuery = $"\n                    INSERT INTO [dbo].[ITKHA]\n                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)\n                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()\n                    FROM [dbo].[Ra]\n                    WHERE {whereClauseBuilder.ToString()}";
 
                 using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
                 {
