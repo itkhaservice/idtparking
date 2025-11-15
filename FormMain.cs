@@ -1,15 +1,17 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
-using System.Linq;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.AxHost;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace IDT_PARKING
@@ -126,6 +128,10 @@ namespace IDT_PARKING
             dtDen_TTr.CustomFormat = "dd-MM-yyyy";
 
             txtQuerry_CaiDat.KeyDown += new KeyEventHandler(txtQuerry_CaiDat_KeyDown);
+
+            // Disable search by MaThe
+            txtMaThe_TTT.Enabled = false;
+            txtMaThe_TTT.PlaceholderText = "Chỉ tìm kiếm bằng Số thẻ";
         }
 
         #endregion
@@ -172,7 +178,7 @@ namespace IDT_PARKING
             }
             if (tabControl.SelectedTab == tabThe)
             {
-                LoadActiveDataGrid("","");
+                LoadActiveDataGrid("");
             }
         }
 
@@ -1371,7 +1377,7 @@ namespace IDT_PARKING
             txtBienSo_TT.Text = row.Cells["Biển số"].Value?.ToString();
 
             // Populate cbbLoai_TTr and cbbLoaiThe_TT with "Loại thẻ"
-            string maLoaiThe = row.Cells["Loai thẻ"].Value?.ToString();
+            string maLoaiThe = row.Cells["Loại thẻ"].Value?.ToString();
             if (!string.IsNullOrEmpty(maLoaiThe))
             {
                 cbbLoai_TTr.SelectedValue = maLoaiThe;
@@ -1702,7 +1708,7 @@ namespace IDT_PARKING
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn thu hồi thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn thu hồi thẻ có Số: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -2238,7 +2244,7 @@ namespace IDT_PARKING
 
         #region Tra Cứu Thẻ (Card Lookup) Tab
 
-        private void LoadActiveDataGrid(string soThe = "", string maThe = "")
+        private void LoadActiveDataGrid(string soThe = "")
         {
             try
             {
@@ -2256,17 +2262,12 @@ namespace IDT_PARKING
                     whereClauses.Add("sttthe LIKE @soThe");
                     parameters.Add(new SqlParameter("@soThe", "%" + soThe + "%"));
                 }
-                
-                if (!string.IsNullOrEmpty(maThe))
-                {
-                    whereClauses.Add("CardID LIKE @maThe");
-                    parameters.Add(new SqlParameter("@maThe", "%" + maThe + "%"));
-                }
 
                 if (whereClauses.Any())
                 {
                     query += " WHERE " + string.Join(" AND ", whereClauses);
                 }
+
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -2275,17 +2276,20 @@ namespace IDT_PARKING
                         command.Parameters.AddRange(parameters.ToArray());
                     }
 
+                    // 4. Sử dụng using cho SqlDataAdapter
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
                         DataTable dataTable = new DataTable();
+
+                        // Fill() tự động xử lý DataReader nội bộ
                         adapter.Fill(dataTable);
-                        //dgvActive_TTT.DataSource = dataTable;
+                        guna2DataGridView3.DataSource = dataTable;
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //MessageBox.Show($"Lỗi khi tải dữ liệu thẻ Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2326,8 +2330,8 @@ namespace IDT_PARKING
             }
             else if (!string.IsNullOrEmpty(initialMaThe))
             {
-                queryActive += "CardID = @maThe";
-                parametersActive.Add(new SqlParameter("@maThe", initialMaThe));
+                //queryActive += "CardID = @maThe";
+                //parametersActive.Add(new SqlParameter("@maThe", initialMaThe));
             }
 
             try
@@ -2362,6 +2366,8 @@ namespace IDT_PARKING
                                     txtTinhTrang_TTT1.Text = "Trạng thái không xác định";
                                     break;
                             }
+
+                            LoadActiveDataGrid(foundSoThe);
                         }
                         else
                         {
@@ -2444,7 +2450,7 @@ namespace IDT_PARKING
                 txtTinhTrang_TTT2.Text = "Lỗi truy vấn";
             }
 
-            LoadActiveDataGrid(txtSoThe_TTT.Text.Trim(), txtMaThe_TTT.Text.Trim());
+            LoadActiveDataGrid(txtSoThe_TTT.Text.Trim());
         }
 
         private (string soTT, string cardID) GetCardIdentifiers(string soTheInput, string maTheInput)
@@ -2697,11 +2703,11 @@ namespace IDT_PARKING
 
         private void txtMaThe_TTT_KeyDown(object sender, KeyEventArgs e) 
         {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                btnTim_TTT_Click(btnTim_TTT, new EventArgs());
-            }
+            //if (e.KeyCode == Keys.Enter)
+            //{
+            //    e.SuppressKeyPress = true;
+            //    btnTim_TTT_Click(btnTim_TTT, new EventArgs());
+            //}
         }
 
         private void ExportActiveToExcel(DataTable dataTable)
@@ -4531,6 +4537,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     connection.Close();
                 }
             }
+        }
+
+        private void txtMaThe_TTT_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
