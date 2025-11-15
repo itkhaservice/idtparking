@@ -69,6 +69,7 @@ namespace IDT_PARKING
 
             txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
             txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
+            btnXoaXeVao.Click += btnXoaXeVao_Click;
 
             dgvXeVao.CellClick += dgvXeVao_CellClick;
             dgvXeVao.KeyDown += dgvXeVao_KeyDown;
