@@ -15,7 +15,7 @@ Tôi đã thực hiện các cập nhật UI sau trong `FormMain.Designer.cs` đ
     *   `guna2Panel3`: Đã đặt `Dock = DockStyle.Bottom` và giữ chiều cao cố định.
     *   `dgvKhachHang_KH`: Đã đặt `Dock = DockStyle.Left` và giữ chiều rộng cố định.
     *   `dgvTheTrong_KH`: Đã đặt `Dock = DockStyle.Left` và giữ chiều rộng cố định.
-    *   `dgvTheThang_KH`: Đã đặt `Dock = DockStyle.Fill` để lấp đầy không gian còn lại.
+    *   `dgvTheThang_KH`: Đã đặt `Dock = DockStyle.DockStyle.Fill` để lấp đầy không gian còn lại.
 
 *   **`tabDoanhThu`:**
     *   `dgvResults`: Đã đặt `Dock = DockStyle.Fill` để lấp đầy không gian chính.
@@ -27,13 +27,15 @@ Tôi đã thực hiện các cập nhật UI sau trong `FormMain.Designer.cs` đ
     *   Đã tạo một `Guna.UI2.WinForms.Guna2Panel` mới (`panelXeRaImages`) để chứa các `PictureBoxes` và `TextBoxes` liên quan đến hình ảnh. `panelXeRaImages` này đã được đặt `Dock = DockStyle.Fill` để lấp đầy không gian còn lại ở bên phải. Tất cả các điều khiển liên quan đã được di chuyển vào `panelXeRaImages`.
     *   `dgvXeRa`: Đã thêm `ScrollBars = System.Windows.Forms.ScrollBars.Both;` để hiển thị thanh cuộn ngang và dọc khi cần.
     *   `dgvXeRa`: Đã thêm `AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;` để các cột tự động điều chỉnh kích thước để lấp đầy không gian có sẵn.
+    *   `dgvXeRa`: Đã thêm `SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;` để cho phép chọn toàn bộ hàng.
 
 *   **`tabXeVao`:**
     *   `guna2Panel11`: Đã đặt `Dock = DockStyle.Bottom` và giữ chiều cao cố định.
     *   `dgvXeVao`: Đã đặt `Dock = DockStyle.Fill` để lấp đầy không gian còn lại ở bên trái.
-    *   Đã tạo một `Guna.UI2.WinForms.Guna2Panel` mới (`panelXeVaoImages`) để chứa các `PictureBoxes` và `TextBox` liên quan đến hình ảnh. `panelXeVaoImages` này đã được đặt `Dock = DockStyle.DockStyle.Fill` để lấp đầy không gian còn lại ở bên phải. Tất cả các điều khiển liên quan đã được di chuyển vào `panelXeVaoImages`.
+    *   Đã tạo một `Guna.UI2.WinForms.Guna2Panel` mới (`panelXeVaoImages`) để chứa các `PictureBoxes` và `TextBox` liên quan đến hình ảnh. `panelXeVaoImages` này đã được đặt `Dock = DockStyle.Fill` để lấp đầy không gian còn lại ở bên phải. Tất cả các điều khiển liên quan đã được di chuyển vào `panelXeVaoImages`.
     *   `dgvXeVao`: Đã thêm `ScrollBars = System.Windows.Forms.ScrollBars.Both;` để hiển thị thanh cuộn ngang và dọc khi cần.
     *   `dgvXeVao`: Đã thêm `AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;` để các cột tự động điều chỉnh kích thước để lấp đầy không gian có sẵn.
+    *   `dgvXeVao`: Đã thêm `SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;` để cho phép chọn toàn bộ hàng.
 
 *   **`tabKhac`:**
     *   `groupBox7`: Đã đặt `Dock = DockStyle.Fill` để lấp đầy toàn bộ tab.

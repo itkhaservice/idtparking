@@ -70,6 +70,7 @@ namespace IDT_PARKING
             txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
             txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
             btnXoaXeVao.Click += btnXoaXeVao_Click;
+            btnXoaXeRa.Click += btnXoaXeRa_Click;
 
             dgvXeVao.CellClick += dgvXeVao_CellClick;
             dgvXeVao.KeyDown += dgvXeVao_KeyDown;
@@ -168,6 +169,10 @@ namespace IDT_PARKING
 
                 // Load LoaiThe data for cbbLoai_TTr
                 // LoadLoaiTheData(); // Removed as it's now called in DoanhThu_Load()
+            }
+            if (tabControl.SelectedTab == tabThe)
+            {
+                LoadActiveDataGrid("","");
             }
         }
 
@@ -553,14 +558,12 @@ namespace IDT_PARKING
 
                     connection = new SqlConnection(connectionString);
                     connection.Open();
-                    EnsureItKhaTableExists();
 
                     txtServer_Main.Text = Properties.Settings.Default.ServerAddress;
                     txtDatabase_Main.Text = Properties.Settings.Default.DatabaseName;
                     txtFolder_Main.Text = Properties.Settings.Default.SharedFolder;
                     txtUsername_Main.Text = Properties.Settings.Default.Username;
                     txtPassword_Main.Text = Properties.Settings.Default.Password;
-
                     SetTabStates(true);
                     DoanhThu_Load();
                     LoadKhachHangData();
@@ -602,7 +605,7 @@ namespace IDT_PARKING
             // KIỂM TRA XEM CÁC TRƯỜNG BẮT BUỘC CÓ BỊ TRỐNG KHÔNG
             if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(databaseName))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin Server và Database.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin Máy chủ và Cơ sở dữ liệu.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return; // Dừng thực hiện nếu thiếu thông tin
             }
 
@@ -631,7 +634,7 @@ namespace IDT_PARKING
                 Properties.Settings.Default.SharedFolder = txtFolder_Main.Text;
                 Properties.Settings.Default.Password = txtPassword_Main.Text;
                 Properties.Settings.Default.Save();
-                EnsureItKhaTableExists();
+                EnsureItKhaTableClear();
                 DoanhThu_Load();
                 SetTabStates(true);
                 LoadKhachHangData();
@@ -641,48 +644,13 @@ namespace IDT_PARKING
                 dtDen_TTr.Value = DateTime.Now;
                 tabControl.SelectedTab = tabKhachHang;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show($"Connection errorrrr: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 SetTabStates(false); // Keep other tabs disabled on connection failure
             }
         }
 
-        private void EnsureItKhaTableExists()
-        {
-            if (connection == null || connection.State != ConnectionState.Open)
-            {
-                MessageBox.Show("Không có kết nối cơ sở dữ liệu. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
 
-            string checkAndCreateTable = @"
-            IF NOT EXISTS (SELECT * FROM sysobjects WHERE name='ITKHA' AND xtype='U')
-            BEGIN
-                CREATE TABLE [dbo].[ITKHA] (
-                    STTThe     VARCHAR(10)   NOT NULL,
-                    CardID     VARCHAR(20)   NOT NULL,
-                    NgayRa     DATETIME      NOT NULL,
-                    ThoiGianRa NCHAR(10)     NOT NULL,
-                    MaLoaiThe  VARCHAR(10)   NOT NULL,
-                    GiaTien    MONEY         NOT NULL,
-                    username   VARCHAR(20)   NOT NULL,
-                    IDXe       VARCHAR(50)   NOT NULL,
-                    IDMat      VARCHAR(50)   NOT NULL,
-                    GioRa      NCHAR(10)     NOT NULL,
-                    cong       VARCHAR(50)   NULL,
-                    soxe       VARCHAR(50)   NULL,
-                    soxera     VARCHAR(50)   NOT NULL,
-                    Thao_Tac   NVARCHAR(20)  NOT NULL,
-                    Ngay_Thuc_Hien DATETIME NOT NULL
-                )
-            END";
-
-            using (SqlCommand cmd = new SqlCommand(checkAndCreateTable, connection))
-            {
-                cmd.ExecuteNonQuery();
-            }
-        }
 
         private void ClearAllSettings()
         {
@@ -694,6 +662,36 @@ namespace IDT_PARKING
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
             MessageBox.Show("Tất cả cài đặt đã được xóa về mặc định.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void EnsureItKhaTableClear()
+        {
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                // Connection not open, cannot check/delete table.
+                // This method should ideally be called when a connection is known to be active.
+                return;
+            }
+
+            string dropTableQuery = @"
+            IF OBJECT_ID('dbo.ITKHA', 'U') IS NOT NULL
+            BEGIN
+                DROP TABLE [dbo].[ITKHA]
+            END";
+
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand(dropTableQuery, connection))
+                {
+                    cmd.ExecuteNonQuery();
+                    // Optionally, log or show a message that the table was dropped.
+                    // For now, we'll keep it silent unless an error occurs.
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa bảng ITKHA: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnClearConnect_Click(object sender, EventArgs e)
@@ -942,7 +940,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi lấy Mã KH lớn nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi lấy Mã khách hàng mới nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null; // Indicate failure
             }
             finally
@@ -2123,11 +2121,7 @@ namespace IDT_PARKING
             {
                 MessageBox.Show(
                     $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
-                    $"Vui lòng kiểm tra lại dữ liệu:\n" +
-                    $"- Mã KH: {maKH}\n" +
-                    $"- Mã thẻ: {cardID}\n" +
-                    $"- Số thẻ: {soTT}\n" +
-                    $"- Mã loại thẻ: {maLoaiThe}",
+                    $"Vui lòng chọn Khách hàng và Số thẻ muốn cấp!:\n",
                     "Lỗi dữ liệu",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error
@@ -2157,7 +2151,7 @@ namespace IDT_PARKING
                 int existingMaKHCount = (int)checkMaKHCmd.ExecuteScalar();
                 if (existingMaKHCount > 0)
                 {
-                    MessageBox.Show($"Mã khách hàng '{maKH}' đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show($"Mã khách hàng '{maKH}' này đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -2243,6 +2237,57 @@ namespace IDT_PARKING
         #endregion
 
         #region Tra Cứu Thẻ (Card Lookup) Tab
+
+        private void LoadActiveDataGrid(string soThe = "", string maThe = "")
+        {
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                }
+
+                string query = "SELECT sttthe AS 'Số thẻ', CardID as 'Mã thẻ', trangthai AS 'Trạng thái' FROM Active";
+                var parameters = new List<SqlParameter>();
+                var whereClauses = new List<string>();
+
+                if (!string.IsNullOrEmpty(soThe))
+                {
+                    whereClauses.Add("sttthe LIKE @soThe");
+                    parameters.Add(new SqlParameter("@soThe", "%" + soThe + "%"));
+                }
+                
+                if (!string.IsNullOrEmpty(maThe))
+                {
+                    whereClauses.Add("CardID LIKE @maThe");
+                    parameters.Add(new SqlParameter("@maThe", "%" + maThe + "%"));
+                }
+
+                if (whereClauses.Any())
+                {
+                    query += " WHERE " + string.Join(" AND ", whereClauses);
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    if (parameters.Any())
+                    {
+                        command.Parameters.AddRange(parameters.ToArray());
+                    }
+
+                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    {
+                        DataTable dataTable = new DataTable();
+                        adapter.Fill(dataTable);
+                        //dgvActive_TTT.DataSource = dataTable;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
         private void btnTim_TTT_Click(object sender, EventArgs e)
         {
@@ -2398,6 +2443,8 @@ namespace IDT_PARKING
                 MessageBox.Show($"Lỗi khi tìm kiếm trong bảng TheThang: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtTinhTrang_TTT2.Text = "Lỗi truy vấn";
             }
+
+            LoadActiveDataGrid(txtSoThe_TTT.Text.Trim(), txtMaThe_TTT.Text.Trim());
         }
 
         private (string soTT, string cardID) GetCardIdentifiers(string soTheInput, string maTheInput)
@@ -2813,6 +2860,7 @@ namespace IDT_PARKING
 
             // Load LoaiThe data for all relevant combo boxes
             LoadLoaiTheData();
+            LoadActiveDataGrid();
 
             // Set "All" as selected for cmbTypeDoanhThu (it's already added in LoadLoaiTheData at index 0)
             if (cmbTypeDoanhThu.Items.Count > 0)
@@ -2972,8 +3020,8 @@ SELECT
     CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
-    Ra.IDXe,
-    Ra.IDMat,
+    Ra.IDXe AS 'IDXe',
+    Ra.IDMat AS 'Mã mặt',
     Ra.soxe AS 'Biển số vào',
     Ra.soxera AS 'Biển số ra'
 FROM
@@ -4105,8 +4153,8 @@ SELECT
     CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
-    Ra.IDXe,
-    Ra.IDMat,
+    Ra.IDXe AS 'Mã xe',
+    Ra.IDMat 'Mã mặt',
     Ra.soxe AS 'Biển số vào',
     Ra.soxera AS 'Biển số ra'
 FROM
@@ -4336,5 +4384,153 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         }
 
         #endregion
+
+        private void btnXoaXeRa_Click(object sender, EventArgs e)
+        {
+            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            {
+                DialogResult result = passwordForm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    string enteredPassword = passwordForm.EnteredPassword;
+
+                    if (enteredPassword == CORRECT_PASSWORD)
+                    {
+                        EvenDeleteXeRa();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Cancel.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        private void EvenDeleteXeRa()
+        {
+            if (connection == null || connection.State != ConnectionState.Open)
+            {
+                MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (dgvXeRa.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("Vui lòng chọn ít nhất một dòng để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            int selectedCount = dgvXeRa.SelectedRows.Count;
+            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (confirm != DialogResult.Yes)
+                return;
+
+            SqlTransaction transaction = null;
+            bool connectionOpenedHere = false;
+
+            try
+            {
+                InitializeDatabaseConnection();
+
+                if (connection.State != ConnectionState.Open)
+                {
+                    connection.Open();
+                    connectionOpenedHere = true;
+                }
+
+                transaction = connection.BeginTransaction();
+
+                StringBuilder whereClauseBuilder = new StringBuilder();
+                List<SqlParameter> logParameters = new List<SqlParameter>();
+                List<SqlParameter> deleteParameters = new List<SqlParameter>();
+
+                int paramIndex = 0;
+                foreach (DataGridViewRow row in dgvXeRa.SelectedRows)
+                {
+                    if (row.IsNewRow) continue;
+
+                    string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+                    string idXe = row.Cells["Mã xe"].Value?.ToString();
+                    string idMat = row.Cells["Mã mặt"].Value?.ToString();
+
+                    if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                    {
+                        // Skip rows with incomplete data, but don't count as failure for the user message
+                        continue;
+                    }
+
+                    string cardIdParam = "@cardId" + paramIndex;
+                    string idXeParam = "@idXe" + paramIndex;
+                    string idMatParam = "@idMat" + paramIndex;
+
+                    if (whereClauseBuilder.Length > 0)
+                    {
+                        whereClauseBuilder.Append(" OR ");
+                    }
+                    whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+
+                    logParameters.Add(new SqlParameter(cardIdParam, cardId));
+                    logParameters.Add(new SqlParameter(idXeParam, idXe));
+                    logParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                    deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
+                    deleteParameters.Add(new SqlParameter(idXeParam, idXe));
+                    deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                    paramIndex++;
+                }
+
+                if (whereClauseBuilder.Length == 0)
+                {
+                    MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    transaction.Rollback();
+                    return;
+                }
+
+                // 🔹 Ghi log trước khi xóa (batch insert)
+                string insertLogQuery = $@"
+                    INSERT INTO [dbo].[ITKHA]
+                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
+                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
+                    FROM [dbo].[Ra]
+                    WHERE {whereClauseBuilder.ToString()};";
+
+                using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
+                {
+                    logCmd.Parameters.AddRange(logParameters.ToArray());
+                    logCmd.ExecuteNonQuery();
+                }
+
+                // 🔹 Thực hiện xóa (batch delete)
+                string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
+                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                {
+                    deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
+                    int rowsAffected = deleteCmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+
+                    MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    btnLocXeRa_Click(this, EventArgs.Empty); // Refresh the DataGridView
+                }
+            }
+            catch (Exception ex)
+            {
+                transaction?.Rollback();
+                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                if (connectionOpenedHere && connection.State == ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
     }
 }
