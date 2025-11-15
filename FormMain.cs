@@ -3247,15 +3247,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     return;
                 }
 
-                // 🔹 Ghi log trước khi xóa (batch insert)
-                string insertLogQuery = $"\n                    INSERT INTO [dbo].[ITKHA]\n                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)\n                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()\n                    FROM [dbo].[Ra]\n                    WHERE {whereClauseBuilder.ToString()}";
-
-                using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
-                {
-                    logCmd.Parameters.AddRange(logParameters.ToArray());
-                    logCmd.ExecuteNonQuery();
-                }
-
                 // 🔹 Thực hiện xóa (batch delete)
                 string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
                 using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
@@ -3451,22 +3442,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 using (SqlTransaction trans = connection.BeginTransaction())
                 {
-                    // 1) Ghi log vào it_kha (dùng cùng connection + transaction)
-                    string insertLogQuery = @"
-                        INSERT INTO [dbo].[ITKHA]
-                        (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
-                        SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Cập nhật', GETDATE()
-                        FROM [dbo].[Ra]
-                        WHERE CardID = @cardId AND IDXe = @idXe AND IDMat = @idMat;";
-
-                    using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, trans))
-                    {
-                        logCmd.Parameters.AddWithValue("@cardId", cardId);
-                        logCmd.Parameters.AddWithValue("@idXe", idXe);
-                        logCmd.Parameters.AddWithValue("@idMat", idMat);
-                        logCmd.ExecuteNonQuery();
-                    }
-
                     // 2) Chuẩn bị update (lấy các cột cần update từ dgv)
                     Dictionary<string, string> columnMapping = new Dictionary<string, string>
                         {
@@ -4522,8 +4497,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
                 {
-                    logCmd.Parameters.AddRange(logParameters.ToArray());
-                    logCmd.ExecuteNonQuery();
+                    //logCmd.Parameters.AddRange(logParameters.ToArray());
+                    //logCmd.ExecuteNonQuery();
                 }
 
                 // 🔹 Thực hiện xóa (batch delete)
