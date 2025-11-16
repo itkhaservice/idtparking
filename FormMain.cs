@@ -54,7 +54,6 @@ namespace IDT_PARKING
             InitializeComponent();
        
             txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
-            SetupAndConnect();
             //this.tabControl.SelectedTab = tabCaiDat;
             
 
@@ -140,6 +139,25 @@ namespace IDT_PARKING
         #endregion
 
         #region Common / General Methods
+
+        private void ShowLoading()
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                loadingControl.BringToFront();
+                loadingControl.Visible = true;
+                loadingControl.Enabled = true;
+            });
+        }
+
+        private void HideLoading()
+        {
+            this.Invoke((MethodInvoker)delegate
+            {
+                loadingControl.Visible = false;
+                loadingControl.Enabled = false;
+            });
+        }
 
         private void SetTabStates(bool enabled)
         {
@@ -528,12 +546,18 @@ namespace IDT_PARKING
             isDragging = false;
         }
 
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            SetupAndConnect();
+        }
+
         #endregion
 
         #region Cài Đặt (Settings) Tab
 
         private async void SetupAndConnect()
         {
+            ShowLoading(); // Show loading indicator
             SetTabStates(false); // Initially disable all tabs except settings
             string serverAddress = Properties.Settings.Default.ServerAddress;
             string databaseName = Properties.Settings.Default.DatabaseName;
@@ -584,6 +608,10 @@ namespace IDT_PARKING
                     tabControl.SelectedTab = tabCaiDat;
                     SetTabStates(false);
                 }
+                finally
+                {
+                    HideLoading(); // Hide loading indicator
+                }
             }
         }
 
@@ -600,6 +628,7 @@ namespace IDT_PARKING
 
         private async void btnConnect_Main_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
             string serverAddress = txtServer_Main.Text;
             string databaseName = txtDatabase_Main.Text;
@@ -652,6 +681,10 @@ namespace IDT_PARKING
             catch (Exception)
             {
                 SetTabStates(false); // Keep other tabs disabled on connection failure
+            }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -755,6 +788,7 @@ namespace IDT_PARKING
 
         private async Task LoadKhachHangData()
         {
+            ShowLoading(); // Show loading indicator
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
 
@@ -818,6 +852,10 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi tải dữ liệu khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -1257,6 +1295,7 @@ namespace IDT_PARKING
 
         private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
         {
+            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             var whereClauses = new List<string>();
@@ -1345,6 +1384,10 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2084,6 +2127,7 @@ namespace IDT_PARKING
 
         private async Task LoadTheTrongData(string searchTerm = "")
         {
+            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             string query = @"
@@ -2140,6 +2184,10 @@ namespace IDT_PARKING
             {
                 MessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
+            }
         }
 
         private void dgvTheTrong_KH_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -2170,6 +2218,7 @@ namespace IDT_PARKING
 
         private async void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
             string maKH = _selectedMaKH;
             string cardID = _selectedCardID;
@@ -2299,6 +2348,7 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
+                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2355,8 +2405,9 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnTim_TTT_Click(object sender, EventArgs e)
+        private async void btnTim_TTT_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             // 1. Reset UI elements
             txtMaThe_TTT.Clear();
             txtTinhTrang_TTT1.Text = "Chưa tìm kiếm";
@@ -2474,6 +2525,10 @@ namespace IDT_PARKING
             {
                 MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
+            }
         }
 
 
@@ -2530,8 +2585,9 @@ namespace IDT_PARKING
             return (soTT, cardID);
         }
 
-        private void btnBaoMat_TTT_Click(object sender, EventArgs e)
+        private async void btnBaoMat_TTT_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2599,11 +2655,13 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
+                HideLoading(); // Hide loading indicator
             }
         }
 
-        private void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
+        private async void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2714,6 +2772,7 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
+                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -3015,9 +3074,9 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnRevenue_Click(object sender, EventArgs e)
+        private async void btnRevenue_Click(object sender, EventArgs e)
         {
-
+            ShowLoading(); // Show loading indicator
             DateTime startDateFromPicker = dateTimeStart.Value;
             DateTime endDateFromPicker = dateTimeEnd.Value;
             DateTime startTimeFromPicker = timeTimeStart.Value;
@@ -3136,6 +3195,10 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             {
                 MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
+            }
         }
         
         private void btnDelete_Click(object sender, EventArgs e)
@@ -3164,8 +3227,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void EvenDelete()
+        private async void EvenDelete()
         {
+            ShowLoading(); // Show loading indicator
             if (connection == null || connection.State != ConnectionState.Open)
             {
                 MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3272,9 +3336,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void btnQuery_Click(object sender, EventArgs e)
+        private async void btnQuery_Click(object sender, EventArgs e)
         {
-
+            ShowLoading(); // Show loading indicator
             // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
             DateTime startDateFromPicker = dateTimeStart.Value;
             DateTime endDateFromPicker = dateTimeEnd.Value;
@@ -3397,12 +3461,17 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             {
                 MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
+            }
             // Không có khối finally ở đây trong code gốc của bạn, nên tôi không thêm vào.
             // Nếu bạn muốn thêm xử lý trạng thái UI như btnExport_Click, thì cần thêm vào đây.
         }
 
-        private void btnUpdate_Click(object sender, EventArgs e)
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
+            ShowLoading(); // Show loading indicator
             if (connection == null)
             {
                 MessageBox.Show("Chưa khởi tạo kết nối. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3516,6 +3585,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     connection.Close();
                 }
+                HideLoading(); // Hide loading indicator
             }
 
         }
@@ -3871,6 +3941,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async Task LoadXeVaoData()
         {
+            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeVaoTuDate.Value;
@@ -4119,7 +4190,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async Task LoadXeRaData()
         {
-            InitializeDatabaseConnection(); // Ensure connection is open
+            ShowLoading(); // Show loading indicator
+            // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeRaTuDate.Value;
             DateTime endDateFromPicker = dtXeRaDenDate.Value;
@@ -4232,7 +4304,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi truy vấn dữ liệu xe ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tải dữ liệu xe ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading(); // Hide loading indicator
             }
         }
 

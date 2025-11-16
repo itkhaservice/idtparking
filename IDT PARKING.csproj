@@ -113,6 +113,12 @@
     <Compile Include="ImageViewerForm.Designer.cs">
       <DependentUpon>ImageViewerForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="LoadingControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LoadingControl.Designer.cs">
+      <DependentUpon>LoadingControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormMain.resx">

@@ -51,6 +51,7 @@ namespace IDT_PARKING
             this.guna2Button3 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
+            this.btnMoThe_TT = new Guna.UI2.WinForms.Guna2Button();
             this.tabThe = new System.Windows.Forms.TabPage();
             this.guna2DataGridView3 = new Guna.UI2.WinForms.Guna2DataGridView();
             this.guna2DataGridView1 = new Guna.UI2.WinForms.Guna2DataGridView();
@@ -73,7 +74,13 @@ namespace IDT_PARKING
             this.btnExport_TTT = new Guna.UI2.WinForms.Guna2Button();
             this.btnOpen_TTT = new Guna.UI2.WinForms.Guna2Button();
             this.tabKhachHang = new System.Windows.Forms.TabPage();
+            this.label53 = new System.Windows.Forms.Label();
+            this.label52 = new System.Windows.Forms.Label();
+            this.label51 = new System.Windows.Forms.Label();
             this.guna2Panel3 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2Panel7 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2Panel6 = new Guna.UI2.WinForms.Guna2Panel();
+            this.label50 = new System.Windows.Forms.Label();
             this.cbChuaThe_KH = new Guna.UI2.WinForms.Guna2CheckBox();
             this.label43 = new System.Windows.Forms.Label();
             this.btnMo_TT = new Guna.UI2.WinForms.Guna2Button();
@@ -231,13 +238,7 @@ namespace IDT_PARKING
             this.txtDatabase_Main = new Guna.UI2.WinForms.Guna2TextBox();
             this.btnConnect_Main = new Guna.UI2.WinForms.Guna2Button();
             this.txtServer_Main = new Guna.UI2.WinForms.Guna2TextBox();
-            this.label50 = new System.Windows.Forms.Label();
-            this.label51 = new System.Windows.Forms.Label();
-            this.label52 = new System.Windows.Forms.Label();
-            this.label53 = new System.Windows.Forms.Label();
-            this.btnMoThe_TT = new Guna.UI2.WinForms.Guna2Button();
-            this.guna2Panel6 = new Guna.UI2.WinForms.Guna2Panel();
-            this.guna2Panel7 = new Guna.UI2.WinForms.Guna2Panel();
+            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -378,6 +379,23 @@ namespace IDT_PARKING
             this.guna2Button6.TabIndex = 69;
             this.guna2Button6.Text = "Tải lên danh sách thẻ";
             this.toolTip1.SetToolTip(this.guna2Button6, "Đang thực hiện..");
+            // 
+            // btnMoThe_TT
+            // 
+            this.btnMoThe_TT.BorderRadius = 4;
+            this.btnMoThe_TT.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoThe_TT.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoThe_TT.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnMoThe_TT.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnMoThe_TT.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnMoThe_TT.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnMoThe_TT.ForeColor = System.Drawing.Color.White;
+            this.btnMoThe_TT.Location = new System.Drawing.Point(1213, 150);
+            this.btnMoThe_TT.Name = "btnMoThe_TT";
+            this.btnMoThe_TT.Size = new System.Drawing.Size(96, 24);
+            this.btnMoThe_TT.TabIndex = 134;
+            this.btnMoThe_TT.Text = "Mở thẻ";
+            this.toolTip1.SetToolTip(this.btnMoThe_TT, "Đang cập nhật...");
             // 
             // tabThe
             // 
@@ -830,6 +848,39 @@ namespace IDT_PARKING
             this.tabKhachHang.Text = "Khách hàng";
             this.tabKhachHang.UseVisualStyleBackColor = true;
             // 
+            // label53
+            // 
+            this.label53.AutoSize = true;
+            this.label53.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label53.Location = new System.Drawing.Point(187, 468);
+            this.label53.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(130, 15);
+            this.label53.TabIndex = 136;
+            this.label53.Text = "Danh sách khách hàng";
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label52.Location = new System.Drawing.Point(987, 468);
+            this.label52.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(119, 15);
+            this.label52.TabIndex = 135;
+            this.label52.Text = "Danh sách thẻ tháng";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label51.Location = new System.Drawing.Point(554, 468);
+            this.label51.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(115, 15);
+            this.label51.TabIndex = 134;
+            this.label51.Text = "Danh sách thẻ trống";
+            // 
             // guna2Panel3
             // 
             this.guna2Panel3.BackColor = System.Drawing.Color.White;
@@ -902,6 +953,33 @@ namespace IDT_PARKING
             this.guna2Panel3.Name = "guna2Panel3";
             this.guna2Panel3.Size = new System.Drawing.Size(1332, 177);
             this.guna2Panel3.TabIndex = 15;
+            // 
+            // guna2Panel7
+            // 
+            this.guna2Panel7.BackColor = System.Drawing.Color.Black;
+            this.guna2Panel7.Location = new System.Drawing.Point(481, 11);
+            this.guna2Panel7.Name = "guna2Panel7";
+            this.guna2Panel7.Size = new System.Drawing.Size(1, 160);
+            this.guna2Panel7.TabIndex = 136;
+            // 
+            // guna2Panel6
+            // 
+            this.guna2Panel6.BackColor = System.Drawing.Color.Black;
+            this.guna2Panel6.Location = new System.Drawing.Point(718, 11);
+            this.guna2Panel6.Name = "guna2Panel6";
+            this.guna2Panel6.Size = new System.Drawing.Size(1, 160);
+            this.guna2Panel6.TabIndex = 135;
+            // 
+            // label50
+            // 
+            this.label50.AutoSize = true;
+            this.label50.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label50.Location = new System.Drawing.Point(407, 34);
+            this.label50.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(46, 15);
+            this.label50.TabIndex = 133;
+            this.label50.Text = "cấp thẻ";
             // 
             // cbChuaThe_KH
             // 
@@ -3222,82 +3300,14 @@ namespace IDT_PARKING
             this.txtServer_Main.Size = new System.Drawing.Size(162, 24);
             this.txtServer_Main.TabIndex = 82;
             // 
-            // label50
+            // loadingControl
             // 
-            this.label50.AutoSize = true;
-            this.label50.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label50.Location = new System.Drawing.Point(407, 34);
-            this.label50.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(46, 15);
-            this.label50.TabIndex = 133;
-            this.label50.Text = "cấp thẻ";
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label51.Location = new System.Drawing.Point(554, 468);
-            this.label51.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(115, 15);
-            this.label51.TabIndex = 134;
-            this.label51.Text = "Danh sách thẻ trống";
-            // 
-            // label52
-            // 
-            this.label52.AutoSize = true;
-            this.label52.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label52.Location = new System.Drawing.Point(987, 468);
-            this.label52.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(119, 15);
-            this.label52.TabIndex = 135;
-            this.label52.Text = "Danh sách thẻ tháng";
-            // 
-            // label53
-            // 
-            this.label53.AutoSize = true;
-            this.label53.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label53.Location = new System.Drawing.Point(187, 468);
-            this.label53.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(130, 15);
-            this.label53.TabIndex = 136;
-            this.label53.Text = "Danh sách khách hàng";
-            // 
-            // btnMoThe_TT
-            // 
-            this.btnMoThe_TT.BorderRadius = 4;
-            this.btnMoThe_TT.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnMoThe_TT.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnMoThe_TT.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnMoThe_TT.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnMoThe_TT.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
-            this.btnMoThe_TT.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnMoThe_TT.ForeColor = System.Drawing.Color.White;
-            this.btnMoThe_TT.Location = new System.Drawing.Point(1213, 150);
-            this.btnMoThe_TT.Name = "btnMoThe_TT";
-            this.btnMoThe_TT.Size = new System.Drawing.Size(96, 24);
-            this.btnMoThe_TT.TabIndex = 134;
-            this.btnMoThe_TT.Text = "Mở thẻ";
-            this.toolTip1.SetToolTip(this.btnMoThe_TT, "Đang cập nhật...");
-            // 
-            // guna2Panel6
-            // 
-            this.guna2Panel6.BackColor = System.Drawing.Color.Black;
-            this.guna2Panel6.Location = new System.Drawing.Point(718, 11);
-            this.guna2Panel6.Name = "guna2Panel6";
-            this.guna2Panel6.Size = new System.Drawing.Size(1, 160);
-            this.guna2Panel6.TabIndex = 135;
-            // 
-            // guna2Panel7
-            // 
-            this.guna2Panel7.BackColor = System.Drawing.Color.Black;
-            this.guna2Panel7.Location = new System.Drawing.Point(481, 11);
-            this.guna2Panel7.Name = "guna2Panel7";
-            this.guna2Panel7.Size = new System.Drawing.Size(1, 160);
-            this.guna2Panel7.TabIndex = 136;
+            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.loadingControl.Location = new System.Drawing.Point(495, 250);
+            this.loadingControl.Name = "loadingControl";
+            this.loadingControl.Size = new System.Drawing.Size(350, 150);
+            this.loadingControl.TabIndex = 1002;
+            this.loadingControl.Visible = false;
             // 
             // FormMain
             // 
@@ -3310,6 +3320,7 @@ namespace IDT_PARKING
             this.Name = "FormMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormMain";
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.tabThe.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).EndInit();
@@ -3550,7 +3561,16 @@ namespace IDT_PARKING
         private System.Windows.Forms.Label label52;
         private System.Windows.Forms.Label label51;
         private Guna.UI2.WinForms.Guna2Button btnMoThe_TT;
-        private Guna.UI2.WinForms.Guna2Panel guna2Panel7;
         private Guna.UI2.WinForms.Guna2Panel guna2Panel6;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel7;
+        private LoadingControl loadingControl;
+
+
+
+
+
+
+
+
     }
 }
