@@ -1673,13 +1673,13 @@ namespace IDT_PARKING
                 //    await cmdActive.ExecuteNonQueryAsync();
                 //}
 
-                await transaction.CommitAsync();
+                transaction.Commit();
                 MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
             }
             catch (Exception ex)
             {
-                if(transaction != null) await transaction.RollbackAsync();
+                if(transaction != null) transaction.Rollback();
                 MessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -2013,7 +2013,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnMoThe_TT_Click(object sender, EventArgs e)
+        private async void btnMoThe_TT_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -2064,7 +2064,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Mở khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        PerformTheThangSearch(); // Refresh data to show the change
+                        await PerformTheThangSearch(); // Refresh data to show the change
                     }
                     else
                     {
@@ -3788,7 +3788,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void btnXoaXeVao_Click(object sender, EventArgs e)
+        private async void btnXoaXeVao_Click(object sender, EventArgs e)
         {
             if (dgvXeVao.SelectedRows.Count == 0)
             {
@@ -3841,7 +3841,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         transaction.Commit();
                         MessageBox.Show("Xóa xe vào thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadXeVaoData(); // Refresh the DataGridView
+                        await LoadXeVaoData(); // Refresh the DataGridView
                     }
                     else
                     {
