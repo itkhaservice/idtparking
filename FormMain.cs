@@ -163,14 +163,14 @@ namespace IDT_PARKING
             }
         }
 
-        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private async void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == tabKhachHang)
             {
-                LoadKhachHangData();
+                await LoadKhachHangData();
                 // Pass default values for showExpired and showLocked (false, false)
-                LoadTheThangData("", true, false, false); // Assuming default search by CardID, not expired, not locked
-                LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
+                await LoadTheThangData("", true, false, false); // Assuming default search by CardID, not expired, not locked
+                await LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
 
                 // Set dtTu_TTr and dtDen_TTr to current date
                 dtTu_TTr.Value = DateTime.Now;
@@ -532,7 +532,7 @@ namespace IDT_PARKING
 
         #region Cài Đặt (Settings) Tab
 
-        private void SetupAndConnect()
+        private async void SetupAndConnect()
         {
             SetTabStates(false); // Initially disable all tabs except settings
             string serverAddress = Properties.Settings.Default.ServerAddress;
@@ -571,9 +571,9 @@ namespace IDT_PARKING
                     txtPassword_Main.Text = Properties.Settings.Default.Password;
                     SetTabStates(true);
                     DoanhThu_Load();
-                    LoadKhachHangData();
-                    LoadTheThangData("", true, false, false);
-                    LoadTheTrongData();
+                    await LoadKhachHangData();
+                    await LoadTheThangData("", true, false, false);
+                    await LoadTheTrongData();
                     dtTu_TTr.Value = DateTime.Now;
                     dtDen_TTr.Value = DateTime.Now;
                     //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
@@ -598,7 +598,7 @@ namespace IDT_PARKING
             MessageBox.Show("Thông tin kết nối đã được lưu thành công!", "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void btnConnect_Main_Click(object sender, EventArgs e)
+        private async void btnConnect_Main_Click(object sender, EventArgs e)
         {
             // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
             string serverAddress = txtServer_Main.Text;
@@ -642,9 +642,9 @@ namespace IDT_PARKING
                 EnsureItKhaTableClear();
                 DoanhThu_Load();
                 SetTabStates(true);
-                LoadKhachHangData();
-                LoadTheThangData("", true, false, false);
-                LoadTheTrongData();
+                await LoadKhachHangData();
+                await LoadTheThangData("", true, false, false);
+                await LoadTheTrongData();
                 dtTu_TTr.Value = DateTime.Now;
                 dtDen_TTr.Value = DateTime.Now;
                 tabControl.SelectedTab = tabKhachHang;
@@ -753,7 +753,7 @@ namespace IDT_PARKING
 
         #region Khách Hàng (Customers) Tab
 
-        private void LoadKhachHangData()
+        private async Task LoadKhachHangData()
         {
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
@@ -763,19 +763,19 @@ namespace IDT_PARKING
             if (!string.IsNullOrWhiteSpace(txtTimTen_KH.Text))
             {
                 whereClauses.Add("hoten LIKE @hoten");
-                parameters.Add(new SqlParameter("@hoten", "%" + txtTimTen_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hoten", txtTimTen_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimDVDC_KH.Text))
             {
                 whereClauses.Add("(DonVi LIKE @dvdc OR DiaChi LIKE @dvdc)");
-                parameters.Add(new SqlParameter("@dvdc", "%" + txtTimDVDC_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@dvdc", txtTimDVDC_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimBS_KH.Text))
             {
                 whereClauses.Add("hopdong LIKE @hopdong");
-                parameters.Add(new SqlParameter("@hopdong", "%" + txtTimBS_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hopdong", txtTimBS_KH.Text + "%"));
             }
 
             if (cbChuaThe_KH.Checked)
@@ -793,26 +793,26 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 using (SqlCommand command = new SqlCommand(finalQuery, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    DataTable dataTable = new DataTable();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvKhachHang_KH.DataSource = dataTable;
-
-                        if (dgvKhachHang_KH.Columns.Contains("Hình ảnh"))
-                        {
-                            dgvKhachHang_KH.Columns["Hình ảnh"].Visible = false;
-                        }
-                        dgvKhachHang_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                        dataTable.Load(reader);
                     }
+
+                    dgvKhachHang_KH.DataSource = dataTable;
+
+                    if (dgvKhachHang_KH.Columns.Contains("Hình ảnh"))
+                    {
+                        dgvKhachHang_KH.Columns["Hình ảnh"].Visible = false;
+                    }
+                    dgvKhachHang_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 }
             }
             catch (Exception ex)
@@ -821,7 +821,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void dgvKhachHang_KH_CellClick(object sender, DataGridViewCellEventArgs e)
+        private async void dgvKhachHang_KH_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
             {
@@ -837,7 +837,7 @@ namespace IDT_PARKING
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
 
                 // Load monthly card data for the selected customer
-                LoadTheThangData(maKHFilter: _selectedMaKH);
+                await LoadTheThangData(maKHFilter: _selectedMaKH);
 
                 // If there's data in dgvTheThang_KH, select the first row and populate details
                 if (dgvTheThang_KH.Rows.Count > 0)
@@ -857,23 +857,23 @@ namespace IDT_PARKING
             }
         }
 
-        private void SearchKhachHang_KeyDown(object sender, KeyEventArgs e)
+        private async void SearchKhachHang_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                LoadKhachHangData();
+                await LoadKhachHangData();
                 e.SuppressKeyPress = true; 
             }
         }
 
-        private void cbChuaThe_KH_CheckedChanged(object sender, EventArgs e)
+        private async void cbChuaThe_KH_CheckedChanged(object sender, EventArgs e)
         {
-            LoadKhachHangData();
+            await LoadKhachHangData();
         }
 
-        private void btnThem_KH_Click(object sender, EventArgs e)
+        private async void btnThem_KH_Click(object sender, EventArgs e)
         {
-            string newMaKH = GenerateNextMaKH();
+            string newMaKH = await GenerateNextMaKH();
             if (newMaKH == null) return; // Error occurred during generation
 
             InitializeDatabaseConnection();
@@ -886,19 +886,19 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@makh", newMaKH);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}. Vui lòng chọn dòng này và nhấn Cập nhật để điền thông tin chi tiết.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadKhachHangData(); // Refresh the DataGridView
+                        await LoadKhachHangData(); // Refresh the DataGridView
                         // Optionally, select the newly added row
                         foreach (DataGridViewRow row in dgvKhachHang_KH.Rows)
                         {
@@ -922,7 +922,7 @@ namespace IDT_PARKING
             }
         }
 
-        private string GenerateNextMaKH()
+        private async Task<string> GenerateNextMaKH()
         {
             string maxMaKH = "000000"; // Default if no existing customers
 
@@ -930,13 +930,13 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 string query = "SELECT MAX(MaKH) FROM KhachHang";
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    object result = command.ExecuteScalar();
+                    object result = await command.ExecuteScalarAsync();
                     if (result != DBNull.Value && result != null)
                     {
                         maxMaKH = result.ToString();
@@ -970,7 +970,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnUpdate_KH_Click(object sender, EventArgs e)
+        private async void btnUpdate_KH_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_selectedMaKH))
             {
@@ -979,6 +979,10 @@ namespace IDT_PARKING
             }
 
             InitializeDatabaseConnection();
+            if (connection.State != ConnectionState.Open)
+            {
+                await connection.OpenAsync();
+            }
 
             // Check for duplicate license plate
             string checkDuplicateBienSoQuery = "SELECT COUNT(*) FROM KhachHang WHERE hopdong = @hopdong AND MaKH != @makh";
@@ -986,7 +990,7 @@ namespace IDT_PARKING
             {
                 checkCmd.Parameters.AddWithValue("@hopdong", txtBienSo_KH.Text.Trim());
                 checkCmd.Parameters.AddWithValue("@makh", _selectedMaKH);
-                int duplicateCount = (int)checkCmd.ExecuteScalar();
+                int duplicateCount = (int)await checkCmd.ExecuteScalarAsync();
                 if (duplicateCount > 0)
                 {
                     MessageBox.Show("Biển số này đã tồn tại cho một khách hàng khác. Vui lòng nhập biển số khác.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1001,11 +1005,6 @@ namespace IDT_PARKING
 
             try
             {
-                if (connection.State != ConnectionState.Open)
-                {
-                    connection.Open();
-                }
-
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@makh", _selectedMaKH);
@@ -1017,12 +1016,12 @@ namespace IDT_PARKING
                     command.Parameters.AddWithValue("@chungloai", txtHieuXe_KH.Text);
                     // hinhanh is not updated via UI, so it's omitted
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật thông tin khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadKhachHangData(); // Refresh the DataGridView
+                        await LoadKhachHangData(); // Refresh the DataGridView
                     }
                     else
                     {
@@ -1036,7 +1035,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnXoa_KH_Click(object sender, EventArgs e)
+        private async void btnXoa_KH_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrWhiteSpace(_selectedMaKH))
             {
@@ -1054,7 +1053,7 @@ namespace IDT_PARKING
                 {
                     if (connection.State != ConnectionState.Open)
                     {
-                        connection.Open();
+                        await connection.OpenAsync();
                     }
 
                     // Check if the customer has any associated monthly cards
@@ -1062,7 +1061,7 @@ namespace IDT_PARKING
                     using (SqlCommand checkCmd = new SqlCommand(checkCardsQuery, connection))
                     {
                         checkCmd.Parameters.AddWithValue("@makh", _selectedMaKH);
-                        int cardCount = (int)checkCmd.ExecuteScalar();
+                        int cardCount = (int)await checkCmd.ExecuteScalarAsync();
 
                         if (cardCount > 0)
                         {
@@ -1077,7 +1076,7 @@ namespace IDT_PARKING
                     {
                         command.Parameters.AddWithValue("@makh", _selectedMaKH);
 
-                        int rowsAffected = command.ExecuteNonQuery();
+                        int rowsAffected = await command.ExecuteNonQueryAsync();
 
                         if (rowsAffected > 0)
                         {
@@ -1090,8 +1089,8 @@ namespace IDT_PARKING
                             txtBienSo_KH.Clear();
                             txtHieuXe_KH.Clear();
                             txtDienThoai_KH.Clear();
-                            LoadKhachHangData(); // Refresh the DataGridView
-                            LoadTheThangData("", true, false, false); // Also refresh monthly cards, clearing the list
+                            await LoadKhachHangData(); // Refresh the DataGridView
+                            await LoadTheThangData("", true, false, false); // Also refresh monthly cards, clearing the list
                         }
                         else
                         {
@@ -1256,7 +1255,7 @@ namespace IDT_PARKING
 
         #region Thẻ Tháng (Monthly Cards) Tab
 
-        private void LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
+        private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -1317,7 +1316,7 @@ namespace IDT_PARKING
                 {
                     whereClauses.Add("tt.soxe LIKE @searchTerm");
                 }
-                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
+                parameters.Add(new SqlParameter("@searchTerm", searchTerm + "%"));
             }
 
             if (whereClauses.Any())
@@ -1329,19 +1328,18 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    DataTable dataTable = new DataTable();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvTheThang_KH.DataSource = dataTable;
+                        dataTable.Load(reader);
                     }
+                    dgvTheThang_KH.DataSource = dataTable;
                 }
             }
             catch (Exception ex)
@@ -1408,7 +1406,7 @@ namespace IDT_PARKING
             return dgvTheThang_KH.CurrentRow;
         }
 
-        private void btnUpdateBienSo_KH_Click(object sender, EventArgs e)
+        private async void btnUpdateBienSo_KH_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1427,7 +1425,7 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 string query = "UPDATE TheThang SET soxe = @newBienSo WHERE CardID = @cardID AND SoTT = @soTT";
@@ -1437,11 +1435,11 @@ namespace IDT_PARKING
                     command.Parameters.AddWithValue("@cardID", cardID);
                     command.Parameters.AddWithValue("@soTT", soTT);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
                     }
                     else
                     {
@@ -1455,7 +1453,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnUpdateLoaiThe_KH_Click(object sender, EventArgs e)
+        private async void btnUpdateLoaiThe_KH_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1474,7 +1472,7 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 string query = "UPDATE TheThang SET MaLoaiThe = @newMaLoaiThe WHERE CardID = @cardID AND SoTT = @soTT";
@@ -1484,11 +1482,11 @@ namespace IDT_PARKING
                     command.Parameters.AddWithValue("@cardID", cardID);
                     command.Parameters.AddWithValue("@soTT", soTT);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
                     }
                     else
                     {
@@ -1502,7 +1500,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnUpdateDate_KH_Click(object sender, EventArgs e)
+        private async void btnUpdateDate_KH_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1528,7 +1526,7 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 string query = "UPDATE TheThang SET NgayBD = @newNgayBD, NgayKT = @newNgayKT WHERE CardID = @cardID AND SoTT = @soTT";
@@ -1539,11 +1537,11 @@ namespace IDT_PARKING
                     command.Parameters.AddWithValue("@cardID", cardID);
                     command.Parameters.AddWithValue("@soTT", soTT);
 
-                    int rowsAffected = command.ExecuteNonQuery();
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
                     }
                     else
                     {
@@ -1557,7 +1555,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnGiaHan_TT_Click(object sender, EventArgs e)
+        private async void btnGiaHan_TT_Click(object sender, EventArgs e)
         {
             if (dgvTheThang_KH.SelectedRows.Count == 0)
             {
@@ -1594,7 +1592,7 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 // Build the parameter names for the IN clause
@@ -1612,11 +1610,11 @@ namespace IDT_PARKING
                 command.Connection = connection;
                 command.Parameters.AddWithValue("@newNgayKT", newNgayKT);
 
-                int rowsAffected = command.ExecuteNonQuery();
+                int rowsAffected = await command.ExecuteNonQueryAsync();
                 if (rowsAffected > 0)
                 {
                     MessageBox.Show($"Gia hạn thành công cho {rowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    PerformTheThangSearch(); // Refresh data
+                    await PerformTheThangSearch(); // Refresh data
                 }
                 else
                 {
@@ -1629,7 +1627,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnKhoaThe_TT_Click(object sender, EventArgs e)
+        private async void btnKhoaThe_TT_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1653,7 +1651,7 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     connectionOpenedHere = true;
                 }
                 transaction = connection.BeginTransaction();
@@ -1664,7 +1662,7 @@ namespace IDT_PARKING
                 {
                     cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
                     cmdTheThang.Parameters.AddWithValue("@soTT", soTT);
-                    cmdTheThang.ExecuteNonQuery();
+                    await cmdTheThang.ExecuteNonQueryAsync();
                 }
 
                 // Update Active.trangthai to 5 (Locked)
@@ -1672,16 +1670,16 @@ namespace IDT_PARKING
                 //using (SqlCommand cmdActive = new SqlCommand(updateActiveQuery, connection, transaction))
                 //{
                 //    cmdActive.Parameters.AddWithValue("@soTT", soTT);
-                //    cmdActive.ExecuteNonQuery();
+                //    await cmdActive.ExecuteNonQueryAsync();
                 //}
 
-                transaction.Commit();
+                await transaction.CommitAsync();
                 MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
             }
             catch (Exception ex)
             {
-                transaction?.Rollback();
+                if(transaction != null) await transaction.RollbackAsync();
                 MessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -1693,7 +1691,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnThuHoiThe_TT_Click(object sender, EventArgs e)
+        private async void btnThuHoiThe_TT_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1741,8 +1739,8 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
-                LoadTheTrongData();
+                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -1758,7 +1756,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnBaoMatThe_TT_Click(object sender, EventArgs e)
+        private async void btnBaoMatThe_TT_Click(object sender, EventArgs e)
         {
             DataGridViewRow selectedRow = GetSelectedTheThangRow();
             if (selectedRow == null) return;
@@ -1806,8 +1804,8 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
-                LoadTheTrongData();
+                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -1823,50 +1821,50 @@ namespace IDT_PARKING
             }
         }
 
-        private void txtThe_TT_KeyDown(object sender, KeyEventArgs e)
+        private async void txtThe_TT_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                PerformTheThangSearch();
+                await PerformTheThangSearch();
                 e.SuppressKeyPress = true;
             }
         }
 
-        private void rbSoThe_TT_CheckedChanged(object sender, EventArgs e)
+        private async void rbSoThe_TT_CheckedChanged(object sender, EventArgs e)
         {
             if (rbSoThe_TT.Checked)
             {
                 rbBienSo_TT.Checked = false;
-                PerformTheThangSearch();
+                await PerformTheThangSearch();
             }
         }
 
-        private void rbBienSo_TT_CheckedChanged(object sender, EventArgs e)
+        private async void rbBienSo_TT_CheckedChanged(object sender, EventArgs e)
         {
             if (rbBienSo_TT.Checked)
             {
                 rbSoThe_TT.Checked = false;
-                PerformTheThangSearch();
+                await PerformTheThangSearch();
             }
         }
 
-        private void PerformTheThangSearch()
+        private async Task PerformTheThangSearch()
         {
             string searchTerm = txtThe_TT.Text.Trim();
             bool searchByCardID = rbSoThe_TT.Checked;
             bool showExpired = cbExDate_TT.Checked; // Get state of cbExDate_TT
             bool showLocked = cbKhoa_TT.Checked;   // Get state of cbKhoa_TT
-            LoadTheThangData(searchTerm, searchByCardID, showExpired, showLocked);
+            await LoadTheThangData(searchTerm, searchByCardID, showExpired, showLocked);
         }
 
-        private void cbExDate_TT_CheckedChanged(object sender, EventArgs e)
+        private async void cbExDate_TT_CheckedChanged(object sender, EventArgs e)
         {
-            PerformTheThangSearch();
+            await PerformTheThangSearch();
         }
 
-        private void cbKhoa_TT_CheckedChanged(object sender, EventArgs e)
+        private async void cbKhoa_TT_CheckedChanged(object sender, EventArgs e)
         {
-            PerformTheThangSearch();
+            await PerformTheThangSearch();
         }
 
         private void ExportTheThangToExcel(DataTable dataTable, String filename)
@@ -2084,7 +2082,7 @@ namespace IDT_PARKING
 
         #region Thẻ Trống (Empty Cards) / Cấp Thẻ (Card Issuance)
 
-        private void LoadTheTrongData(string searchTerm = "")
+        private async Task LoadTheTrongData(string searchTerm = "")
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -2102,7 +2100,7 @@ namespace IDT_PARKING
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 whereClauses.Add("sttthe LIKE @searchTerm");
-                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
+                parameters.Add(new SqlParameter("@searchTerm", searchTerm + "%"));
             }
 
             if (whereClauses.Any())
@@ -2114,27 +2112,27 @@ namespace IDT_PARKING
             {
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                 }
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    DataTable dataTable = new DataTable();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
+                        dataTable.Load(reader);
+                    }
 
-                        dgvTheTrong_KH.DataSource = dataTable;
-                        dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
+                    dgvTheTrong_KH.DataSource = dataTable;
+                    dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
 
-                        // If exactly one row is returned, automatically select it and trigger CellClick
-                        if (dataTable.Rows.Count == 1)
-                        {
-                            dgvTheTrong_KH.CurrentCell = dgvTheTrong_KH.Rows[0].Cells[0];
-                            dgvTheTrong_KH.Rows[0].Selected = true;
-                            dgvTheTrong_KH_CellClick(dgvTheTrong_KH, new DataGridViewCellEventArgs(0, 0)); // Simulate click on the first cell
-                        }
+                    // If exactly one row is returned, automatically select it and trigger CellClick
+                    if (dataTable.Rows.Count == 1)
+                    {
+                        dgvTheTrong_KH.CurrentCell = dgvTheTrong_KH.Rows[0].Cells[0];
+                        dgvTheTrong_KH.Rows[0].Selected = true;
+                        dgvTheTrong_KH_CellClick(dgvTheTrong_KH, new DataGridViewCellEventArgs(0, 0)); // Simulate click on the first cell
                     }
                 }
             }
@@ -2155,22 +2153,22 @@ namespace IDT_PARKING
             }
         }
 
-        private void PerformTheTrongSearch()
+        private async Task PerformTheTrongSearch()
         {
             string searchTerm = txtThe_TTr.Text.Trim();
-            LoadTheTrongData(searchTerm);
+            await LoadTheTrongData(searchTerm);
         }
 
-        private void txtThe_TTr_KeyDown(object sender, KeyEventArgs e)
+        private async void txtThe_TTr_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
-                PerformTheTrongSearch();
+                await PerformTheTrongSearch();
                 e.SuppressKeyPress = true;
             }
         }
 
-        private void btnCapThe_TTr_Click(object sender, EventArgs e)
+        private async void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
             // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
             string maKH = _selectedMaKH;
@@ -2283,8 +2281,8 @@ namespace IDT_PARKING
                 MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // 5. Load lại dữ liệu
-                LoadTheThangData("", true, false, false);
-                LoadTheTrongData();
+                await LoadTheThangData("", true, false, false);
+                await LoadTheTrongData();
 
                 // 6. Clear UI
                 txtThe_TTr.Clear();
@@ -2324,7 +2322,7 @@ namespace IDT_PARKING
                 if (!string.IsNullOrEmpty(soThe))
                 {
                     whereClauses.Add("sttthe LIKE @soThe");
-                    parameters.Add(new SqlParameter("@soThe", "%" + soThe + "%"));
+                    parameters.Add(new SqlParameter("@soThe", soThe + "%"));
                 }
 
                 if (whereClauses.Any())
@@ -3866,12 +3864,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void btnLocXeVao_Click(object sender, EventArgs e)
+        private async void btnLocXeVao_Click(object sender, EventArgs e)
         {
-            LoadXeVaoData();
+            await LoadXeVaoData();
         }
 
-        private void LoadXeVaoData()
+        private async Task LoadXeVaoData()
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -3942,6 +3940,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             try
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
@@ -3949,25 +3952,25 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeVao))
                     {
-                        command.Parameters.AddWithValue("@soTheXeVao", "%" + soTheXeVao + "%");
+                        command.Parameters.AddWithValue("@soTheXeVao", soTheXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeVao))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeVao", "%" + bienSoXeVao + "%");
+                        command.Parameters.AddWithValue("@bienSoXeVao", bienSoXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
                         command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                     }
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    DataTable dataTable = new DataTable();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvXeVao.DataSource = dataTable;
-                        dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        dataTable.Load(reader);
                     }
+
+                    dgvXeVao.DataSource = dataTable;
+                    dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 }
             }
             catch (Exception ex)
@@ -4114,7 +4117,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void LoadXeRaData()
+        private async Task LoadXeRaData()
         {
             InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -4194,6 +4197,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             try
             {
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
@@ -4201,25 +4209,25 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeRa))
                     {
-                        command.Parameters.AddWithValue("@soTheXeRa", "%" + soTheXeRa + "%");
+                        command.Parameters.AddWithValue("@soTheXeRa", soTheXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeRa))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeRa", "%" + bienSoXeRa + "%");
+                        command.Parameters.AddWithValue("@bienSoXeRa", bienSoXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
                         command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                     }
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                    DataTable dataTable = new DataTable();
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvXeRa.DataSource = dataTable;
-                        dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        dataTable.Load(reader);
                     }
+
+                    dgvXeRa.DataSource = dataTable;
+                    dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 }
             }
             catch (Exception ex)
@@ -4228,9 +4236,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void btnLocXeRa_Click(object sender, EventArgs e)
+        private async void btnLocXeRa_Click(object sender, EventArgs e)
         {
-            LoadXeRaData();
+            await LoadXeRaData();
         }
 
         private void dgvXeRa_CellClick(object sender, DataGridViewCellEventArgs e)

@@ -19,7 +19,7 @@ namespace IDT_PARKING
             splitContainer1.Dock = DockStyle.Fill;
         }
 
-        private void ExecuteQuery(string sqlQuery)
+        private async Task ExecuteQuery(string sqlQuery)
         {
             string serverAddress = Properties.Settings.Default.ServerAddress;
             string databaseName = Properties.Settings.Default.DatabaseName;
@@ -45,10 +45,15 @@ namespace IDT_PARKING
             {
                 try
                 {
-                    connection.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter(sql, connection);
+                    await connection.OpenAsync();
                     DataTable dataTable = new DataTable();
-                    adapter.Fill(dataTable);
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                        {
+                            dataTable.Load(reader);
+                        }
+                    }
 
                     // Gán dữ liệu vào DataGridView
                     dgvResult.DataSource = dataTable;
@@ -70,7 +75,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void txtCommand_KeyDown(object sender, KeyEventArgs e)
+        private async void txtCommand_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {
@@ -83,7 +88,7 @@ namespace IDT_PARKING
 
 
                     string sqlQuery = txtCommand.SelectedText;
-                    ExecuteQuery(sqlQuery);
+                    await ExecuteQuery(sqlQuery);
 
                     int selectionStart = txtCommand.SelectionStart;
                     int selectionLength = txtCommand.SelectionLength;
