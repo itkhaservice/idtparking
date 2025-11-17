@@ -59,7 +59,7 @@ namespace IDT_PARKING
 
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
 
-
+            this.Resize += MainForm_Resize;
             ptHinhMatRa.Click += pictureBox_Click;
             ptHinhXeRa.Click += pictureBox_Click;
             ptHinhMatVao.Click += pictureBox_Click;
@@ -143,11 +143,17 @@ namespace IDT_PARKING
         {
             this.Invoke((MethodInvoker)delegate
             {
+                loadingControl.Location = new Point(
+                    (this.ClientSize.Width - loadingControl.Width) / 2,
+                    (this.ClientSize.Height - loadingControl.Height) / 2
+                );
+
                 loadingControl.BringToFront();
                 loadingControl.Visible = true;
                 loadingControl.Enabled = true;
             });
         }
+
 
         private void HideLoading()
         {
@@ -157,6 +163,18 @@ namespace IDT_PARKING
                 loadingControl.Enabled = false;
             });
         }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (loadingControl.Visible)
+            {
+                loadingControl.Location = new Point(
+                    (this.ClientSize.Width - loadingControl.Width) / 2,
+                    (this.ClientSize.Height - loadingControl.Height) / 2
+                );
+            }
+        }
+
 
         private void SetTabStates(bool enabled)
         {

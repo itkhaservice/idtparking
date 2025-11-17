@@ -3308,6 +3308,7 @@ namespace IDT_PARKING
             this.loadingControl.Size = new System.Drawing.Size(350, 150);
             this.loadingControl.TabIndex = 1002;
             this.loadingControl.Visible = false;
+            this.Controls.Add(this.loadingControl);
             // 
             // FormMain
             // 
