@@ -68,14 +68,15 @@ namespace IDT_PARKING
             ptHinhMatVaoVao.Click += pictureBox_Click;
             ptHinhXeVaoVao.Click += pictureBox_Click;
 
-            txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
-            txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
             btnXoaXeVao.Click += btnXoaXeVao_Click;
             btnXoaXeRa.Click += btnXoaXeRa_Click;
 
             dgvXeVao.CellClick += dgvXeVao_CellClick;
             dgvXeVao.KeyDown += dgvXeVao_KeyDown;
-            txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
+
+            txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
+            txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
+
             txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
             txtBienSoXeVao.KeyDown += txtBienSoXeVao_KeyDown;
 
@@ -574,7 +575,6 @@ namespace IDT_PARKING
 
         private async void SetupAndConnect()
         {
-            ShowLoading(); // Show loading indicator
             SetTabStates(false); // Initially disable all tabs except settings
             string serverAddress = Properties.Settings.Default.ServerAddress;
             string databaseName = Properties.Settings.Default.DatabaseName;
@@ -627,7 +627,6 @@ namespace IDT_PARKING
                 }
                 finally
                 {
-                    HideLoading(); // Hide loading indicator
                 }
             }
         }
@@ -645,7 +644,6 @@ namespace IDT_PARKING
 
         private async void btnConnect_Main_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
             string serverAddress = txtServer_Main.Text;
             string databaseName = txtDatabase_Main.Text;
@@ -701,7 +699,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -805,7 +802,6 @@ namespace IDT_PARKING
 
         private async Task LoadKhachHangData()
         {
-            ShowLoading(); // Show loading indicator
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
 
@@ -814,19 +810,19 @@ namespace IDT_PARKING
             if (!string.IsNullOrWhiteSpace(txtTimTen_KH.Text))
             {
                 whereClauses.Add("hoten LIKE @hoten");
-                parameters.Add(new SqlParameter("@hoten", txtTimTen_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hoten", "%" + txtTimTen_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimDVDC_KH.Text))
             {
                 whereClauses.Add("(DonVi LIKE @dvdc OR DiaChi LIKE @dvdc)");
-                parameters.Add(new SqlParameter("@dvdc", txtTimDVDC_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@dvdc", "%" + txtTimDVDC_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimBS_KH.Text))
             {
                 whereClauses.Add("hopdong LIKE @hopdong");
-                parameters.Add(new SqlParameter("@hopdong", txtTimBS_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hopdong", "%" + txtTimBS_KH.Text + "%"));
             }
 
             if (cbChuaThe_KH.Checked)
@@ -872,7 +868,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -1312,7 +1307,6 @@ namespace IDT_PARKING
 
         private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             var whereClauses = new List<string>();
@@ -1372,7 +1366,7 @@ namespace IDT_PARKING
                 {
                     whereClauses.Add("tt.soxe LIKE @searchTerm");
                 }
-                parameters.Add(new SqlParameter("@searchTerm", searchTerm + "%"));
+                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
             }
 
             if (whereClauses.Any())
@@ -1404,7 +1398,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2144,7 +2137,6 @@ namespace IDT_PARKING
 
         private async Task LoadTheTrongData(string searchTerm = "")
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             string query = @"
@@ -2203,7 +2195,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2235,7 +2226,6 @@ namespace IDT_PARKING
 
         private async void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
             string maKH = _selectedMaKH;
             string cardID = _selectedCardID;
@@ -2365,7 +2355,6 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2424,7 +2413,6 @@ namespace IDT_PARKING
 
         private async void btnTim_TTT_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // 1. Reset UI elements
             txtMaThe_TTT.Clear();
             txtTinhTrang_TTT1.Text = "Chưa tìm kiếm";
@@ -2544,7 +2532,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2604,7 +2591,6 @@ namespace IDT_PARKING
 
         private async void btnBaoMat_TTT_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2672,13 +2658,11 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
         private async void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2789,7 +2773,6 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -3093,7 +3076,6 @@ namespace IDT_PARKING
 
         private async void btnRevenue_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             DateTime startDateFromPicker = dateTimeStart.Value;
             DateTime endDateFromPicker = dateTimeEnd.Value;
             DateTime startTimeFromPicker = timeTimeStart.Value;
@@ -3214,7 +3196,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
         
@@ -3246,7 +3227,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void EvenDelete()
         {
-            ShowLoading(); // Show loading indicator
             if (connection == null || connection.State != ConnectionState.Open)
             {
                 MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3355,7 +3335,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnQuery_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
             DateTime startDateFromPicker = dateTimeStart.Value;
             DateTime endDateFromPicker = dateTimeEnd.Value;
@@ -3480,7 +3459,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
             // Không có khối finally ở đây trong code gốc của bạn, nên tôi không thêm vào.
             // Nếu bạn muốn thêm xử lý trạng thái UI như btnExport_Click, thì cần thêm vào đây.
@@ -3557,7 +3535,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnUpdate_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             if (connection == null)
             {
                 MessageBox.Show("Chưa khởi tạo kết nối. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3671,7 +3648,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
 
         }
@@ -3936,6 +3912,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeVao.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -3945,6 +3922,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeVao.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -4046,7 +4024,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async Task LoadXeVaoData()
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeVaoTuDate.Value;
@@ -4128,11 +4105,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeVao))
                     {
-                        command.Parameters.AddWithValue("@soTheXeVao", soTheXeVao + "%");
+                        command.Parameters.AddWithValue("@soTheXeVao", "%" + soTheXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeVao))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeVao", bienSoXeVao + "%");
+                        command.Parameters.AddWithValue("@bienSoXeVao", "%" + bienSoXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
@@ -4264,6 +4241,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeRa.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -4273,6 +4251,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeRa.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -4295,7 +4274,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async Task LoadXeRaData()
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeRaTuDate.Value;
@@ -4333,8 +4311,8 @@ SELECT
     CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
-    Ra.IDXe AS 'Mã xe',
-    Ra.IDMat 'Mã mặt',
+    Ra.IDXe AS 'IDXe',
+    Ra.IDMat AS 'IDMat',
     Ra.soxe AS 'Biển số vào',
     Ra.soxera AS 'Biển số ra'
 FROM
@@ -4386,11 +4364,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeRa))
                     {
-                        command.Parameters.AddWithValue("@soTheXeRa", soTheXeRa + "%");
+                        command.Parameters.AddWithValue("@soTheXeRa", "%" + soTheXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeRa))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeRa", bienSoXeRa + "%");
+                        command.Parameters.AddWithValue("@bienSoXeRa", "%" + bienSoXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
@@ -4404,6 +4382,19 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
 
                     dgvXeRa.DataSource = dataTable;
+                    // Hide specific columns
+                    if (dgvXeRa.Columns.Contains("Mã thẻ"))
+                    {
+                        dgvXeRa.Columns["Mã thẻ"].Visible = false;
+                    }
+                    if (dgvXeRa.Columns.Contains("IDXe"))
+                    {
+                        dgvXeRa.Columns["IDXe"].Visible = false;
+                    }
+                    if (dgvXeRa.Columns.Contains("IDMat"))
+                    {
+                        dgvXeRa.Columns["IDMat"].Visible = false;
+                    }
                     dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
                 }
             }
@@ -4413,7 +4404,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -4467,20 +4457,22 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 txtInfoRa.Text = "Thông tin ra: Lỗi định dạng dữ liệu";
             }
 
-            if (row == null || row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
-                row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
-            {
-                // Clear picture boxes if data is incomplete or row is null
-                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
-                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
-                toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hàng không đầy đủ.");
-                toolTip1.SetToolTip(ptHinhXeRa, "Dữ liệu hàng không đầy đủ.");
-                return;
-            }
-
+            // Clear picture boxes if data is incomplete or row is null
+            ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+            ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+            toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hàng không đầy đủ.");
             string idMat = row.Cells["IDMat"].Value?.ToString();
             idXe = row.Cells["IDXe"].Value?.ToString();
             string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
+
+            if (string.IsNullOrEmpty(idMat) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(cardId))
+            {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hình ảnh không đầy đủ (IDMat, IDXe, Mã thẻ).");
+                toolTip1.SetToolTip(ptHinhXeRa, "Dữ liệu hình ảnh không đầy đủ (IDMat, IDXe, Mã thẻ).");
+                return;
+            }
 
 
 
@@ -4550,7 +4542,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             LoadImageIntoPictureBox(ptHinhXeVao, imageXeVaoPath);
             LoadImageIntoPictureBox(ptHinhMatRa, imageMatPath);
             LoadImageIntoPictureBox(ptHinhXeRa, imageXePath);
-
         }
 
         private void txtTimKiem_KeyDown(object sender, KeyEventArgs e)
@@ -4644,8 +4635,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     if (row.IsNewRow) continue;
 
                     string cardId = row.Cells["Mã thẻ"].Value?.ToString();
-                    string idXe = row.Cells["Mã xe"].Value?.ToString();
-                    string idMat = row.Cells["Mã mặt"].Value?.ToString();
+                    string idXe = row.Cells["IDXe"].Value?.ToString();
+                    string idMat = row.Cells["IDMat"].Value?.ToString();
 
                     if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
                     {
@@ -4718,7 +4709,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         }
         private async void btnRevenueMonth_Click(object sender, EventArgs e)
         {
-            ShowLoading();
 
             using (InputPromptForm inputForm = new InputPromptForm("Nhập tháng và năm (MM/YYYY):", "Doanh thu theo tháng"))
             {
@@ -4732,7 +4722,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         MessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
                                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        HideLoading();
                         return;
                     }
 
@@ -4800,13 +4789,10 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     btnExportRevenue.Enabled = true;
                 }
             }
-
-            HideLoading();
         }
 
         private async void btnRevenueYear_Click(object sender, EventArgs e)
         {
-            ShowLoading();
 
             using (InputPromptForm inputForm = new InputPromptForm("Nhập năm (YYYY):", "Doanh thu theo năm"))
             {
@@ -4818,7 +4804,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         MessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
                                         "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        HideLoading();
                         return;
                     }
 
@@ -4883,9 +4868,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     btnExportRevenue.Enabled = true;
                 }
             }
-
-            HideLoading();
         }
-
     }
 }
