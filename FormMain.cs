@@ -3076,30 +3076,33 @@ namespace IDT_PARKING
 
         private async void btnRevenue_Click(object sender, EventArgs e)
         {
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
+            ShowLoading();
+            try
+            {
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
 
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
 
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
+                string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
-            string query = @"
+                string query = @"
 SELECT
     Ra.STTThe AS 'Số thẻ',
     Ra.CardID AS 'Mã thẻ',
@@ -3118,84 +3121,86 @@ FROM
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 WHERE 1=1 AND GiaTien > 0";
 
-            query += @" AND (
-                CAST(NgayRa AS DATETIME) +
-                CAST(
-                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
-                AS DATETIME)
-            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+                query += @" AND (
+                    CAST(NgayRa AS DATETIME) +
+                    CAST(
+                        RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                        RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                    AS DATETIME)
+                ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
-            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
-            {
-                query += " AND Ra.MaLoaiThe = @MaterialType";
-            }
-
-            try
-            {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                 {
-                    command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
-                    command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+                    query += " AND Ra.MaLoaiThe = @MaterialType";
+                }
 
-                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
-                    }
+                        command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                        command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvResults.DataSource = dataTable;
-                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                        int rowCount = dataTable.Rows.Count;
-                        txtCount.Text = rowCount.ToString("N0");
-
-                        if (dataTable.Rows.Count > 0)
+                        if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                         {
-                            btnUpdate.Enabled = true;
-                            btnDelete.Enabled = true;
-                        }
-                        else
-                        {
-                            btnUpdate.Enabled = false;
-                            btnDelete.Enabled = false;
+                            command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                         }
 
-                        decimal totalGiaTien = 0;
-
-                        if (dataTable.Columns.Contains("Tiền thu"))
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                         {
-                            foreach (DataRow row in dataTable.Rows)
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            dgvResults.DataSource = dataTable;
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                            int rowCount = dataTable.Rows.Count;
+                            txtCount.Text = rowCount.ToString("N0");
+
+                            if (dataTable.Rows.Count > 0)
                             {
-                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                btnUpdate.Enabled = true;
+                                btnDelete.Enabled = true;
+                            }
+                            else
+                            {
+                                btnUpdate.Enabled = false;
+                                btnDelete.Enabled = false;
+                            }
+
+                            decimal totalGiaTien = 0;
+
+                            if (dataTable.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dataTable.Rows)
                                 {
-                                    totalGiaTien += giaTien;
+                                    if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalGiaTien += giaTien;
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                            else
+                            {
+                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
 
-                        txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
-                        txtCount.Text = dataTable.Rows.Count.ToString("N0");
-                        btnExportRevenue.Enabled = true;
+                            txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
+                            txtCount.Text = dataTable.Rows.Count.ToString("N0");
+                            btnExportRevenue.Enabled = true;
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {
+                HideLoading();
             }
         }
         
@@ -3335,32 +3340,35 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnQuery_Click(object sender, EventArgs e)
         {
-            // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
+            ShowLoading();
+            try
+            {
+                // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
 
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
 
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
+                string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
-            // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
-            string query = @"
+                // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
+                string query = @"
 SELECT
     Ra.STTThe AS 'Số thẻ',
     Ra.CardID AS 'Mã thẻ',
@@ -3379,89 +3387,89 @@ FROM
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 WHERE 1=1 ";
 
-            query += @" AND (
-                CAST(NgayRa AS DATETIME) +
-                CAST(
-                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
-                AS DATETIME)
-            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+                query += @" AND (
+                    CAST(NgayRa AS DATETIME) +
+                    CAST(
+                        RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                        RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                    AS DATETIME)
+                ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
-            // Giữ nguyên logic thêm điều kiện lọc theo loại vật liệu
-            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
-            {
-                query += " AND Ra.MaLoaiThe = @MaterialType";
-            }
-
-            // Giữ nguyên ORDER BY
-            query += " ORDER BY NgayRa ASC, GioRa ASC;";
-
-            // Giữ nguyên khối try-catch-finally và logic đổ dữ liệu vào dgvResults
-            try
-            {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                // Giữ nguyên logic thêm điều kiện lọc theo loại vật liệu
+                if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                 {
-                    command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
-                    command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+                    query += " AND Ra.MaLoaiThe = @MaterialType";
+                }
 
-                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                // Giữ nguyên ORDER BY
+                query += " ORDER BY NgayRa ASC, GioRa ASC;";
+
+                // Giữ nguyên khối try-catch-finally và logic đổ dữ liệu vào dgvResults
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
-                    }
+                        command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                        command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvResults.DataSource = dataTable;
-                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                        if (dataTable.Rows.Count > 0)
+                        if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                         {
-                            btnUpdate.Enabled = true;
-                            btnDelete.Enabled = true;
-                        }
-                        else
-                        {
-                            btnUpdate.Enabled = false;
-                            btnDelete.Enabled = false;
+                            command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                         }
 
-                        decimal totalGiaTien = 0;
-
-                        if (dataTable.Columns.Contains("Tiền thu"))
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                         {
-                            foreach (DataRow row in dataTable.Rows)
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            dgvResults.DataSource = dataTable;
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                            if (dataTable.Rows.Count > 0)
                             {
-                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                btnUpdate.Enabled = true;
+                                btnDelete.Enabled = true;
+                            }
+                            else
+                            {
+                                btnUpdate.Enabled = false;
+                                btnDelete.Enabled = false;
+                            }
+
+                            decimal totalGiaTien = 0;
+
+                            if (dataTable.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dataTable.Rows)
                                 {
-                                    totalGiaTien += giaTien;
+                                    if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalGiaTien += giaTien;
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                            else
+                            {
+                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
 
-                        txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
-                        txtCount.Text = dataTable.Rows.Count.ToString("N0");
-                        btnExportRevenue.Enabled = true;
+                            txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
+                            txtCount.Text = dataTable.Rows.Count.ToString("N0");
+                            btnExportRevenue.Enabled = true;
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {
+                HideLoading();
             }
-            // Không có khối finally ở đây trong code gốc của bạn, nên tôi không thêm vào.
-            // Nếu bạn muốn thêm xử lý trạng thái UI như btnExport_Click, thì cần thêm vào đây.
         }
 
         private async Task<DataTable> ExecuteRevenueQuery(DateTime fullStartDateTime, DateTime fullEndDateTime, string selectedMaterialType = ALL_MATERIAL_TYPE)
@@ -4019,7 +4027,15 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnLocXeVao_Click(object sender, EventArgs e)
         {
-            await LoadXeVaoData();
+            ShowLoading();
+            try
+            {
+                await LoadXeVaoData();
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private async Task LoadXeVaoData()
@@ -4409,7 +4425,15 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnLocXeRa_Click(object sender, EventArgs e)
         {
-            await LoadXeRaData();
+            ShowLoading();
+            try
+            {
+                await LoadXeRaData();
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private void dgvXeRa_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -4709,164 +4733,178 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         }
         private async void btnRevenueMonth_Click(object sender, EventArgs e)
         {
-
-            using (InputPromptForm inputForm = new InputPromptForm("Nhập tháng và năm (MM/YYYY):", "Doanh thu theo tháng"))
+            ShowLoading();
+            try
             {
-                if (inputForm.ShowDialog() == DialogResult.OK)
+                using (InputPromptForm inputForm = new InputPromptForm("Nhập tháng và năm (MM/YYYY):", "Doanh thu theo tháng"))
                 {
-                    string input = inputForm.InputText.Trim();
-
-                    if (!DateTime.TryParseExact(input, "MM/yyyy",
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        System.Globalization.DateTimeStyles.None, out DateTime monthYear))
+                    if (inputForm.ShowDialog() == DialogResult.OK)
                     {
-                        MessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
-                                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                        string input = inputForm.InputText.Trim();
 
-                    // Lấy giờ người dùng chọn
-                    DateTime uiTimeStart = timeTimeStart.Value;
-                    DateTime uiTimeEnd = timeTimeEnd.Value;
-
-                    DataTable monthlyRevenueData = new DataTable();
-                    monthlyRevenueData.Columns.Add("Ngày", typeof(string));
-                    monthlyRevenueData.Columns.Add("Tiền thu", typeof(decimal));
-
-                    decimal totalMonthlyRevenue = 0;
-
-                    int daysInMonth = DateTime.DaysInMonth(monthYear.Year, monthYear.Month);
-
-                    for (int day = 1; day <= daysInMonth; day++)
-                    {
-                        DateTime currentDay = new DateTime(monthYear.Year, monthYear.Month, day);
-
-                        DateTime startTime = new DateTime(
-                            currentDay.Year, currentDay.Month, currentDay.Day,
-                            uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
-
-                        DateTime endTime = new DateTime(
-                            currentDay.Year, currentDay.Month, currentDay.Day,
-                            uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
-
-                        if (endTime <= startTime)
-                            endTime = endTime.AddDays(1);
-
-                        DataTable dailyData = await ExecuteRevenueQuery(startTime, endTime);
-
-                        decimal totalDailyRevenue = 0;
-
-                        if (dailyData != null && dailyData.Columns.Contains("Tiền thu"))
+                        if (!DateTime.TryParseExact(input, "MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime monthYear))
                         {
-                            foreach (DataRow row in dailyData.Rows)
-                            {
-                                if (row["Tiền thu"] != DBNull.Value &&
-                                    decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
-                                {
-                                    totalDailyRevenue += giaTien;
-                                }
-                            }
+                            MessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
+                                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
 
-                        monthlyRevenueData.Rows.Add(
-                            currentDay.ToString("dd/MM/yyyy"),
-                            Math.Round(totalDailyRevenue, 0)
-                        );
+                        // Lấy giờ người dùng chọn
+                        DateTime uiTimeStart = timeTimeStart.Value;
+                        DateTime uiTimeEnd = timeTimeEnd.Value;
 
-                        totalMonthlyRevenue += totalDailyRevenue;
+                        DataTable monthlyRevenueData = new DataTable();
+                        monthlyRevenueData.Columns.Add("Ngày", typeof(string));
+                        monthlyRevenueData.Columns.Add("Tiền thu", typeof(decimal));
+
+                        decimal totalMonthlyRevenue = 0;
+
+                        int daysInMonth = DateTime.DaysInMonth(monthYear.Year, monthYear.Month);
+
+                        for (int day = 1; day <= daysInMonth; day++)
+                        {
+                            DateTime currentDay = new DateTime(monthYear.Year, monthYear.Month, day);
+
+                            DateTime startTime = new DateTime(
+                                currentDay.Year, currentDay.Month, currentDay.Day,
+                                uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
+
+                            DateTime endTime = new DateTime(
+                                currentDay.Year, currentDay.Month, currentDay.Day,
+                                uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
+
+                            if (endTime <= startTime)
+                                endTime = endTime.AddDays(1);
+
+                            DataTable dailyData = await ExecuteRevenueQuery(startTime, endTime);
+
+                            decimal totalDailyRevenue = 0;
+
+                            if (dailyData != null && dailyData.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dailyData.Rows)
+                                {
+                                    if (row["Tiền thu"] != DBNull.Value &&
+                                        decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalDailyRevenue += giaTien;
+                                    }
+                                }
+                            }
+
+                            monthlyRevenueData.Rows.Add(
+                                currentDay.ToString("dd/MM/yyyy"),
+                                Math.Round(totalDailyRevenue, 0)
+                            );
+
+                            totalMonthlyRevenue += totalDailyRevenue;
+                        }
+
+                        dgvResults.DataSource = monthlyRevenueData;
+                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                        // Format hiển thị
+                        dgvResults.Columns["Ngày"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tiền thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tiền thu"].DefaultCellStyle.Format = "N0";
+
+                        txtSum.Text = totalMonthlyRevenue.ToString("N0") + " VNĐ";
+                        txtCount.Text = monthlyRevenueData.Rows.Count.ToString("N0");
+                        btnExportRevenue.Enabled = true;
                     }
-
-                    dgvResults.DataSource = monthlyRevenueData;
-                    dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                    // Format hiển thị
-                    dgvResults.Columns["Ngày"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgvResults.Columns["Tiền thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgvResults.Columns["Tiền thu"].DefaultCellStyle.Format = "N0";
-
-                    txtSum.Text = totalMonthlyRevenue.ToString("N0") + " VNĐ";
-                    txtCount.Text = monthlyRevenueData.Rows.Count.ToString("N0");
-                    btnExportRevenue.Enabled = true;
                 }
+            }
+            finally
+            {
+                HideLoading();
             }
         }
 
         private async void btnRevenueYear_Click(object sender, EventArgs e)
         {
-
-            using (InputPromptForm inputForm = new InputPromptForm("Nhập năm (YYYY):", "Doanh thu theo năm"))
+            ShowLoading();
+            try
             {
-                if (inputForm.ShowDialog() == DialogResult.OK)
+                using (InputPromptForm inputForm = new InputPromptForm("Nhập năm (YYYY):", "Doanh thu theo năm"))
                 {
-                    string input = inputForm.InputText.Trim();
-
-                    if (!int.TryParse(input, out int year) || year < 1900 || year > 2100)
+                    if (inputForm.ShowDialog() == DialogResult.OK)
                     {
-                        MessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
-                                        "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
+                        string input = inputForm.InputText.Trim();
 
-                    // Lấy giờ người dùng chọn
-                    DateTime uiTimeStart = timeTimeStart.Value;
-                    DateTime uiTimeEnd = timeTimeEnd.Value;
-
-                    DataTable yearlyRevenueData = new DataTable();
-                    yearlyRevenueData.Columns.Add("Tháng", typeof(string));
-                    yearlyRevenueData.Columns.Add("Tổng tiền", typeof(decimal));
-
-                    decimal totalYearlyRevenue = 0;
-
-                    for (int month = 1; month <= 12; month++)
-                    {
-                        DateTime firstDay = new DateTime(year, month, 1);
-                        int days = DateTime.DaysInMonth(year, month);
-
-                        DateTime startTime = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day,
-                                                          uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
-
-                        DateTime endTime = new DateTime(firstDay.Year, firstDay.Month, days,
-                                                        uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
-
-                        if (endTime <= startTime)
-                            endTime = endTime.AddDays(1);
-
-                        DataTable monthlyData = await ExecuteRevenueQuery(startTime, endTime);
-
-                        decimal totalMonthlyRevenue = 0;
-
-                        if (monthlyData != null && monthlyData.Columns.Contains("Tiền thu"))
+                        if (!int.TryParse(input, out int year) || year < 1900 || year > 2100)
                         {
-                            foreach (DataRow row in monthlyData.Rows)
-                            {
-                                if (row["Tiền thu"] != DBNull.Value &&
-                                    decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
-                                {
-                                    totalMonthlyRevenue += giaTien;
-                                }
-                            }
+                            MessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
+                                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
                         }
 
-                        yearlyRevenueData.Rows.Add(
-                            $"Tháng {month}/{year}",
-                            Math.Round(totalMonthlyRevenue, 0)
-                        );
+                        // Lấy giờ người dùng chọn
+                        DateTime uiTimeStart = timeTimeStart.Value;
+                        DateTime uiTimeEnd = timeTimeEnd.Value;
 
-                        totalYearlyRevenue += totalMonthlyRevenue;
+                        DataTable yearlyRevenueData = new DataTable();
+                        yearlyRevenueData.Columns.Add("Tháng", typeof(string));
+                        yearlyRevenueData.Columns.Add("Tổng tiền", typeof(decimal));
+
+                        decimal totalYearlyRevenue = 0;
+
+                        for (int month = 1; month <= 12; month++)
+                        {
+                            DateTime firstDay = new DateTime(year, month, 1);
+                            int days = DateTime.DaysInMonth(year, month);
+
+                            DateTime startTime = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day,
+                                                              uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
+
+                            DateTime endTime = new DateTime(firstDay.Year, firstDay.Month, days,
+                                                            uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
+
+                            if (endTime <= startTime)
+                                endTime = endTime.AddDays(1);
+
+                            DataTable monthlyData = await ExecuteRevenueQuery(startTime, endTime);
+
+                            decimal totalMonthlyRevenue = 0;
+
+                            if (monthlyData != null && monthlyData.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in monthlyData.Rows)
+                                {
+                                    if (row["Tiền thu"] != DBNull.Value &&
+                                        decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalMonthlyRevenue += giaTien;
+                                    }
+                                }
+                            }
+
+                            yearlyRevenueData.Rows.Add(
+                                $"Tháng {month}/{year}",
+                                Math.Round(totalMonthlyRevenue, 0)
+                            );
+
+                            totalYearlyRevenue += totalMonthlyRevenue;
+                        }
+
+                        dgvResults.DataSource = yearlyRevenueData;
+                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                        // Format hiển thị
+                        dgvResults.Columns["Tháng"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Format = "N0";
+
+                        txtSum.Text = totalYearlyRevenue.ToString("N0") + " VNĐ";
+                        txtCount.Text = yearlyRevenueData.Rows.Count.ToString("N0");
+                        btnExportRevenue.Enabled = true;
                     }
-
-                    dgvResults.DataSource = yearlyRevenueData;
-                    dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                    // Format hiển thị
-                    dgvResults.Columns["Tháng"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                    dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Format = "N0";
-
-                    txtSum.Text = totalYearlyRevenue.ToString("N0") + " VNĐ";
-                    txtCount.Text = yearlyRevenueData.Rows.Count.ToString("N0");
-                    btnExportRevenue.Enabled = true;
                 }
+            }
+            finally
+            {
+                HideLoading();
             }
         }
     }
