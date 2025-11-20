@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
@@ -18,6 +19,7 @@ namespace IDT_PARKING
 {
     public partial class FormMain : Form
     {
+        private string _lastBackupFolderPath = string.Empty;
         #region Global Variables and Constants
 
         // KHAI BÁO CÁC BIẾN LƯU TỪ FORM CÀI ĐẶT
@@ -139,6 +141,45 @@ namespace IDT_PARKING
         #endregion
 
         #region Common / General Methods
+
+        private Task RunSTATask(Action action)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    action();
+                    tcs.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
+        }
+
+        private Task<T> RunSTATask<T>(Func<T> func)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    tcs.SetResult(func());
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
+        }
 
         private void ShowLoading()
         {
@@ -1155,7 +1196,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void ExportKhachHangToExcel(DataTable dataTable, String filename)
+        private string ExportKhachHangToExcel(DataTable dataTable, String filename)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
@@ -1218,52 +1259,37 @@ namespace IDT_PARKING
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        kh_export_path = Path.GetDirectoryName(sfd.FileName);
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (workbook != null) workbook.Saved = true;
-            }
             finally
             {
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
                     workbook.Close(false);
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
             }
         }
 
-        private void btnExportExcel_KH_Click(object sender, EventArgs e)
+        private async void btnExportExcel_KH_Click(object sender, EventArgs e)
         {
             if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
             {
@@ -1271,8 +1297,27 @@ namespace IDT_PARKING
                 return;
             }
 
-            DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
-            ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG");
+            ShowLoading();
+            try
+            {
+                DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
+                string exportedFilePath = await RunSTATask<string>(() => ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG"));
+
+                // This code runs *after* the background task is complete
+                HideLoading(); // Hide loading indicator first
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    kh_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                // If exportedFilePath is null, it means the user cancelled the SaveFileDialog. Do nothing.
+            }
+            catch (Exception ex)
+            {
+                HideLoading(); // Ensure loading is hidden on error
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnMo_KH_Click(object sender, EventArgs e)
@@ -1390,6 +1435,14 @@ namespace IDT_PARKING
                         dataTable.Load(reader);
                     }
                     dgvTheThang_KH.DataSource = dataTable;
+
+                    // Automatically select the row if only one exists
+                    if (dataTable.Rows.Count == 1)
+                    {
+                        dgvTheThang_KH.Rows[0].Selected = true;
+                        dgvTheThang_KH.CurrentCell = dgvTheThang_KH.Rows[0].Cells[0];
+                        PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
+                    }
                 }
             }
             catch (Exception ex)
@@ -1920,7 +1973,7 @@ namespace IDT_PARKING
             await PerformTheThangSearch();
         }
 
-        private void ExportTheThangToExcel(DataTable dataTable, String filename)
+        private string ExportTheThangToExcel(DataTable dataTable, String filename)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
@@ -1983,52 +2036,37 @@ namespace IDT_PARKING
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        tt_export_path = Path.GetDirectoryName(sfd.FileName);
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (workbook != null) workbook.Saved = true;
-            }
             finally
             {
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
                     workbook.Close(false);
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
             }
         }
 
-        private void btnExportExcel_TT_Click(object sender, EventArgs e)
+        private async void btnExportExcel_TT_Click(object sender, EventArgs e)
         {
             if (dgvTheThang_KH.DataSource == null || !(dgvTheThang_KH.DataSource is DataTable) || ((DataTable)dgvTheThang_KH.DataSource).Rows.Count == 0)
             {
@@ -2036,8 +2074,25 @@ namespace IDT_PARKING
                 return;
             }
 
-            DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
-            ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG");
+            ShowLoading();
+            try
+            {
+                DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
+                string exportedFilePath = await RunSTATask<string>(() => ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG"));
+
+                HideLoading();
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    tt_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                HideLoading();
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnMo_TT_Click(object sender, EventArgs e)
@@ -2177,8 +2232,11 @@ namespace IDT_PARKING
                         dataTable.Load(reader);
                     }
 
+                    dgvTheTrong_KH.SuspendLayout();
+                    dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvTheTrong_KH.DataSource = dataTable;
                     dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
+                    dgvTheTrong_KH.ResumeLayout();
 
                     // If exactly one row is returned, automatically select it and trigger CellClick
                     if (dataTable.Rows.Count == 1)
@@ -2401,7 +2459,11 @@ namespace IDT_PARKING
 
                         // Fill() tự động xử lý DataReader nội bộ
                         adapter.Fill(dataTable);
+                        guna2DataGridView3.SuspendLayout();
+                        guna2DataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                         guna2DataGridView3.DataSource = dataTable;
+                        guna2DataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        guna2DataGridView3.ResumeLayout();
                     }
                 }
             }
@@ -3153,8 +3215,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             DataTable dataTable = new DataTable();
                             adapter.Fill(dataTable);
 
+                            dgvResults.SuspendLayout();
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                             dgvResults.DataSource = dataTable;
                             dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                            dgvResults.ResumeLayout();
 
                             int rowCount = dataTable.Rows.Count;
                             txtCount.Text = rowCount.ToString("N0");
@@ -3424,8 +3489,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             DataTable dataTable = new DataTable();
                             adapter.Fill(dataTable);
 
+                            dgvResults.SuspendLayout();
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                             dgvResults.DataSource = dataTable;
                             dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                            dgvResults.ResumeLayout();
 
                             if (dataTable.Rows.Count > 0)
                             {
@@ -3660,17 +3728,16 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         }
 
-        private void ExportDataTableToExcel(DataTable dataTable, String filename, DateTime fullStartDateTime, DateTime fullEndDateTime)
+        private string ExportDataTableToExcel(DataTable dataTable, String filename, DateTime fullStartDateTime, DateTime fullEndDateTime)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
             Excel.Worksheet worksheet = null;
-            Excel.Range headerRange = null; // Khai báo để giải phóng
-            Excel.Range dataRange = null;   // Khai báo để giải phóng
+            Excel.Range headerRange = null; 
+            Excel.Range dataRange = null;   
 
             try
             {
-                // Tối ưu hóa Excel Application
                 excelApp = new Excel.Application();
 
                 workbook = excelApp.Workbooks.Add();
@@ -3689,7 +3756,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 headerRange.Font.Bold = true;
                 headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
                 headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                Marshal.ReleaseComObject(headerRange); // Giải phóng Range sau khi dùng
+                Marshal.ReleaseComObject(headerRange); 
 
                 object[,] data = new object[rowCount, columnCount];
                 for (int row = 0; row < rowCount; row++)
@@ -3698,20 +3765,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
                     }
-                    if (row % 1000 == 0 || row == rowCount - 1) // Cập nhật mỗi 1000 hàng hoặc ở cuối
-                    {
-                        progressBarExport.Value = (int)((double)(row + 1) / rowCount * 90); // 90% cho việc ghi dữ liệu
-                        Application.DoEvents(); // Cho phép UI xử lý sự kiện để cập nhật ProgressBar
-                    }
                 }
                 dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
                 dataRange.Value = data;
-                Marshal.ReleaseComObject(dataRange); // Giải phóng Range sau khi dùng
+                Marshal.ReleaseComObject(dataRange); 
 
-                // 3. Tự động điều chỉnh độ rộng cột và các tối ưu khác
                 worksheet.Columns.AutoFit();
-
-                progressBarExport.Value = 95; // 95% cho các thao tác tối ưu
 
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
@@ -3752,112 +3811,70 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Lấy đường dẫn thư mục chứa file và lưu vào biến tương ứng
-                        string folderPath = Path.GetDirectoryName(sfd.FileName);
-                        if (filename == "DANH-SACH-THE-THANG")
-                        {
-                            tt_export_path = folderPath;
-                        }
-                        else if (filename == "DOANH-THU-VANG-LAI" || filename == "DOANH-THU-THANG" || filename == "DOANH-THU-NAM")
-                        {
-                            dt_export_path = folderPath;
-                        }
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
-                progressBarExport.Value = 100; // Hoàn thành
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // Nếu có lỗi, đảm bảo workbook không hỏi lưu khi đóng
-                if (workbook != null) workbook.Saved = true;
             }
             finally
             {
-                // Khôi phục trạng thái của Excel Application
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                // Giải phóng tài nguyên COM Objects một cách an toàn
-                // Đảm bảo giải phóng các đối tượng đã khai báo
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
-                    workbook.Close(false); // False để không hỏi lưu lại lần nữa
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
+                    workbook.Close(false);
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
 
-                // Buộc Garbage Collection để giải phóng các đối tượng COM bị treo
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
+
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect(); // Chạy lại lần nữa để chắc chắn
             }
         }
 
-        private void btnExportRevenue_Click(object sender, EventArgs e)
+        private async void btnExportRevenue_Click(object sender, EventArgs e)
         {
-            // Vô hiệu hóa nút Export và hiển thị ProgressBar
-            btnExportRevenue.Enabled = false;
-            this.Cursor = Cursors.WaitCursor;
-            progressBarExport.Visible = true;
-            progressBarExport.Value = 0;
+            if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-            // Recalculate fullStartDateTime and fullEndDateTime
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
-
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
-
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
-
-            DataTable dataTable = new DataTable();
+            ShowLoading();
             try
             {
-                // Check if dgvResults has data
-                if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
-                {
-                    MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                DataTable dataTable = (DataTable)dgvResults.DataSource;
 
-                // Get data from dgvResults
-                dataTable = (DataTable)dgvResults.DataSource;
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
 
-                // Determine the filename based on the current report type
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
+
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
+
                 string reportType = "DOANH-THU-VANG-LAI"; // Default
                 if (dgvResults.Columns.Contains("Ngày") && dgvResults.Columns.Contains("Tổng tiền"))
                 {
@@ -3868,20 +3885,20 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     reportType = "DOANH-THU-NAM";
                 }
 
-                // Call the export function with new parameters
-                ExportDataTableToExcel(dataTable, reportType, fullStartDateTime, fullEndDateTime);
+                string exportedFilePath = await RunSTATask<string>(() => ExportDataTableToExcel(dataTable, reportType, fullStartDateTime, fullEndDateTime));
+
+                HideLoading();
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    dt_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                // Khôi phục trạng thái UI
-                btnExportRevenue.Enabled = true;
-                this.Cursor = Cursors.Default;
-                progressBarExport.Visible = false;
-                progressBarExport.Value = 0;
+                HideLoading();
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -4138,8 +4155,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         dataTable.Load(reader);
                     }
 
+                    dgvXeVao.SuspendLayout();
+                    dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvXeVao.DataSource = dataTable;
                     dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dgvXeVao.ResumeLayout();
                 }
             }
             catch (Exception ex)
@@ -4397,6 +4417,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         dataTable.Load(reader);
                     }
 
+                    dgvXeRa.SuspendLayout();
+                    dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvXeRa.DataSource = dataTable;
                     // Hide specific columns
                     if (dgvXeRa.Columns.Contains("Mã thẻ"))
@@ -4412,6 +4434,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         dgvXeRa.Columns["IDMat"].Visible = false;
                     }
                     dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dgvXeRa.ResumeLayout();
                 }
             }
             catch (Exception ex)
@@ -4905,6 +4928,154 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             finally
             {
                 HideLoading();
+            }
+        }
+
+        private void btnHideProgram_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private async void btnBackUp_Click(object sender, EventArgs e)
+        {
+            string databaseName = Properties.Settings.Default.DatabaseName;
+            if (string.IsNullOrWhiteSpace(databaseName))
+            {
+                MessageBox.Show("Không thể xác định tên cơ sở dữ liệu từ cài đặt.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string backupFileName = $"{databaseName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Backup Files (*.bak)|*.bak|All files (*.*)|*.*";
+                sfd.Title = "Chọn vị trí để sao lưu cơ sở dữ liệu";
+                sfd.FileName = backupFileName;
+
+                string sharedFolderPath = Properties.Settings.Default.SharedFolder;
+                if (Directory.Exists(sharedFolderPath))
+                {
+                    sfd.InitialDirectory = sharedFolderPath;
+                }
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string destBackupFile = sfd.FileName;
+                    ShowLoading();
+                    try
+                    {
+                        string serverAddress = Properties.Settings.Default.ServerAddress;
+                        string uid = Properties.Settings.Default.Username;
+                        string password = Properties.Settings.Default.Password;
+
+                        // It's best practice to connect to the 'master' database to perform a backup.
+                        var builder = new SqlConnectionStringBuilder
+                        {
+                            DataSource = serverAddress,
+                            InitialCatalog = "master", // Connect to master DB for backup operation
+                            IntegratedSecurity = string.IsNullOrWhiteSpace(uid),
+                            TrustServerCertificate = true
+                        };
+
+                        if (!builder.IntegratedSecurity)
+                        {
+                            builder.UserID = uid;
+                            builder.Password = password;
+                        }
+
+                        using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+                        {
+                            await conn.OpenAsync();
+
+                            string backupCmd = $@"
+                                BACKUP DATABASE [{databaseName}]
+                                TO DISK = N'{destBackupFile}'
+                                WITH INIT, STATS = 10";
+
+                            using (SqlCommand cmd = new SqlCommand(backupCmd, conn))
+                            {
+                                cmd.CommandTimeout = 3600; // 1 hour timeout for large databases
+                                await cmd.ExecuteNonQueryAsync();
+                            }
+                        }
+
+                                                    MessageBox.Show(
+                                                        $"Đã sao lưu cơ sở dữ liệu '{databaseName}' thành công đến:\n{destBackupFile}",
+                                                        "Sao lưu thành công",
+                                                        MessageBoxButtons.OK,
+                                                        MessageBoxIcon.Information);
+                                                    _lastBackupFolderPath = Path.GetDirectoryName(destBackupFile);                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi trong quá trình sao lưu: {ex.Message}", "Lỗi sao lưu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        HideLoading();
+                    }
+                }
+            }
+        }
+
+        private void Connection_InfoMessage_Backup(object sender, SqlInfoMessageEventArgs e)
+        {
+            // Các thông báo STATS sẽ có dạng "XX percent processed."
+            // Chúng ta cần phân tích chuỗi này để lấy phần trăm.
+            string message = e.Message;
+            // Kiểm tra xem thông báo có chứa thông tin tiến độ hay không
+            if (message.Contains("percent processed."))
+            {
+                // Sử dụng Regex để trích xuất số phần trăm
+                System.Text.RegularExpressions.Match match =
+                    System.Text.RegularExpressions.Regex.Match(message, @"^(\d+) percent processed.$");
+
+                if (match.Success)
+                {
+                    if (int.TryParse(match.Groups[1].Value, out int percentComplete))
+                    {
+                        // Cập nhật ProgressBar trên UI Thread
+                        // Cần dùng Invoke vì sự kiện này được gọi từ một thread khác (do Task.Run)
+                        if (this.progressBarExport.InvokeRequired)
+                        {
+                            this.Invoke((MethodInvoker)delegate
+                            {
+                                // Đảm bảo giá trị trong khoảng hợp lệ [0, 100]
+                                progressBarExport.Value = Math.Min(100, Math.Max(0, percentComplete));
+                            });
+                        }
+                        else
+                        {
+                            progressBarExport.Value = Math.Min(100, Math.Max(0, percentComplete));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnOpenBackup_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_lastBackupFolderPath))
+            {
+                if (Directory.Exists(_lastBackupFolderPath))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(_lastBackupFolderPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục '{_lastBackupFolderPath}': {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Thư mục '{_lastBackupFolderPath}' không tồn tại. Vui lòng kiểm tra lại.", "Thư mục không tồn tại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn sao lưu nào được ghi nhận. Vui lòng thực hiện sao lưu trước.", "Không có đường dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }
