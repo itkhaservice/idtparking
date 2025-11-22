@@ -411,7 +411,7 @@ namespace IDT_PARKING
             this.tabThe.Location = new System.Drawing.Point(4, 44);
             this.tabThe.Name = "tabThe";
             this.tabThe.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabThe.Size = new System.Drawing.Size(1343, 670);
+            this.tabThe.Size = new System.Drawing.Size(1344, 670);
             this.tabThe.TabIndex = 4;
             this.tabThe.Text = "Thẻ";
             this.tabThe.UseVisualStyleBackColor = true;
@@ -851,7 +851,7 @@ namespace IDT_PARKING
             this.tabKhachHang.Location = new System.Drawing.Point(4, 44);
             this.tabKhachHang.Name = "tabKhachHang";
             this.tabKhachHang.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhachHang.Size = new System.Drawing.Size(1343, 670);
+            this.tabKhachHang.Size = new System.Drawing.Size(1344, 670);
             this.tabKhachHang.TabIndex = 3;
             this.tabKhachHang.Text = "Khách hàng";
             this.tabKhachHang.UseVisualStyleBackColor = true;
@@ -1951,7 +1951,7 @@ namespace IDT_PARKING
             this.tabDoanhThu.Location = new System.Drawing.Point(4, 44);
             this.tabDoanhThu.Name = "tabDoanhThu";
             this.tabDoanhThu.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabDoanhThu.Size = new System.Drawing.Size(1343, 670);
+            this.tabDoanhThu.Size = new System.Drawing.Size(1344, 670);
             this.tabDoanhThu.TabIndex = 2;
             this.tabDoanhThu.Text = "Doanh thu";
             this.tabDoanhThu.UseVisualStyleBackColor = true;
@@ -2278,7 +2278,7 @@ namespace IDT_PARKING
             this.tabXeRa.Location = new System.Drawing.Point(4, 44);
             this.tabXeRa.Name = "tabXeRa";
             this.tabXeRa.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabXeRa.Size = new System.Drawing.Size(1343, 670);
+            this.tabXeRa.Size = new System.Drawing.Size(1344, 670);
             this.tabXeRa.TabIndex = 1;
             this.tabXeRa.Text = "Xe ra";
             this.tabXeRa.UseVisualStyleBackColor = true;
@@ -2904,7 +2904,7 @@ namespace IDT_PARKING
             this.tabKhac.Location = new System.Drawing.Point(4, 44);
             this.tabKhac.Name = "tabKhac";
             this.tabKhac.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhac.Size = new System.Drawing.Size(1343, 670);
+            this.tabKhac.Size = new System.Drawing.Size(1344, 670);
             this.tabKhac.TabIndex = 5;
             this.tabKhac.Text = "Khác";
             this.tabKhac.UseVisualStyleBackColor = true;
@@ -2919,7 +2919,6 @@ namespace IDT_PARKING
             this.groupBox7.Size = new System.Drawing.Size(1335, 661);
             this.groupBox7.TabIndex = 31;
             this.groupBox7.TabStop = false;
-            this.groupBox7.Text = "CHƯA BIẾT NÊN LÀM THÊM TÍNH NĂNG GÌ NỮA";
             // 
             // tabCaiDat
             // 
@@ -2934,7 +2933,7 @@ namespace IDT_PARKING
             this.tabCaiDat.Location = new System.Drawing.Point(4, 44);
             this.tabCaiDat.Name = "tabCaiDat";
             this.tabCaiDat.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabCaiDat.Size = new System.Drawing.Size(1343, 670);
+            this.tabCaiDat.Size = new System.Drawing.Size(1344, 670);
             this.tabCaiDat.TabIndex = 6;
             this.tabCaiDat.Text = "Cài đặt";
             this.tabCaiDat.UseVisualStyleBackColor = true;
@@ -3377,7 +3376,7 @@ namespace IDT_PARKING
             // 
             this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.loadingControl.Location = new System.Drawing.Point(495, 250);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(4);
             this.loadingControl.Name = "loadingControl";
             this.loadingControl.Size = new System.Drawing.Size(350, 150);
             this.loadingControl.TabIndex = 1002;

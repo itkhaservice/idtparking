@@ -245,8 +245,9 @@ namespace IDT_PARKING
             if (tabControl.SelectedTab == tabKhachHang)
             {
                 await LoadKhachHangData();
-                // Pass default values for showExpired and showLocked (false, false)
-                await LoadTheThangData("", true, false, false); // Assuming default search by CardID, not expired, not locked
+                // When the tab is selected, LoadKhachHangData will internally call LoadTheThangData
+                // with the MaKHs of the filtered customers. If no customers are filtered, an empty list will be passed.
+                //await LoadTheThangData("", true, false, false, null); 
                 await LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
 
                 // Set dtTu_TTr and dtDen_TTr to current date
@@ -652,10 +653,9 @@ namespace IDT_PARKING
                     txtUsername_Main.Text = Properties.Settings.Default.Username;
                     txtPassword_Main.Text = Properties.Settings.Default.Password;
                     SetTabStates(true);
-                    DoanhThu_Load();
-                    await LoadKhachHangData();
-                    await LoadTheThangData("", true, false, false);
-                    await LoadTheTrongData();
+                                    DoanhThu_Load();
+                                    await LoadKhachHangData();
+                                    await LoadTheThangData("", true, false, false, null);                    await LoadTheTrongData();
                     dtTu_TTr.Value = DateTime.Now;
                     dtDen_TTr.Value = DateTime.Now;
                     //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
@@ -728,7 +728,7 @@ namespace IDT_PARKING
                 DoanhThu_Load();
                 SetTabStates(true);
                 await LoadKhachHangData();
-                await LoadTheThangData("", true, false, false);
+                await LoadTheThangData("", true, false, false, null);
                 await LoadTheTrongData();
                 dtTu_TTr.Value = DateTime.Now;
                 dtDen_TTr.Value = DateTime.Now;
@@ -902,6 +902,19 @@ namespace IDT_PARKING
                     }
                     dgvKhachHang_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 }
+
+                // Extract MaKH from the filtered customer dataTable
+                List<string> filteredMaKHs = new List<string>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (row["Mã KH"] != DBNull.Value)
+                    {
+                        filteredMaKHs.Add(row["Mã KH"].ToString());
+                    }
+                }
+
+                // Load monthly cards for the filtered customers
+                await LoadTheThangData(maKHFilters: filteredMaKHs);
             }
             catch (Exception ex)
             {
@@ -928,7 +941,7 @@ namespace IDT_PARKING
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
 
                 // Load monthly card data for the selected customer
-                await LoadTheThangData(maKHFilter: _selectedMaKH);
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });
 
                 // If there's data in dgvTheThang_KH, select the first row and populate details
                 if (dgvTheThang_KH.Rows.Count > 0)
@@ -1181,7 +1194,7 @@ namespace IDT_PARKING
                             txtHieuXe_KH.Clear();
                             txtDienThoai_KH.Clear();
                             await LoadKhachHangData(); // Refresh the DataGridView
-                            await LoadTheThangData("", true, false, false); // Also refresh monthly cards, clearing the list
+                            await LoadTheThangData("", true, false, false, null); // Also refresh monthly cards, clearing the list
                         }
                         else
                         {
@@ -1350,7 +1363,7 @@ namespace IDT_PARKING
 
         #region Thẻ Tháng (Monthly Cards) Tab
 
-        private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
+        private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, List<string> maKHFilters = null)
         {
             // InitializeDatabaseConnection(); // Ensure connection is open
 
@@ -1379,10 +1392,15 @@ namespace IDT_PARKING
                     KhachHang kh ON tt.MaKH = kh.MaKH";
 
             // Add MaKH filter if provided
-            if (!string.IsNullOrEmpty(maKHFilter))
+            if (maKHFilters != null && maKHFilters.Any())
             {
-                whereClauses.Add("tt.MaKH = @maKHFilter");
-                parameters.Add(new SqlParameter("@maKHFilter", maKHFilter));
+                // Create parameters for each MaKH in the list
+                var maKHParamNames = maKHFilters.Select((makh, index) => $"@maKHFilter{index}").ToList();
+                whereClauses.Add($"tt.MaKH IN ({string.Join(", ", maKHParamNames)})");
+                for (int i = 0; i < maKHFilters.Count; i++)
+                {
+                    parameters.Add(new SqlParameter($"@maKHFilter{i}", maKHFilters[i]));
+                }
             }
 
             // Conditional TTrang filter based on showLocked
@@ -2411,7 +2429,7 @@ namespace IDT_PARKING
                 MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // 5. Load lại dữ liệu
-                await LoadTheThangData("", true, false, false);
+                await LoadTheThangData("", true, false, false, null);
                 await LoadTheTrongData();
 
                 // 6. Clear UI
