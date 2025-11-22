@@ -1428,14 +1428,8 @@ namespace IDT_PARKING
 
             if (whereClauses.Any())
             {
-                query += " WHERE " + string.Join(" AND ", whereClauses);
-            }
-
-            if (whereClauses.Any())
-            {
-                query += " WHERE " + string.Join(" AND ", whereClauses);
-            }
-
+                                 query += " WHERE " + string.Join(" AND ", whereClauses);
+                            }
             // Handle MaKH filters with batching
             if (maKHFilters != null && maKHFilters.Any() && maKHFilters.Count > maxParametersPerBatch)
             {
