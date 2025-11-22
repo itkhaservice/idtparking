@@ -1444,6 +1444,22 @@ namespace IDT_PARKING
                         PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
                     }
                 }
+
+                // Count active monthly cards (TTrang = 1)
+                string countQuery = "SELECT COUNT(*) FROM TheThang WHERE TTrang = 1";
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    object result = await countCommand.ExecuteScalarAsync();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        int count = Convert.ToInt32(result);
+                        txtCountTT.Text = $"Số lượng: {count}";
+                    }
+                    else
+                    {
+                        txtCountTT.Text = "Số lượng: 0";
+                    }
+                }
             }
             catch (Exception ex)
             {
