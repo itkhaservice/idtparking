@@ -884,11 +884,11 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
+                DataTable dataTable = new DataTable(); // Moved here
+
                 using (SqlCommand command = new SqlCommand(finalQuery, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-
-                    DataTable dataTable = new DataTable();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         dataTable.Load(reader);
@@ -1365,6 +1365,10 @@ namespace IDT_PARKING
 
         private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, List<string> maKHFilters = null)
         {
+            const int maxParametersPerBatch = 2000; // SQL Server limit is 2100, use 2000 for safety
+
+            var allResults = new DataTable(); // DataTable to collect results from all batches
+
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             var whereClauses = new List<string>();
@@ -1391,17 +1395,7 @@ namespace IDT_PARKING
                 INNER JOIN
                     KhachHang kh ON tt.MaKH = kh.MaKH";
 
-            // Add MaKH filter if provided
-            if (maKHFilters != null && maKHFilters.Any())
-            {
-                // Create parameters for each MaKH in the list
-                var maKHParamNames = maKHFilters.Select((makh, index) => $"@maKHFilter{index}").ToList();
-                whereClauses.Add($"tt.MaKH IN ({string.Join(", ", maKHParamNames)})");
-                for (int i = 0; i < maKHFilters.Count; i++)
-                {
-                    parameters.Add(new SqlParameter($"@maKHFilter{i}", maKHFilters[i]));
-                }
-            }
+
 
             // Conditional TTrang filter based on showLocked
             if (showLocked)
@@ -1437,34 +1431,85 @@ namespace IDT_PARKING
                 query += " WHERE " + string.Join(" AND ", whereClauses);
             }
 
+            // Handle MaKH filters with batching
+            if (maKHFilters != null && maKHFilters.Any() && maKHFilters.Count > maxParametersPerBatch)
+            {
+                // Batching is required for maKHFilters
+                for (int i = 0; i < maKHFilters.Count; i += maxParametersPerBatch)
+                {
+                    List<string> currentBatch = maKHFilters.Skip(i).Take(maxParametersPerBatch).ToList();
+                    
+                    // Create batch-specific parameters and where clause
+                    var batchParameters = new List<SqlParameter>();
+                    var batchMaKHParamNames = currentBatch.Select((makh, idx) => $"@maKHFilter{idx}").ToList();
+                    string batchMaKHWhereClause = $"tt.MaKH IN ({string.Join(", ", batchMaKHParamNames)})";
+                    for (int idx = 0; idx < currentBatch.Count; idx++)
+                    {
+                        batchParameters.Add(new SqlParameter($"@maKHFilter{idx}", currentBatch[idx]));
+                    }
+
+                    // Clone other parameters and where clauses to avoid modifying them for the next batch
+                    var currentBatchWhereClauses = new List<string>(whereClauses);
+                    currentBatchWhereClauses.Add(batchMaKHWhereClause);
+
+                    // Construct the full query for the current batch
+                    string batchQuery = query;
+                    if (currentBatchWhereClauses.Any())
+                    {
+                        batchQuery += " WHERE " + string.Join(" AND ", currentBatchWhereClauses);
+                    }
+
+                    DataTable batchDataTable = await _ExecuteTheThangQueryAndLoadData(batchQuery, batchParameters, connection);
+                    if (allResults.Rows.Count == 0) // If it's the first batch, copy structure
+                    {
+                        allResults = batchDataTable.Clone();
+                    }
+                    foreach (DataRow row in batchDataTable.Rows)
+                    {
+                        allResults.ImportRow(row);
+                    }
+                }
+            }
+            else // No batching required (maKHFilters is null/empty or small)
+            {
+                // If maKHFilters is present but small enough, add its clause to whereClauses
+                if (maKHFilters != null && maKHFilters.Any())
+                {
+                    var maKHParamNames = maKHFilters.Select((makh, index) => $"@maKHFilter{index}").ToList();
+                    whereClauses.Add($"tt.MaKH IN ({string.Join(", ", maKHParamNames)})");
+                    for (int i = 0; i < maKHFilters.Count; i++)
+                    {
+                        parameters.Add(new SqlParameter($"@maKHFilter{i}", maKHFilters[i]));
+                    }
+                }
+
+                // Proceed with existing whereClauses and parameters
+                string finalQuery = query;
+                if (whereClauses.Any())
+                {
+                    finalQuery += " WHERE " + string.Join(" AND ", whereClauses);
+                }
+                allResults = await _ExecuteTheThangQueryAndLoadData(finalQuery, parameters, connection);
+            }
+
+            dgvTheThang_KH.DataSource = allResults;
+
+            // Automatically select the row if only one exists
+            if (allResults.Rows.Count == 1)
+            {
+                dgvTheThang_KH.Rows[0].Selected = true;
+                dgvTheThang_KH.CurrentCell = dgvTheThang_KH.Rows[0].Cells[0];
+                PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
+            }
+
+            // Count active monthly cards (TTrang = 1)
+            string countQuery = "SELECT COUNT(*) FROM TheThang WHERE TTrang = 1";
             try
             {
-                if (connection.State != ConnectionState.Open)
+                 if (connection.State != ConnectionState.Open)
                 {
                     await connection.OpenAsync();
                 }
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddRange(parameters.ToArray());
-                    DataTable dataTable = new DataTable();
-                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
-                    {
-                        dataTable.Load(reader);
-                    }
-                    dgvTheThang_KH.DataSource = dataTable;
-
-                    // Automatically select the row if only one exists
-                    if (dataTable.Rows.Count == 1)
-                    {
-                        dgvTheThang_KH.Rows[0].Selected = true;
-                        dgvTheThang_KH.CurrentCell = dgvTheThang_KH.Rows[0].Cells[0];
-                        PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
-                    }
-                }
-
-                // Count active monthly cards (TTrang = 1)
-                string countQuery = "SELECT COUNT(*) FROM TheThang WHERE TTrang = 1";
                 using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
                 {
                     object result = await countCommand.ExecuteScalarAsync();
@@ -1481,11 +1526,38 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi đếm thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
+                // Connection management is assumed to be handled by the caller or InitializeDatabaseConnection()
             }
+        }
+
+        private async Task<DataTable> _ExecuteTheThangQueryAndLoadData(string query, List<SqlParameter> parameters, SqlConnection connection)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddRange(parameters.ToArray());
+                    using (SqlDataReader reader = await command.ExecuteReaderAsync())
+                    {
+                        dataTable.Load(reader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng (nội bộ): {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return dataTable;
         }
 
         private void PopulateTheThangDetails(DataGridViewRow row)
@@ -1579,7 +1651,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1626,7 +1698,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1681,7 +1753,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1815,7 +1887,7 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
             }
             catch (Exception ex)
             {
@@ -1879,8 +1951,8 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
-                await LoadTheTrongData();
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });               
+                    await LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -1944,7 +2016,7 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                 await LoadTheTrongData();
             }
             catch (Exception ex)
@@ -2507,7 +2579,9 @@ namespace IDT_PARKING
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnTim_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             // 1. Reset UI elements
             txtMaThe_TTT.Clear();
@@ -2685,7 +2759,9 @@ namespace IDT_PARKING
             return (soTT, cardID);
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnBaoMat_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
@@ -2757,7 +2833,9 @@ namespace IDT_PARKING
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
@@ -3170,7 +3248,9 @@ namespace IDT_PARKING
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnRevenue_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             ShowLoading();
             try
@@ -3329,7 +3409,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void EvenDelete()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
@@ -3437,7 +3519,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnQuery_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             ShowLoading();
             try
@@ -3643,7 +3727,9 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             return dataTable;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnUpdate_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (connection == null)
             {
