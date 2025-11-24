@@ -107,6 +107,12 @@
     <Compile Include="PasswordPromptForm.Designer.cs">
       <DependentUpon>PasswordPromptForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="InputPromptForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InputPromptForm.Designer.cs">
+      <DependentUpon>InputPromptForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -132,6 +138,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="PasswordPromptForm.resx">
       <DependentUpon>PasswordPromptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InputPromptForm.resx">
+      <DependentUpon>InputPromptForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

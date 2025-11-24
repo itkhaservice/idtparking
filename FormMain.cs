@@ -9,6 +9,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
@@ -18,6 +20,7 @@ namespace IDT_PARKING
 {
     public partial class FormMain : Form
     {
+        private string _lastBackupFolderPath = string.Empty;
         #region Global Variables and Constants
 
         // KHAI BÁO CÁC BIẾN LƯU TỪ FORM CÀI ĐẶT
@@ -59,7 +62,7 @@ namespace IDT_PARKING
 
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
 
-
+            this.Resize += MainForm_Resize;
             ptHinhMatRa.Click += pictureBox_Click;
             ptHinhXeRa.Click += pictureBox_Click;
             ptHinhMatVao.Click += pictureBox_Click;
@@ -68,14 +71,15 @@ namespace IDT_PARKING
             ptHinhMatVaoVao.Click += pictureBox_Click;
             ptHinhXeVaoVao.Click += pictureBox_Click;
 
-            txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
-            txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
             btnXoaXeVao.Click += btnXoaXeVao_Click;
             btnXoaXeRa.Click += btnXoaXeRa_Click;
 
             dgvXeVao.CellClick += dgvXeVao_CellClick;
             dgvXeVao.KeyDown += dgvXeVao_KeyDown;
-            txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
+
+            txtSoTheXeRa.KeyDown += txtSoTheXeRa_KeyDown;
+            txtBienSoXeRa.KeyDown += txtBienSoXeRa_KeyDown;
+
             txtSoTheXeVao.KeyDown += txtSoTheXeVao_KeyDown;
             txtBienSoXeVao.KeyDown += txtBienSoXeVao_KeyDown;
 
@@ -108,9 +112,8 @@ namespace IDT_PARKING
             cbKhoa_TT.CheckedChanged += new EventHandler(this.cbKhoa_TT_CheckedChanged);
             btnMoThe_TT.Click += new System.EventHandler(this.btnMoThe_TT_Click);
 
-            //LoadKhachHangData(); // Initial load for KhachHang
-            //LoadTheThangData(); // Initial load for TheThang
-            //LoadTheTrongData(); // Initial load for TheTrong
+            guna2Button1.Click += new System.EventHandler(this.btnRevenueMonth_Click);
+            guna2Button3.Click += new System.EventHandler(this.btnRevenueYear_Click);
 
             // Sự kiện cho tìm kiếm thẻ trống
             txtThe_TTr.KeyDown += new KeyEventHandler(this.txtThe_TTr_KeyDown);
@@ -140,15 +143,60 @@ namespace IDT_PARKING
 
         #region Common / General Methods
 
+        private Task RunSTATask(Action action)
+        {
+            var tcs = new TaskCompletionSource<object>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    action();
+                    tcs.SetResult(null);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
+        }
+
+        private Task<T> RunSTATask<T>(Func<T> func)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            var thread = new Thread(() =>
+            {
+                try
+                {
+                    tcs.SetResult(func());
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+            });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+            return tcs.Task;
+        }
+
         private void ShowLoading()
         {
             this.Invoke((MethodInvoker)delegate
             {
+                loadingControl.Location = new Point(
+                    (this.ClientSize.Width - loadingControl.Width) / 2,
+                    (this.ClientSize.Height - loadingControl.Height) / 2
+                );
+
                 loadingControl.BringToFront();
                 loadingControl.Visible = true;
                 loadingControl.Enabled = true;
             });
         }
+
 
         private void HideLoading()
         {
@@ -158,6 +206,18 @@ namespace IDT_PARKING
                 loadingControl.Enabled = false;
             });
         }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (loadingControl.Visible)
+            {
+                loadingControl.Location = new Point(
+                    (this.ClientSize.Width - loadingControl.Width) / 2,
+                    (this.ClientSize.Height - loadingControl.Height) / 2
+                );
+            }
+        }
+
 
         private void SetTabStates(bool enabled)
         {
@@ -186,8 +246,9 @@ namespace IDT_PARKING
             if (tabControl.SelectedTab == tabKhachHang)
             {
                 await LoadKhachHangData();
-                // Pass default values for showExpired and showLocked (false, false)
-                await LoadTheThangData("", true, false, false); // Assuming default search by CardID, not expired, not locked
+                // When the tab is selected, LoadKhachHangData will internally call LoadTheThangData
+                // with the MaKHs of the filtered customers. If no customers are filtered, an empty list will be passed.
+                //await LoadTheThangData("", true, false, false, null); 
                 await LoadTheTrongData(); // Load TheTrong data when tabKhachHang is selected
 
                 // Set dtTu_TTr and dtDen_TTr to current date
@@ -557,7 +618,6 @@ namespace IDT_PARKING
 
         private async void SetupAndConnect()
         {
-            ShowLoading(); // Show loading indicator
             SetTabStates(false); // Initially disable all tabs except settings
             string serverAddress = Properties.Settings.Default.ServerAddress;
             string databaseName = Properties.Settings.Default.DatabaseName;
@@ -594,10 +654,9 @@ namespace IDT_PARKING
                     txtUsername_Main.Text = Properties.Settings.Default.Username;
                     txtPassword_Main.Text = Properties.Settings.Default.Password;
                     SetTabStates(true);
-                    DoanhThu_Load();
-                    await LoadKhachHangData();
-                    await LoadTheThangData("", true, false, false);
-                    await LoadTheTrongData();
+                                    DoanhThu_Load();
+                                    await LoadKhachHangData();
+                                    await LoadTheThangData("", true, false, false, null);                    await LoadTheTrongData();
                     dtTu_TTr.Value = DateTime.Now;
                     dtDen_TTr.Value = DateTime.Now;
                     //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
@@ -610,7 +669,6 @@ namespace IDT_PARKING
                 }
                 finally
                 {
-                    HideLoading(); // Hide loading indicator
                 }
             }
         }
@@ -628,7 +686,6 @@ namespace IDT_PARKING
 
         private async void btnConnect_Main_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // LẤY THÔNG TIN KẾT NỐI TỪ GIAO DIỆN NGƯỜI DÙNG
             string serverAddress = txtServer_Main.Text;
             string databaseName = txtDatabase_Main.Text;
@@ -672,7 +729,7 @@ namespace IDT_PARKING
                 DoanhThu_Load();
                 SetTabStates(true);
                 await LoadKhachHangData();
-                await LoadTheThangData("", true, false, false);
+                await LoadTheThangData("", true, false, false, null);
                 await LoadTheTrongData();
                 dtTu_TTr.Value = DateTime.Now;
                 dtDen_TTr.Value = DateTime.Now;
@@ -684,7 +741,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -788,7 +844,6 @@ namespace IDT_PARKING
 
         private async Task LoadKhachHangData()
         {
-            ShowLoading(); // Show loading indicator
             var whereClauses = new List<string>();
             var parameters = new List<SqlParameter>();
 
@@ -797,19 +852,19 @@ namespace IDT_PARKING
             if (!string.IsNullOrWhiteSpace(txtTimTen_KH.Text))
             {
                 whereClauses.Add("hoten LIKE @hoten");
-                parameters.Add(new SqlParameter("@hoten", txtTimTen_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hoten", "%" + txtTimTen_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimDVDC_KH.Text))
             {
                 whereClauses.Add("(DonVi LIKE @dvdc OR DiaChi LIKE @dvdc)");
-                parameters.Add(new SqlParameter("@dvdc", txtTimDVDC_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@dvdc", "%" + txtTimDVDC_KH.Text + "%"));
             }
 
             if (!string.IsNullOrWhiteSpace(txtTimBS_KH.Text))
             {
                 whereClauses.Add("hopdong LIKE @hopdong");
-                parameters.Add(new SqlParameter("@hopdong", txtTimBS_KH.Text + "%"));
+                parameters.Add(new SqlParameter("@hopdong", "%" + txtTimBS_KH.Text + "%"));
             }
 
             if (cbChuaThe_KH.Checked)
@@ -830,11 +885,11 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
+                DataTable dataTable = new DataTable(); // Moved here
+
                 using (SqlCommand command = new SqlCommand(finalQuery, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-
-                    DataTable dataTable = new DataTable();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         dataTable.Load(reader);
@@ -848,6 +903,19 @@ namespace IDT_PARKING
                     }
                     dgvKhachHang_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 }
+
+                // Extract MaKH from the filtered customer dataTable
+                List<string> filteredMaKHs = new List<string>();
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    if (row["Mã KH"] != DBNull.Value)
+                    {
+                        filteredMaKHs.Add(row["Mã KH"].ToString());
+                    }
+                }
+
+                // Load monthly cards for the filtered customers
+                await LoadTheThangData(maKHFilters: filteredMaKHs);
             }
             catch (Exception ex)
             {
@@ -855,7 +923,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -875,7 +942,7 @@ namespace IDT_PARKING
                 txtDienThoai_KH.Text = row.Cells["Điện thoại"].Value?.ToString();
 
                 // Load monthly card data for the selected customer
-                await LoadTheThangData(maKHFilter: _selectedMaKH);
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });
 
                 // If there's data in dgvTheThang_KH, select the first row and populate details
                 if (dgvTheThang_KH.Rows.Count > 0)
@@ -966,6 +1033,7 @@ namespace IDT_PARKING
 
             try
             {
+                InitializeDatabaseConnection();
                 if (connection.State != ConnectionState.Open)
                 {
                     await connection.OpenAsync();
@@ -975,7 +1043,7 @@ namespace IDT_PARKING
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     object result = await command.ExecuteScalarAsync();
-                    if (result != DBNull.Value && result != null)
+                    if (result != DBNull.Value && result != null && !string.IsNullOrEmpty(result.ToString()))
                     {
                         maxMaKH = result.ToString();
                     }
@@ -986,24 +1054,42 @@ namespace IDT_PARKING
                 MessageBox.Show($"Lỗi khi lấy Mã khách hàng mới nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null; // Indicate failure
             }
-            finally
-            {
-                // It's generally better to keep the connection open if multiple operations are expected,
-                // but for a single query, closing it here is fine.
-                // However, InitializeDatabaseConnection() ensures it's open, so we might not need to close it here.
-            }
 
-            // Parse, increment, and format
-            if (int.TryParse(maxMaKH, out int numericMaKH))
+            // New logic to handle alphanumeric MaKH
+            try
             {
-                numericMaKH++;
-                return numericMaKH.ToString("D6"); // Format to 6 digits with leading zeros
+                // Regex to separate numeric prefix and string suffix
+                Match match = Regex.Match(maxMaKH, @"^(\d+)(.*)$");
+
+                if (match.Success)
+                {
+                    string numericPartStr = match.Groups[1].Value;
+                    string suffixPart = match.Groups[2].Value;
+
+                    if (int.TryParse(numericPartStr, out int numericPart))
+                    {
+                        numericPart++;
+                        // Format back to the original length with leading zeros
+                        string newNumericPart = numericPart.ToString(new string('0', numericPartStr.Length));
+                        return newNumericPart + suffixPart;
+                    }
+                }
+
+                // Fallback for purely numeric or other formats
+                if (int.TryParse(maxMaKH, out int numericMaKH))
+                {
+                    numericMaKH++;
+                    return numericMaKH.ToString("D6");
+                }
+                else
+                {
+                    MessageBox.Show("Mã KH hiện tại không đúng định dạng. Không thể tự động tăng. Mã KH cuối: " + maxMaKH, "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Handle cases where MaKH is not purely numeric or has unexpected format
-                // For now, return a default or throw an error
-                MessageBox.Show("Mã KH hiện tại không đúng định dạng số. Không thể tự động tăng.", "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi xử lý tạo Mã KH mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -1128,7 +1214,7 @@ namespace IDT_PARKING
                             txtHieuXe_KH.Clear();
                             txtDienThoai_KH.Clear();
                             await LoadKhachHangData(); // Refresh the DataGridView
-                            await LoadTheThangData("", true, false, false); // Also refresh monthly cards, clearing the list
+                            await LoadTheThangData("", true, false, false, null); // Also refresh monthly cards, clearing the list
                         }
                         else
                         {
@@ -1143,7 +1229,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void ExportKhachHangToExcel(DataTable dataTable, String filename)
+        private string ExportKhachHangToExcel(DataTable dataTable, String filename)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
@@ -1206,52 +1292,37 @@ namespace IDT_PARKING
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        kh_export_path = Path.GetDirectoryName(sfd.FileName);
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (workbook != null) workbook.Saved = true;
-            }
             finally
             {
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
                     workbook.Close(false);
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
             }
         }
 
-        private void btnExportExcel_KH_Click(object sender, EventArgs e)
+        private async void btnExportExcel_KH_Click(object sender, EventArgs e)
         {
             if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
             {
@@ -1259,8 +1330,27 @@ namespace IDT_PARKING
                 return;
             }
 
-            DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
-            ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG");
+            ShowLoading();
+            try
+            {
+                DataTable dataTable = (DataTable)dgvKhachHang_KH.DataSource;
+                string exportedFilePath = await RunSTATask<string>(() => ExportKhachHangToExcel(dataTable, "DANH-SACH-KHACH-HANG"));
+
+                // This code runs *after* the background task is complete
+                HideLoading(); // Hide loading indicator first
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    kh_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                // If exportedFilePath is null, it means the user cancelled the SaveFileDialog. Do nothing.
+            }
+            catch (Exception ex)
+            {
+                HideLoading(); // Ensure loading is hidden on error
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnMo_KH_Click(object sender, EventArgs e)
@@ -1293,9 +1383,12 @@ namespace IDT_PARKING
 
         #region Thẻ Tháng (Monthly Cards) Tab
 
-        private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, string maKHFilter = "")
+        private async Task LoadTheThangData(string searchTerm = "", bool searchByCardID = true, bool showExpired = false, bool showLocked = false, List<string> maKHFilters = null)
         {
-            ShowLoading(); // Show loading indicator
+            const int maxParametersPerBatch = 2000; // SQL Server limit is 2100, use 2000 for safety
+
+            var allResults = new DataTable(); // DataTable to collect results from all batches
+
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             var whereClauses = new List<string>();
@@ -1322,12 +1415,7 @@ namespace IDT_PARKING
                 INNER JOIN
                     KhachHang kh ON tt.MaKH = kh.MaKH";
 
-            // Add MaKH filter if provided
-            if (!string.IsNullOrEmpty(maKHFilter))
-            {
-                whereClauses.Add("tt.MaKH = @maKHFilter");
-                parameters.Add(new SqlParameter("@maKHFilter", maKHFilter));
-            }
+
 
             // Conditional TTrang filter based on showLocked
             if (showLocked)
@@ -1355,14 +1443,116 @@ namespace IDT_PARKING
                 {
                     whereClauses.Add("tt.soxe LIKE @searchTerm");
                 }
-                parameters.Add(new SqlParameter("@searchTerm", searchTerm + "%"));
+                parameters.Add(new SqlParameter("@searchTerm", "%" + searchTerm + "%"));
             }
 
-            if (whereClauses.Any())
+
+            // Handle MaKH filters with batching
+            if (maKHFilters != null && maKHFilters.Any() && maKHFilters.Count > maxParametersPerBatch)
             {
-                query += " WHERE " + string.Join(" AND ", whereClauses);
+                // Batching is required for maKHFilters
+                for (int i = 0; i < maKHFilters.Count; i += maxParametersPerBatch)
+                {
+                    List<string> currentBatch = maKHFilters.Skip(i).Take(maxParametersPerBatch).ToList();
+                    
+                    // Create batch-specific parameters and where clause
+                    var batchParameters = new List<SqlParameter>();
+                    var batchMaKHParamNames = currentBatch.Select((makh, idx) => $"@maKHFilter{idx}").ToList();
+                    string batchMaKHWhereClause = $"tt.MaKH IN ({string.Join(", ", batchMaKHParamNames)})";
+                    for (int idx = 0; idx < currentBatch.Count; idx++)
+                    {
+                        batchParameters.Add(new SqlParameter($"@maKHFilter{idx}", currentBatch[idx]));
+                    }
+
+                    // Clone other parameters and where clauses to avoid modifying them for the next batch
+                    var currentBatchWhereClauses = new List<string>(whereClauses);
+                    currentBatchWhereClauses.Add(batchMaKHWhereClause);
+
+                    // Construct the full query for the current batch
+                    string batchQuery = query;
+                    if (currentBatchWhereClauses.Any())
+                    {
+                        batchQuery += " WHERE " + string.Join(" AND ", currentBatchWhereClauses);
+                    }
+
+                    DataTable batchDataTable = await _ExecuteTheThangQueryAndLoadData(batchQuery, batchParameters, connection);
+                    if (allResults.Rows.Count == 0) // If it's the first batch, copy structure
+                    {
+                        allResults = batchDataTable.Clone();
+                    }
+                    foreach (DataRow row in batchDataTable.Rows)
+                    {
+                        allResults.ImportRow(row);
+                    }
+                }
+            }
+            else // No batching required (maKHFilters is null/empty or small)
+            {
+                // If maKHFilters is present but small enough, add its clause to whereClauses
+                if (maKHFilters != null && maKHFilters.Any())
+                {
+                    var maKHParamNames = maKHFilters.Select((makh, index) => $"@maKHFilter{index}").ToList();
+                    whereClauses.Add($"tt.MaKH IN ({string.Join(", ", maKHParamNames)})");
+                    for (int i = 0; i < maKHFilters.Count; i++)
+                    {
+                        parameters.Add(new SqlParameter($"@maKHFilter{i}", maKHFilters[i]));
+                    }
+                }
+
+                // Proceed with existing whereClauses and parameters
+                string finalQuery = query;
+                if (whereClauses.Any())
+                {
+                    finalQuery += " WHERE " + string.Join(" AND ", whereClauses);
+                }
+                allResults = await _ExecuteTheThangQueryAndLoadData(finalQuery, parameters, connection);
             }
 
+            dgvTheThang_KH.DataSource = allResults;
+
+            // Automatically select the row if only one exists
+            if (allResults.Rows.Count == 1)
+            {
+                dgvTheThang_KH.Rows[0].Selected = true;
+                dgvTheThang_KH.CurrentCell = dgvTheThang_KH.Rows[0].Cells[0];
+                PopulateTheThangDetails(dgvTheThang_KH.Rows[0]);
+            }
+
+            // Count active monthly cards (TTrang = 1)
+            string countQuery = "SELECT COUNT(*) FROM TheThang WHERE TTrang = 1";
+            try
+            {
+                 if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    object result = await countCommand.ExecuteScalarAsync();
+                    if (result != null && result != DBNull.Value)
+                    {
+                        int count = Convert.ToInt32(result);
+                        txtCountTT.Text = $"Số lượng: {count}";
+                    }
+                    else
+                    {
+                        txtCountTT.Text = "Số lượng: 0";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi đếm thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                // Connection management is assumed to be handled by the caller or InitializeDatabaseConnection()
+            }
+        }
+
+        private async Task<DataTable> _ExecuteTheThangQueryAndLoadData(string query, List<SqlParameter> parameters, SqlConnection connection)
+        {
+            DataTable dataTable = new DataTable();
             try
             {
                 if (connection.State != ConnectionState.Open)
@@ -1373,22 +1563,17 @@ namespace IDT_PARKING
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddRange(parameters.ToArray());
-                    DataTable dataTable = new DataTable();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
                         dataTable.Load(reader);
                     }
-                    dgvTheThang_KH.DataSource = dataTable;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng (nội bộ): {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                HideLoading(); // Hide loading indicator
-            }
+            return dataTable;
         }
 
         private void PopulateTheThangDetails(DataGridViewRow row)
@@ -1482,7 +1667,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1529,7 +1714,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1584,7 +1769,7 @@ namespace IDT_PARKING
                     if (rowsAffected > 0)
                     {
                         MessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                        await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
@@ -1718,7 +1903,7 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
             }
             catch (Exception ex)
             {
@@ -1782,8 +1967,8 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
-                await LoadTheTrongData();
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });               
+                    await LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -1847,7 +2032,7 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilter: _selectedMaKH); // Refresh data
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                 await LoadTheTrongData();
             }
             catch (Exception ex)
@@ -1910,7 +2095,7 @@ namespace IDT_PARKING
             await PerformTheThangSearch();
         }
 
-        private void ExportTheThangToExcel(DataTable dataTable, String filename)
+        private string ExportTheThangToExcel(DataTable dataTable, String filename)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
@@ -1973,52 +2158,37 @@ namespace IDT_PARKING
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        tt_export_path = Path.GetDirectoryName(sfd.FileName);
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (workbook != null) workbook.Saved = true;
-            }
             finally
             {
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
                     workbook.Close(false);
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
+
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect();
             }
         }
 
-        private void btnExportExcel_TT_Click(object sender, EventArgs e)
+        private async void btnExportExcel_TT_Click(object sender, EventArgs e)
         {
             if (dgvTheThang_KH.DataSource == null || !(dgvTheThang_KH.DataSource is DataTable) || ((DataTable)dgvTheThang_KH.DataSource).Rows.Count == 0)
             {
@@ -2026,8 +2196,25 @@ namespace IDT_PARKING
                 return;
             }
 
-            DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
-            ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG");
+            ShowLoading();
+            try
+            {
+                DataTable dataTable = (DataTable)dgvTheThang_KH.DataSource;
+                string exportedFilePath = await RunSTATask<string>(() => ExportTheThangToExcel(dataTable, "DANH-SACH-THE-THANG"));
+
+                HideLoading();
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    tt_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                HideLoading();
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnMo_TT_Click(object sender, EventArgs e)
@@ -2127,7 +2314,6 @@ namespace IDT_PARKING
 
         private async Task LoadTheTrongData(string searchTerm = "")
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             string query = @"
@@ -2168,8 +2354,11 @@ namespace IDT_PARKING
                         dataTable.Load(reader);
                     }
 
+                    dgvTheTrong_KH.SuspendLayout();
+                    dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvTheTrong_KH.DataSource = dataTable;
                     dgvTheTrong_KH.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; // Auto-fill columns
+                    dgvTheTrong_KH.ResumeLayout();
 
                     // If exactly one row is returned, automatically select it and trigger CellClick
                     if (dataTable.Rows.Count == 1)
@@ -2186,7 +2375,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2218,7 +2406,6 @@ namespace IDT_PARKING
 
         private async void btnCapThe_TTr_Click(object sender, EventArgs e)
         {
-            ShowLoading(); // Show loading indicator
             // 2. Lấy dữ liệu vào biến tạm (tránh bị Clear UI làm mất dữ liệu)
             string maKH = _selectedMaKH;
             string cardID = _selectedCardID;
@@ -2330,7 +2517,7 @@ namespace IDT_PARKING
                 MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // 5. Load lại dữ liệu
-                await LoadTheThangData("", true, false, false);
+                await LoadTheThangData("", true, false, false, null);
                 await LoadTheTrongData();
 
                 // 6. Clear UI
@@ -2348,7 +2535,6 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2395,7 +2581,11 @@ namespace IDT_PARKING
 
                         // Fill() tự động xử lý DataReader nội bộ
                         adapter.Fill(dataTable);
+                        guna2DataGridView3.SuspendLayout();
+                        guna2DataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                         guna2DataGridView3.DataSource = dataTable;
+                        guna2DataGridView3.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                        guna2DataGridView3.ResumeLayout();
                     }
                 }
             }
@@ -2405,9 +2595,10 @@ namespace IDT_PARKING
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnTim_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
             // 1. Reset UI elements
             txtMaThe_TTT.Clear();
             txtTinhTrang_TTT1.Text = "Chưa tìm kiếm";
@@ -2527,7 +2718,6 @@ namespace IDT_PARKING
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -2585,9 +2775,10 @@ namespace IDT_PARKING
             return (soTT, cardID);
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnBaoMat_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2655,13 +2846,13 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnKhoiPhuc_TTT_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
             string soTheInput = txtSoThe_TTT.Text.Trim();
             string maTheInput = txtMaThe_TTT.Text.Trim();
 
@@ -2772,7 +2963,6 @@ namespace IDT_PARKING
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
         }
 
@@ -3074,33 +3264,37 @@ namespace IDT_PARKING
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnRevenue_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
+            ShowLoading();
+            try
+            {
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
 
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
 
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
+                string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
-            string query = @"
+                string query = @"
 SELECT
     Ra.STTThe AS 'Số thẻ',
     Ra.CardID AS 'Mã thẻ',
@@ -3119,85 +3313,89 @@ FROM
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 WHERE 1=1 AND GiaTien > 0";
 
-            query += @" AND (
-                CAST(NgayRa AS DATETIME) +
-                CAST(
-                    RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
-                    RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
-                    RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
-                AS DATETIME)
-            ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+                query += @" AND (
+                    CAST(NgayRa AS DATETIME) +
+                    CAST(
+                        RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                        RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                    AS DATETIME)
+                ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
-            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
-            {
-                query += " AND Ra.MaLoaiThe = @MaterialType";
-            }
-
-            try
-            {
-                using (SqlCommand command = new SqlCommand(query, connection))
+                if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                 {
-                    command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
-                    command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+                    query += " AND Ra.MaLoaiThe = @MaterialType";
+                }
 
-                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
-                    }
+                        command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                        command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
-                    using (SqlDataAdapter adapter = new SqlDataAdapter(command))
-                    {
-                        DataTable dataTable = new DataTable();
-                        adapter.Fill(dataTable);
-
-                        dgvResults.DataSource = dataTable;
-                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                        int rowCount = dataTable.Rows.Count;
-                        txtCount.Text = rowCount.ToString("N0");
-
-                        if (dataTable.Rows.Count > 0)
+                        if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                         {
-                            btnUpdate.Enabled = true;
-                            btnDelete.Enabled = true;
-                        }
-                        else
-                        {
-                            btnUpdate.Enabled = false;
-                            btnDelete.Enabled = false;
+                            command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                         }
 
-                        decimal totalGiaTien = 0;
-
-                        if (dataTable.Columns.Contains("Tiền thu"))
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                         {
-                            foreach (DataRow row in dataTable.Rows)
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            dgvResults.SuspendLayout();
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                            dgvResults.DataSource = dataTable;
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                            dgvResults.ResumeLayout();
+
+                            int rowCount = dataTable.Rows.Count;
+                            txtCount.Text = rowCount.ToString("N0");
+
+                            if (dataTable.Rows.Count > 0)
                             {
-                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                btnUpdate.Enabled = true;
+                                btnDelete.Enabled = true;
+                            }
+                            else
+                            {
+                                btnUpdate.Enabled = false;
+                                btnDelete.Enabled = false;
+                            }
+
+                            decimal totalGiaTien = 0;
+
+                            if (dataTable.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dataTable.Rows)
                                 {
-                                    totalGiaTien += giaTien;
+                                    if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalGiaTien += giaTien;
+                                    }
                                 }
                             }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
+                            else
+                            {
+                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
 
-                        txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
-                        txtCount.Text = dataTable.Rows.Count.ToString("N0");
-                        btnExportRevenue.Enabled = true;
+                            txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
+                            txtCount.Text = dataTable.Rows.Count.ToString("N0");
+                            btnExportRevenue.Enabled = true;
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
+                HideLoading();
             }
         }
         
@@ -3227,9 +3425,10 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void EvenDelete()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
             if (connection == null || connection.State != ConnectionState.Open)
             {
                 MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3336,35 +3535,39 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnQuery_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
-            // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
+            ShowLoading();
+            try
+            {
+                // Giữ nguyên việc lấy giá trị từ Date/Time Pickers
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
 
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
 
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
 
-            string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
+                string selectedMaterialType = cmbTypeDoanhThu.Text.Trim();
 
-            // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
-            string query = @"
+                // *** PHẦN SỬA ĐỔI QUAN TRỌNG: Câu truy vấn SQL để tương thích mọi phiên bản ***
+                string query = @"
 SELECT
     Ra.STTThe AS 'Số thẻ',
     Ra.CardID AS 'Mã thẻ',
@@ -3383,7 +3586,124 @@ FROM
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 WHERE 1=1 ";
 
-            query += @" AND (
+                query += @" AND (
+                    CAST(NgayRa AS DATETIME) +
+                    CAST(
+                        RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 10000) % 100 AS VARCHAR(2)), 2) + ':' +
+                        RIGHT('0' + CAST((GioRa / 100) % 100 AS VARCHAR(2)), 2) + '.' +
+                        RIGHT('0' + CAST(GioRa % 100 AS VARCHAR(2)), 2)
+                    AS DATETIME)
+                ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
+
+                // Giữ nguyên logic thêm điều kiện lọc theo loại vật liệu
+                if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                {
+                    query += " AND Ra.MaLoaiThe = @MaterialType";
+                }
+
+                // Giữ nguyên ORDER BY
+                query += " ORDER BY NgayRa ASC, GioRa ASC;";
+
+                // Giữ nguyên khối try-catch-finally và logic đổ dữ liệu vào dgvResults
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
+                        command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
+
+                        if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                        {
+                            command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
+                        }
+
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            DataTable dataTable = new DataTable();
+                            adapter.Fill(dataTable);
+
+                            dgvResults.SuspendLayout();
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                            dgvResults.DataSource = dataTable;
+                            dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                            dgvResults.ResumeLayout();
+
+                            if (dataTable.Rows.Count > 0)
+                            {
+                                btnUpdate.Enabled = true;
+                                btnDelete.Enabled = true;
+                            }
+                            else
+                            {
+                                btnUpdate.Enabled = false;
+                                btnDelete.Enabled = false;
+                            }
+
+                            decimal totalGiaTien = 0;
+
+                            if (dataTable.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dataTable.Rows)
+                                {
+                                    if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalGiaTien += giaTien;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+
+                            txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
+                            txtCount.Text = dataTable.Rows.Count.ToString("N0");
+                            btnExportRevenue.Enabled = true;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        private async Task<DataTable> ExecuteRevenueQuery(DateTime fullStartDateTime, DateTime fullEndDateTime, string selectedMaterialType = ALL_MATERIAL_TYPE)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                string query = @"
+SELECT
+    Ra.STTThe AS 'Số thẻ',
+    Ra.CardID AS 'Mã thẻ',
+    Vao.NgayVao AS 'Ngày vào',
+    CONVERT(varchar, DATEADD(second, Vao.ThoiGian, 0), 108) AS 'Thời gian vào',
+    Ra.NgayRa AS 'Ngày ra',
+    CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
+    Ra.MaLoaiThe AS 'Loại thẻ',
+    Ra.GiaTien AS 'Tiền thu',
+    Ra.IDXe,
+    Ra.IDMat,
+    Ra.soxe AS 'Biển số vào',
+    Ra.soxera AS 'Biển số ra'
+FROM
+[dbo].[Ra]
+INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
+                WHERE 1=1 AND GiaTien > 0";
+
+                query += @" AND (
                 CAST(NgayRa AS DATETIME) +
                 CAST(
                     RIGHT('0' + CAST(GioRa / 1000000 AS VARCHAR(2)), 2) + ':' +
@@ -3393,85 +3713,40 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 AS DATETIME)
             ) BETWEEN @fullStartDateTime AND @fullEndDateTime";
 
-            // Giữ nguyên logic thêm điều kiện lọc theo loại vật liệu
-            if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
-            {
-                query += " AND Ra.MaLoaiThe = @MaterialType";
-            }
+                if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != ALL_MATERIAL_TYPE)
+                {
+                    query += " AND Ra.MaLoaiThe = @MaterialType";
+                }
 
-            // Giữ nguyên ORDER BY
-            query += " ORDER BY NgayRa ASC, GioRa ASC;";
+                query += " ORDER BY NgayRa ASC, GioRa ASC;";
 
-            // Giữ nguyên khối try-catch-finally và logic đổ dữ liệu vào dgvResults
-            try
-            {
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                     command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
-                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
+                    if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != ALL_MATERIAL_TYPE)
                     {
                         command.Parameters.AddWithValue("@MaterialType", selectedMaterialType);
                     }
 
                     using (SqlDataAdapter adapter = new SqlDataAdapter(command))
                     {
-                        DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
-
-                        dgvResults.DataSource = dataTable;
-                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-
-                        if (dataTable.Rows.Count > 0)
-                        {
-                            btnUpdate.Enabled = true;
-                            btnDelete.Enabled = true;
-                        }
-                        else
-                        {
-                            btnUpdate.Enabled = false;
-                            btnDelete.Enabled = false;
-                        }
-
-                        decimal totalGiaTien = 0;
-
-                        if (dataTable.Columns.Contains("Tiền thu"))
-                        {
-                            foreach (DataRow row in dataTable.Rows)
-                            {
-                                if (row["Tiền thu"] != DBNull.Value && decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
-                                {
-                                    totalGiaTien += giaTien;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        }
-
-                        txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
-                        txtCount.Text = dataTable.Rows.Count.ToString("N0");
-                        btnExportRevenue.Enabled = true;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi truy vấn dữ liệu doanh thu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            finally
-            {
-                HideLoading(); // Hide loading indicator
-            }
-            // Không có khối finally ở đây trong code gốc của bạn, nên tôi không thêm vào.
-            // Nếu bạn muốn thêm xử lý trạng thái UI như btnExport_Click, thì cần thêm vào đây.
+            return dataTable;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void btnUpdate_Click(object sender, EventArgs e)
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
-            ShowLoading(); // Show loading indicator
             if (connection == null)
             {
                 MessageBox.Show("Chưa khởi tạo kết nối. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -3585,22 +3860,20 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     connection.Close();
                 }
-                HideLoading(); // Hide loading indicator
             }
 
         }
 
-        private void ExportDataTableToExcel(DataTable dataTable, String filename, DateTime fullStartDateTime, DateTime fullEndDateTime)
+        private string ExportDataTableToExcel(DataTable dataTable, String filename, DateTime fullStartDateTime, DateTime fullEndDateTime)
         {
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
             Excel.Worksheet worksheet = null;
-            Excel.Range headerRange = null; // Khai báo để giải phóng
-            Excel.Range dataRange = null;   // Khai báo để giải phóng
+            Excel.Range headerRange = null; 
+            Excel.Range dataRange = null;   
 
             try
             {
-                // Tối ưu hóa Excel Application
                 excelApp = new Excel.Application();
 
                 workbook = excelApp.Workbooks.Add();
@@ -3619,7 +3892,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 headerRange.Font.Bold = true;
                 headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
                 headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                Marshal.ReleaseComObject(headerRange); // Giải phóng Range sau khi dùng
+                Marshal.ReleaseComObject(headerRange); 
 
                 object[,] data = new object[rowCount, columnCount];
                 for (int row = 0; row < rowCount; row++)
@@ -3628,20 +3901,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         data[row, col] = dataTable.Rows[row][col]?.ToString() ?? "";
                     }
-                    if (row % 1000 == 0 || row == rowCount - 1) // Cập nhật mỗi 1000 hàng hoặc ở cuối
-                    {
-                        progressBarExport.Value = (int)((double)(row + 1) / rowCount * 90); // 90% cho việc ghi dữ liệu
-                        Application.DoEvents(); // Cho phép UI xử lý sự kiện để cập nhật ProgressBar
-                    }
                 }
                 dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
                 dataRange.Value = data;
-                Marshal.ReleaseComObject(dataRange); // Giải phóng Range sau khi dùng
+                Marshal.ReleaseComObject(dataRange); 
 
-                // 3. Tự động điều chỉnh độ rộng cột và các tối ưu khác
                 worksheet.Columns.AutoFit();
-
-                progressBarExport.Value = 95; // 95% cho các thao tác tối ưu
 
                 string serverAddress = txtServer;
                 string sharedFolderValue = Properties.Settings.Default.SharedFolder;
@@ -3671,128 +3936,105 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         string endTime = fullEndDateTime.ToString("HHmmss");
                         sfd.FileName = $"XUAT-DU-LIEU-DOANH-THU-TU-{startDate}-{startTime}-DEN-{endDate}-{endTime}.xlsx";
                     }
+                    else if (filename == "DOANH-THU-THANG")
+                    {
+                        sfd.FileName = $"XUAT-DU-LIEU-DOANH-THU-THANG-{fullStartDateTime:MMyyyy}.xlsx";
+                    }
+                    else if (filename == "DOANH-THU-NAM")
+                    {
+                        sfd.FileName = $"XUAT-DU-LIEU-DOANH-THU-NAM-{fullStartDateTime:yyyy}.xlsx";
+                    }
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                        // Lấy đường dẫn thư mục chứa file và lưu vào biến tương ứng
-                        string folderPath = Path.GetDirectoryName(sfd.FileName);
-                        if (filename == "DANH-SACH-THE-THANG")
-                        {
-                            tt_export_path = folderPath;
-                        }
-                        else if (filename == "DOANH-THU-VANG-LAI")
-                        {
-                            dt_export_path = folderPath;
-                        }
+                        return sfd.FileName;
+                    }
+                    else
+                    {
+                        return null;
                     }
                 }
-                progressBarExport.Value = 100; // Hoàn thành
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                // Nếu có lỗi, đảm bảo workbook không hỏi lưu khi đóng
-                if (workbook != null) workbook.Saved = true;
             }
             finally
             {
-                // Khôi phục trạng thái của Excel Application
-                if (excelApp != null)
-                {
-                    excelApp.ScreenUpdating = true;
-                    excelApp.DisplayAlerts = true;
-                    excelApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-                }
-
-                // Giải phóng tài nguyên COM Objects một cách an toàn
-                // Đảm bảo giải phóng các đối tượng đã khai báo
-                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
-                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
-                if (worksheet != null)
-                {
-                    Marshal.ReleaseComObject(worksheet);
-                    worksheet = null;
-                }
                 if (workbook != null)
                 {
-                    workbook.Close(false); // False để không hỏi lưu lại lần nữa
-                    Marshal.ReleaseComObject(workbook);
-                    workbook = null;
+                    workbook.Close(false);
                 }
                 if (excelApp != null)
                 {
                     excelApp.Quit();
-                    Marshal.ReleaseComObject(excelApp);
-                    excelApp = null;
                 }
 
-                // Buộc Garbage Collection để giải phóng các đối tượng COM bị treo
+                if (headerRange != null) Marshal.ReleaseComObject(headerRange);
+                if (dataRange != null) Marshal.ReleaseComObject(dataRange);
+                if (worksheet != null) Marshal.ReleaseComObject(worksheet);
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
+
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-                GC.Collect(); // Chạy lại lần nữa để chắc chắn
             }
         }
 
-        private void btnExportRevenue_Click(object sender, EventArgs e)
+        private async void btnExportRevenue_Click(object sender, EventArgs e)
         {
-            // Vô hiệu hóa nút Export và hiển thị ProgressBar
-            btnExportRevenue.Enabled = false;
-            this.Cursor = Cursors.WaitCursor;
-            progressBarExport.Visible = true;
-            progressBarExport.Value = 0;
+            if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
 
-            // Recalculate fullStartDateTime and fullEndDateTime
-            DateTime startDateFromPicker = dateTimeStart.Value;
-            DateTime endDateFromPicker = dateTimeEnd.Value;
-            DateTime startTimeFromPicker = timeTimeStart.Value;
-            DateTime endTimeFromPicker = timeTimeEnd.Value;
-
-            DateTime fullStartDateTime = new DateTime(
-                startDateFromPicker.Year,
-                startDateFromPicker.Month,
-                startDateFromPicker.Day,
-                startTimeFromPicker.Hour,
-                startTimeFromPicker.Minute,
-                startTimeFromPicker.Second);
-
-            DateTime fullEndDateTime = new DateTime(
-                endDateFromPicker.Year,
-                endDateFromPicker.Month,
-                endDateFromPicker.Day,
-                endTimeFromPicker.Hour,
-                endTimeFromPicker.Minute,
-                endTimeFromPicker.Second);
-
-            DataTable dataTable = new DataTable();
+            ShowLoading();
             try
             {
-                // Check if dgvResults has data
-                if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
+                DataTable dataTable = (DataTable)dgvResults.DataSource;
+
+                DateTime startDateFromPicker = dateTimeStart.Value;
+                DateTime endDateFromPicker = dateTimeEnd.Value;
+                DateTime startTimeFromPicker = timeTimeStart.Value;
+                DateTime endTimeFromPicker = timeTimeEnd.Value;
+
+                DateTime fullStartDateTime = new DateTime(
+                    startDateFromPicker.Year,
+                    startDateFromPicker.Month,
+                    startDateFromPicker.Day,
+                    startTimeFromPicker.Hour,
+                    startTimeFromPicker.Minute,
+                    startTimeFromPicker.Second);
+
+                DateTime fullEndDateTime = new DateTime(
+                    endDateFromPicker.Year,
+                    endDateFromPicker.Month,
+                    endDateFromPicker.Day,
+                    endTimeFromPicker.Hour,
+                    endTimeFromPicker.Minute,
+                    endTimeFromPicker.Second);
+
+                string reportType = "DOANH-THU-VANG-LAI"; // Default
+                if (dgvResults.Columns.Contains("Ngày") && dgvResults.Columns.Contains("Tổng tiền"))
                 {
-                    MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
+                    reportType = "DOANH-THU-THANG";
+                }
+                else if (dgvResults.Columns.Contains("Tháng") && dgvResults.Columns.Contains("Tổng tiền"))
+                {
+                    reportType = "DOANH-THU-NAM";
                 }
 
-                // Get data from dgvResults
-                dataTable = (DataTable)dgvResults.DataSource;
+                string exportedFilePath = await RunSTATask<string>(() => ExportDataTableToExcel(dataTable, reportType, fullStartDateTime, fullEndDateTime));
 
-                // Call the export function with new parameters
-                ExportDataTableToExcel(dataTable, "DOANH-THU-VANG-LAI", fullStartDateTime, fullEndDateTime);
+                HideLoading();
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    dt_export_path = Path.GetDirectoryName(exportedFilePath);
+                    MessageBox.Show(this, "Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                // Khôi phục trạng thái UI
-                btnExportRevenue.Enabled = true;
-                this.Cursor = Cursors.Default;
-                progressBarExport.Visible = false;
-                progressBarExport.Value = 0;
+                HideLoading();
+                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3831,6 +4073,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeVao.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -3840,6 +4083,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeVao.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -3936,12 +4180,19 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async void btnLocXeVao_Click(object sender, EventArgs e)
         {
-            await LoadXeVaoData();
+            ShowLoading();
+            try
+            {
+                await LoadXeVaoData();
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private async Task LoadXeVaoData()
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeVaoTuDate.Value;
@@ -4023,11 +4274,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeVao))
                     {
-                        command.Parameters.AddWithValue("@soTheXeVao", soTheXeVao + "%");
+                        command.Parameters.AddWithValue("@soTheXeVao", "%" + soTheXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeVao))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeVao", bienSoXeVao + "%");
+                        command.Parameters.AddWithValue("@bienSoXeVao", "%" + bienSoXeVao + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
@@ -4040,8 +4291,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         dataTable.Load(reader);
                     }
 
+                    dgvXeVao.SuspendLayout();
+                    dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvXeVao.DataSource = dataTable;
                     dgvXeVao.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dgvXeVao.ResumeLayout();
                 }
             }
             catch (Exception ex)
@@ -4159,6 +4413,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeRa.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -4168,6 +4423,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (e.KeyCode == Keys.Enter)
             {
                 btnLocXeRa.PerformClick();
+                ((Control)sender).Focus();
                 e.SuppressKeyPress = true;
             }
         }
@@ -4190,7 +4446,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private async Task LoadXeRaData()
         {
-            ShowLoading(); // Show loading indicator
             // InitializeDatabaseConnection(); // Ensure connection is open
 
             DateTime startDateFromPicker = dtXeRaTuDate.Value;
@@ -4228,8 +4483,8 @@ SELECT
     CONVERT(varchar, DATEADD(second, Ra.THoiGianRa, 0), 108) AS 'Thời gian ra',
     Ra.MaLoaiThe AS 'Loại thẻ',
     Ra.GiaTien AS 'Tiền thu',
-    Ra.IDXe AS 'Mã xe',
-    Ra.IDMat 'Mã mặt',
+    Ra.IDXe AS 'IDXe',
+    Ra.IDMat AS 'IDMat',
     Ra.soxe AS 'Biển số vào',
     Ra.soxera AS 'Biển số ra'
 FROM
@@ -4281,11 +4536,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                     if (!string.IsNullOrEmpty(soTheXeRa))
                     {
-                        command.Parameters.AddWithValue("@soTheXeRa", soTheXeRa + "%");
+                        command.Parameters.AddWithValue("@soTheXeRa", "%" + soTheXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(bienSoXeRa))
                     {
-                        command.Parameters.AddWithValue("@bienSoXeRa", bienSoXeRa + "%");
+                        command.Parameters.AddWithValue("@bienSoXeRa", "%" + bienSoXeRa + "%");
                     }
                     if (!string.IsNullOrEmpty(selectedMaterialType) && selectedMaterialType.ToUpper() != "ALL")
                     {
@@ -4298,8 +4553,24 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         dataTable.Load(reader);
                     }
 
+                    dgvXeRa.SuspendLayout();
+                    dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                     dgvXeRa.DataSource = dataTable;
+                    // Hide specific columns
+                    if (dgvXeRa.Columns.Contains("Mã thẻ"))
+                    {
+                        dgvXeRa.Columns["Mã thẻ"].Visible = false;
+                    }
+                    if (dgvXeRa.Columns.Contains("IDXe"))
+                    {
+                        dgvXeRa.Columns["IDXe"].Visible = false;
+                    }
+                    if (dgvXeRa.Columns.Contains("IDMat"))
+                    {
+                        dgvXeRa.Columns["IDMat"].Visible = false;
+                    }
                     dgvXeRa.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                    dgvXeRa.ResumeLayout();
                 }
             }
             catch (Exception ex)
@@ -4308,13 +4579,20 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
             }
         }
 
         private async void btnLocXeRa_Click(object sender, EventArgs e)
         {
-            await LoadXeRaData();
+            ShowLoading();
+            try
+            {
+                await LoadXeRaData();
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private void dgvXeRa_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -4362,20 +4640,22 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 txtInfoRa.Text = "Thông tin ra: Lỗi định dạng dữ liệu";
             }
 
-            if (row == null || row.Cells["IDMat"] == null || row.Cells["IDXe"] == null ||
-                row.Cells["Mã thẻ"] == null || row.Cells["Ngày vào"] == null || row.Cells["Thời gian vào"] == null)
-            {
-                // Clear picture boxes if data is incomplete or row is null
-                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
-                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
-                toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hàng không đầy đủ.");
-                toolTip1.SetToolTip(ptHinhXeRa, "Dữ liệu hàng không đầy đủ.");
-                return;
-            }
-
+            // Clear picture boxes if data is incomplete or row is null
+            ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+            ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+            toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hàng không đầy đủ.");
             string idMat = row.Cells["IDMat"].Value?.ToString();
             idXe = row.Cells["IDXe"].Value?.ToString();
             string cardId = row.Cells["Mã thẻ"].Value?.ToString(); // Lấy CardID
+
+            if (string.IsNullOrEmpty(idMat) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(cardId))
+            {
+                ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
+                ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
+                toolTip1.SetToolTip(ptHinhMatRa, "Dữ liệu hình ảnh không đầy đủ (IDMat, IDXe, Mã thẻ).");
+                toolTip1.SetToolTip(ptHinhXeRa, "Dữ liệu hình ảnh không đầy đủ (IDMat, IDXe, Mã thẻ).");
+                return;
+            }
 
 
 
@@ -4445,7 +4725,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             LoadImageIntoPictureBox(ptHinhXeVao, imageXeVaoPath);
             LoadImageIntoPictureBox(ptHinhMatRa, imageMatPath);
             LoadImageIntoPictureBox(ptHinhXeRa, imageXePath);
-
         }
 
         private void txtTimKiem_KeyDown(object sender, KeyEventArgs e)
@@ -4539,8 +4818,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     if (row.IsNewRow) continue;
 
                     string cardId = row.Cells["Mã thẻ"].Value?.ToString();
-                    string idXe = row.Cells["Mã xe"].Value?.ToString();
-                    string idMat = row.Cells["Mã mặt"].Value?.ToString();
+                    string idXe = row.Cells["IDXe"].Value?.ToString();
+                    string idMat = row.Cells["IDMat"].Value?.ToString();
 
                     if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
                     {
@@ -4611,10 +4890,329 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
             }
         }
-
-        private void txtMaThe_TTT_TextChanged(object sender, EventArgs e)
+        private async void btnRevenueMonth_Click(object sender, EventArgs e)
         {
+            ShowLoading();
+            try
+            {
+                using (InputPromptForm inputForm = new InputPromptForm("Nhập tháng và năm (MM/YYYY):", "Doanh thu theo tháng"))
+                {
+                    if (inputForm.ShowDialog() == DialogResult.OK)
+                    {
+                        string input = inputForm.InputText.Trim();
 
+                        if (!DateTime.TryParseExact(input, "MM/yyyy",
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime monthYear))
+                        {
+                            MessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
+                                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Lấy giờ người dùng chọn
+                        DateTime uiTimeStart = timeTimeStart.Value;
+                        DateTime uiTimeEnd = timeTimeEnd.Value;
+
+                        DataTable monthlyRevenueData = new DataTable();
+                        monthlyRevenueData.Columns.Add("Ngày", typeof(string));
+                        monthlyRevenueData.Columns.Add("Tiền thu", typeof(decimal));
+
+                        decimal totalMonthlyRevenue = 0;
+
+                        int daysInMonth = DateTime.DaysInMonth(monthYear.Year, monthYear.Month);
+
+                        for (int day = 1; day <= daysInMonth; day++)
+                        {
+                            DateTime currentDay = new DateTime(monthYear.Year, monthYear.Month, day);
+
+                            DateTime startTime = new DateTime(
+                                currentDay.Year, currentDay.Month, currentDay.Day,
+                                uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
+
+                            DateTime endTime = new DateTime(
+                                currentDay.Year, currentDay.Month, currentDay.Day,
+                                uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
+
+                            if (endTime <= startTime)
+                                endTime = endTime.AddDays(1);
+
+                            DataTable dailyData = await ExecuteRevenueQuery(startTime, endTime);
+
+                            decimal totalDailyRevenue = 0;
+
+                            if (dailyData != null && dailyData.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in dailyData.Rows)
+                                {
+                                    if (row["Tiền thu"] != DBNull.Value &&
+                                        decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalDailyRevenue += giaTien;
+                                    }
+                                }
+                            }
+
+                            monthlyRevenueData.Rows.Add(
+                                currentDay.ToString("dd/MM/yyyy"),
+                                Math.Round(totalDailyRevenue, 0)
+                            );
+
+                            totalMonthlyRevenue += totalDailyRevenue;
+                        }
+
+                        dgvResults.DataSource = monthlyRevenueData;
+                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                        // Format hiển thị
+                        dgvResults.Columns["Ngày"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tiền thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tiền thu"].DefaultCellStyle.Format = "N0";
+
+                        txtSum.Text = totalMonthlyRevenue.ToString("N0") + " VNĐ";
+                        txtCount.Text = monthlyRevenueData.Rows.Count.ToString("N0");
+                        btnExportRevenue.Enabled = true;
+                    }
+                }
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        private async void btnRevenueYear_Click(object sender, EventArgs e)
+        {
+            ShowLoading();
+            try
+            {
+                using (InputPromptForm inputForm = new InputPromptForm("Nhập năm (YYYY):", "Doanh thu theo năm"))
+                {
+                    if (inputForm.ShowDialog() == DialogResult.OK)
+                    {
+                        string input = inputForm.InputText.Trim();
+
+                        if (!int.TryParse(input, out int year) || year < 1900 || year > 2100)
+                        {
+                            MessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
+                                            "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+
+                        // Lấy giờ người dùng chọn
+                        DateTime uiTimeStart = timeTimeStart.Value;
+                        DateTime uiTimeEnd = timeTimeEnd.Value;
+
+                        DataTable yearlyRevenueData = new DataTable();
+                        yearlyRevenueData.Columns.Add("Tháng", typeof(string));
+                        yearlyRevenueData.Columns.Add("Tổng tiền", typeof(decimal));
+
+                        decimal totalYearlyRevenue = 0;
+
+                        for (int month = 1; month <= 12; month++)
+                        {
+                            DateTime firstDay = new DateTime(year, month, 1);
+                            int days = DateTime.DaysInMonth(year, month);
+
+                            DateTime startTime = new DateTime(firstDay.Year, firstDay.Month, firstDay.Day,
+                                                              uiTimeStart.Hour, uiTimeStart.Minute, uiTimeStart.Second);
+
+                            DateTime endTime = new DateTime(firstDay.Year, firstDay.Month, days,
+                                                            uiTimeEnd.Hour, uiTimeEnd.Minute, uiTimeEnd.Second);
+
+                            if (endTime <= startTime)
+                                endTime = endTime.AddDays(1);
+
+                            DataTable monthlyData = await ExecuteRevenueQuery(startTime, endTime);
+
+                            decimal totalMonthlyRevenue = 0;
+
+                            if (monthlyData != null && monthlyData.Columns.Contains("Tiền thu"))
+                            {
+                                foreach (DataRow row in monthlyData.Rows)
+                                {
+                                    if (row["Tiền thu"] != DBNull.Value &&
+                                        decimal.TryParse(row["Tiền thu"].ToString(), out decimal giaTien))
+                                    {
+                                        totalMonthlyRevenue += giaTien;
+                                    }
+                                }
+                            }
+
+                            yearlyRevenueData.Rows.Add(
+                                $"Tháng {month}/{year}",
+                                Math.Round(totalMonthlyRevenue, 0)
+                            );
+
+                            totalYearlyRevenue += totalMonthlyRevenue;
+                        }
+
+                        dgvResults.DataSource = yearlyRevenueData;
+                        dgvResults.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+                        // Format hiển thị
+                        dgvResults.Columns["Tháng"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        dgvResults.Columns["Tổng tiền"].DefaultCellStyle.Format = "N0";
+
+                        txtSum.Text = totalYearlyRevenue.ToString("N0") + " VNĐ";
+                        txtCount.Text = yearlyRevenueData.Rows.Count.ToString("N0");
+                        btnExportRevenue.Enabled = true;
+                    }
+                }
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        private void btnHideProgram_Click(object sender, EventArgs e)
+        {
+            this.WindowState = FormWindowState.Minimized;
+        }
+
+        private async void btnBackUp_Click(object sender, EventArgs e)
+        {
+            string databaseName = Properties.Settings.Default.DatabaseName;
+            if (string.IsNullOrWhiteSpace(databaseName))
+            {
+                MessageBox.Show("Không thể xác định tên cơ sở dữ liệu từ cài đặt.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            string backupFileName = $"{databaseName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
+
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "Backup Files (*.bak)|*.bak|All files (*.*)|*.*";
+                sfd.Title = "Chọn vị trí để sao lưu cơ sở dữ liệu";
+                sfd.FileName = backupFileName;
+
+                string sharedFolderPath = Properties.Settings.Default.SharedFolder;
+                if (Directory.Exists(sharedFolderPath))
+                {
+                    sfd.InitialDirectory = sharedFolderPath;
+                }
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    string destBackupFile = sfd.FileName;
+                    ShowLoading();
+                    try
+                    {
+                        string serverAddress = Properties.Settings.Default.ServerAddress;
+                        string uid = Properties.Settings.Default.Username;
+                        string password = Properties.Settings.Default.Password;
+
+                        // It's best practice to connect to the 'master' database to perform a backup.
+                        var builder = new SqlConnectionStringBuilder
+                        {
+                            DataSource = serverAddress,
+                            InitialCatalog = "master", // Connect to master DB for backup operation
+                            IntegratedSecurity = string.IsNullOrWhiteSpace(uid),
+                            TrustServerCertificate = true
+                        };
+
+                        if (!builder.IntegratedSecurity)
+                        {
+                            builder.UserID = uid;
+                            builder.Password = password;
+                        }
+
+                        using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
+                        {
+                            await conn.OpenAsync();
+
+                            string backupCmd = $@"
+                                BACKUP DATABASE [{databaseName}]
+                                TO DISK = N'{destBackupFile}'
+                                WITH INIT, STATS = 10";
+
+                            using (SqlCommand cmd = new SqlCommand(backupCmd, conn))
+                            {
+                                cmd.CommandTimeout = 3600; // 1 hour timeout for large databases
+                                await cmd.ExecuteNonQueryAsync();
+                            }
+                        }
+
+                                                    MessageBox.Show(
+                                                        $"Đã sao lưu cơ sở dữ liệu '{databaseName}' thành công đến:\n{destBackupFile}",
+                                                        "Sao lưu thành công",
+                                                        MessageBoxButtons.OK,
+                                                        MessageBoxIcon.Information);
+                                                    _lastBackupFolderPath = Path.GetDirectoryName(destBackupFile);                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Lỗi trong quá trình sao lưu: {ex.Message}", "Lỗi sao lưu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        HideLoading();
+                    }
+                }
+            }
+        }
+
+        private void Connection_InfoMessage_Backup(object sender, SqlInfoMessageEventArgs e)
+        {
+            // Các thông báo STATS sẽ có dạng "XX percent processed."
+            // Chúng ta cần phân tích chuỗi này để lấy phần trăm.
+            string message = e.Message;
+            // Kiểm tra xem thông báo có chứa thông tin tiến độ hay không
+            if (message.Contains("percent processed."))
+            {
+                // Sử dụng Regex để trích xuất số phần trăm
+                System.Text.RegularExpressions.Match match =
+                    System.Text.RegularExpressions.Regex.Match(message, @"^(\d+) percent processed.$");
+
+                if (match.Success)
+                {
+                    if (int.TryParse(match.Groups[1].Value, out int percentComplete))
+                    {
+                        // Cập nhật ProgressBar trên UI Thread
+                        // Cần dùng Invoke vì sự kiện này được gọi từ một thread khác (do Task.Run)
+                        if (this.progressBarExport.InvokeRequired)
+                        {
+                            this.Invoke((MethodInvoker)delegate
+                            {
+                                // Đảm bảo giá trị trong khoảng hợp lệ [0, 100]
+                                progressBarExport.Value = Math.Min(100, Math.Max(0, percentComplete));
+                            });
+                        }
+                        else
+                        {
+                            progressBarExport.Value = Math.Min(100, Math.Max(0, percentComplete));
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnOpenBackup_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(_lastBackupFolderPath))
+            {
+                if (Directory.Exists(_lastBackupFolderPath))
+                {
+                    try
+                    {
+                        System.Diagnostics.Process.Start(_lastBackupFolderPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục '{_lastBackupFolderPath}': {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Thư mục '{_lastBackupFolderPath}' không tồn tại. Vui lòng kiểm tra lại.", "Thư mục không tồn tại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có đường dẫn sao lưu nào được ghi nhận. Vui lòng thực hiện sao lưu trước.", "Không có đường dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
     }
 }
