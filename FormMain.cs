@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -1032,6 +1033,7 @@ namespace IDT_PARKING
 
             try
             {
+                InitializeDatabaseConnection();
                 if (connection.State != ConnectionState.Open)
                 {
                     await connection.OpenAsync();
@@ -1041,7 +1043,7 @@ namespace IDT_PARKING
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     object result = await command.ExecuteScalarAsync();
-                    if (result != DBNull.Value && result != null)
+                    if (result != DBNull.Value && result != null && !string.IsNullOrEmpty(result.ToString()))
                     {
                         maxMaKH = result.ToString();
                     }
@@ -1052,24 +1054,42 @@ namespace IDT_PARKING
                 MessageBox.Show($"Lỗi khi lấy Mã khách hàng mới nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null; // Indicate failure
             }
-            finally
-            {
-                // It's generally better to keep the connection open if multiple operations are expected,
-                // but for a single query, closing it here is fine.
-                // However, InitializeDatabaseConnection() ensures it's open, so we might not need to close it here.
-            }
 
-            // Parse, increment, and format
-            if (int.TryParse(maxMaKH, out int numericMaKH))
+            // New logic to handle alphanumeric MaKH
+            try
             {
-                numericMaKH++;
-                return numericMaKH.ToString("D6"); // Format to 6 digits with leading zeros
+                // Regex to separate numeric prefix and string suffix
+                Match match = Regex.Match(maxMaKH, @"^(\d+)(.*)$");
+
+                if (match.Success)
+                {
+                    string numericPartStr = match.Groups[1].Value;
+                    string suffixPart = match.Groups[2].Value;
+
+                    if (int.TryParse(numericPartStr, out int numericPart))
+                    {
+                        numericPart++;
+                        // Format back to the original length with leading zeros
+                        string newNumericPart = numericPart.ToString(new string('0', numericPartStr.Length));
+                        return newNumericPart + suffixPart;
+                    }
+                }
+
+                // Fallback for purely numeric or other formats
+                if (int.TryParse(maxMaKH, out int numericMaKH))
+                {
+                    numericMaKH++;
+                    return numericMaKH.ToString("D6");
+                }
+                else
+                {
+                    MessageBox.Show("Mã KH hiện tại không đúng định dạng. Không thể tự động tăng. Mã KH cuối: " + maxMaKH, "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return null;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                // Handle cases where MaKH is not purely numeric or has unexpected format
-                // For now, return a default or throw an error
-                MessageBox.Show("Mã KH hiện tại không đúng định dạng số. Không thể tự động tăng.", "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Lỗi khi xử lý tạo Mã KH mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
