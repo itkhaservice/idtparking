@@ -42,6 +42,8 @@ namespace IDT_PARKING
         private string kh_export_path;
         private string tt_export_path;
         private string dt_export_path;
+        private string lastXeVaoExportPath;
+        private string lastXeRaExportPath;
         private string active_export_path;
         private bool isDragging = false;
         private Point lastCursorPos;
@@ -5212,6 +5214,196 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             else
             {
                 MessageBox.Show("Chưa có đường dẫn sao lưu nào được ghi nhận. Vui lòng thực hiện sao lưu trước.", "Không có đường dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        #region Excel Export Helpers
+
+        private void OpenExportedFileDirectory(string filePath)
+        {
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                if (File.Exists(filePath))
+                {
+                    try
+                    {
+                        string directoryPath = Path.GetDirectoryName(filePath);
+                        System.Diagnostics.Process.Start(directoryPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Không thể mở thư mục. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("File không tồn tại. Vui lòng xuất file trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Chưa có file nào được xuất. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private string ExportDataGridViewToExcel(DataGridView dgv, string defaultFileName)
+        {
+            // Convert DataGridView to DataTable
+            DataTable dt = new DataTable();
+            foreach (DataGridViewColumn column in dgv.Columns)
+            {
+                if (column.Visible)
+                {
+                    dt.Columns.Add(column.HeaderText);
+                }
+            }
+
+            foreach (DataGridViewRow row in dgv.Rows)
+            {
+                if (row.Visible)
+                {
+                    DataRow dataRow = dt.NewRow();
+                    foreach (DataGridViewCell cell in row.Cells)
+                    {
+                        if (cell.OwningColumn.Visible)
+                        {
+                            // Ensure value is not null before adding
+                            dataRow[cell.OwningColumn.HeaderText] = cell.Value ?? DBNull.Value;
+                        }
+                    }
+                    dt.Rows.Add(dataRow);
+                }
+            }
+
+            if (dt.Rows.Count == 0)
+            {
+                return null; // Return null to indicate no data, caller will show message
+            }
+
+            // Export DataTable to Excel
+            Excel.Application excelApp = null;
+            Excel.Workbook workbook = null;
+            string finalFilePath = null;
+
+            try
+            {
+                SaveFileDialog sfd = new SaveFileDialog
+                {
+                    Filter = "Excel Workbook (*.xlsx)|*.xlsx",
+                    Title = "Lưu file Excel",
+                    FileName = $"{defaultFileName}-{DateTime.Now:dd-MM-yyyy}.xlsx"
+                };
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    excelApp = new Excel.Application();
+                    workbook = excelApp.Workbooks.Add();
+                    Excel.Worksheet worksheet = (Excel.Worksheet)workbook.Sheets[1];
+
+                    // Headers
+                    for (int i = 0; i < dt.Columns.Count; i++)
+                    {
+                        worksheet.Cells[1, i + 1] = dt.Columns[i].ColumnName;
+                    }
+
+                    // Data
+                    for (int i = 0; i < dt.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < dt.Columns.Count; j++)
+                        {
+                            worksheet.Cells[i + 2, j + 1] = dt.Rows[i][j].ToString();
+                        }
+                    }
+                    
+                    worksheet.Columns.AutoFit();
+
+                    workbook.SaveAs(sfd.FileName);
+                    finalFilePath = sfd.FileName;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            finally
+            {
+                if (workbook != null) workbook.Close(false);
+                if (excelApp != null) excelApp.Quit();
+                
+                if (workbook != null) Marshal.ReleaseComObject(workbook);
+                if (excelApp != null) Marshal.ReleaseComObject(excelApp);
+            }
+
+            return finalFilePath;
+        }
+
+        #endregion
+        private void btnMoXeRa_Click(object sender, EventArgs e)
+        {
+            OpenExportedFileDirectory(lastXeRaExportPath);
+        }
+
+        private async void btnXuatXeRa_Click(object sender, EventArgs e)
+        {
+            if (dgvXeRa.Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu 'Xe Ra' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            ShowLoading();
+            try
+            {
+                string exportedFilePath = await RunSTATask(() => ExportDataGridViewToExcel(dgvXeRa, "DANH-SACH-XE-RA"));
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    lastXeRaExportPath = exportedFilePath;
+                    MessageBox.Show("Xuất dữ liệu 'Xe Ra' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        private void btnMoXeVao_Click(object sender, EventArgs e)
+        {
+            OpenExportedFileDirectory(lastXeVaoExportPath);
+        }
+
+        private async void btnXuatXeVao_Click(object sender, EventArgs e)
+        {
+            if (dgvXeVao.Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu 'Xe Vào' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            ShowLoading();
+            try
+            {
+                string exportedFilePath = await RunSTATask(() => ExportDataGridViewToExcel(dgvXeVao, "DANH-SACH-XE-VAO"));
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    lastXeVaoExportPath = exportedFilePath;
+                    MessageBox.Show("Xuất dữ liệu 'Xe Vào' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
             }
         }
     }

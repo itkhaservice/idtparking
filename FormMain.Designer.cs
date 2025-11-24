@@ -52,6 +52,8 @@ namespace IDT_PARKING
             this.guna2Button1 = new Guna.UI2.WinForms.Guna2Button();
             this.guna2Button6 = new Guna.UI2.WinForms.Guna2Button();
             this.btnMoThe_TT = new Guna.UI2.WinForms.Guna2Button();
+            this.btnXuatXeRa = new Guna.UI2.WinForms.Guna2Button();
+            this.btnXuatXeVao = new Guna.UI2.WinForms.Guna2Button();
             this.tabThe = new System.Windows.Forms.TabPage();
             this.guna2DataGridView3 = new Guna.UI2.WinForms.Guna2DataGridView();
             this.guna2DataGridView1 = new Guna.UI2.WinForms.Guna2DataGridView();
@@ -177,6 +179,7 @@ namespace IDT_PARKING
             this.ptHinhMatRa = new Guna.UI2.WinForms.Guna2PictureBox();
             this.ptHinhXeRa = new Guna.UI2.WinForms.Guna2PictureBox();
             this.guna2Panel2 = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnMoXeRa = new Guna.UI2.WinForms.Guna2Button();
             this.btnXoaXeRa = new Guna.UI2.WinForms.Guna2Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -198,6 +201,7 @@ namespace IDT_PARKING
             this.ptHinhXeVaoVao = new Guna.UI2.WinForms.Guna2PictureBox();
             this.txtInfoVaoVao = new Guna.UI2.WinForms.Guna2TextBox();
             this.guna2Panel11 = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnMoXeVao = new Guna.UI2.WinForms.Guna2Button();
             this.btnXoaXeVao = new Guna.UI2.WinForms.Guna2Button();
             this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -400,6 +404,42 @@ namespace IDT_PARKING
             this.btnMoThe_TT.TabIndex = 134;
             this.btnMoThe_TT.Text = "Mở thẻ";
             this.toolTip1.SetToolTip(this.btnMoThe_TT, "Đang cập nhật...");
+            // 
+            // btnXuatXeRa
+            // 
+            this.btnXuatXeRa.BorderRadius = 4;
+            this.btnXuatXeRa.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnXuatXeRa.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnXuatXeRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnXuatXeRa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnXuatXeRa.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnXuatXeRa.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnXuatXeRa.ForeColor = System.Drawing.Color.White;
+            this.btnXuatXeRa.Location = new System.Drawing.Point(499, 38);
+            this.btnXuatXeRa.Name = "btnXuatXeRa";
+            this.btnXuatXeRa.Size = new System.Drawing.Size(96, 24);
+            this.btnXuatXeRa.TabIndex = 129;
+            this.btnXuatXeRa.Text = "Xuất Excel";
+            this.toolTip1.SetToolTip(this.btnXuatXeRa, "Xuất danh sách Khách hàng");
+            this.btnXuatXeRa.Click += new System.EventHandler(this.btnXuatXeRa_Click);
+            // 
+            // btnXuatXeVao
+            // 
+            this.btnXuatXeVao.BorderRadius = 4;
+            this.btnXuatXeVao.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnXuatXeVao.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnXuatXeVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnXuatXeVao.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnXuatXeVao.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnXuatXeVao.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnXuatXeVao.ForeColor = System.Drawing.Color.White;
+            this.btnXuatXeVao.Location = new System.Drawing.Point(499, 37);
+            this.btnXuatXeVao.Name = "btnXuatXeVao";
+            this.btnXuatXeVao.Size = new System.Drawing.Size(96, 24);
+            this.btnXuatXeVao.TabIndex = 131;
+            this.btnXuatXeVao.Text = "Xuất Excel";
+            this.toolTip1.SetToolTip(this.btnXuatXeVao, "Xuất danh sách Khách hàng");
+            this.btnXuatXeVao.Click += new System.EventHandler(this.btnXuatXeVao_Click);
             // 
             // tabThe
             // 
@@ -2368,6 +2408,8 @@ namespace IDT_PARKING
             this.guna2Panel2.BorderColor = System.Drawing.Color.Black;
             this.guna2Panel2.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             this.guna2Panel2.BorderThickness = 1;
+            this.guna2Panel2.Controls.Add(this.btnMoXeRa);
+            this.guna2Panel2.Controls.Add(this.btnXuatXeRa);
             this.guna2Panel2.Controls.Add(this.btnXoaXeRa);
             this.guna2Panel2.Controls.Add(this.label1);
             this.guna2Panel2.Controls.Add(this.label2);
@@ -2387,6 +2429,23 @@ namespace IDT_PARKING
             this.guna2Panel2.Name = "guna2Panel2";
             this.guna2Panel2.Size = new System.Drawing.Size(728, 86);
             this.guna2Panel2.TabIndex = 64;
+            // 
+            // btnMoXeRa
+            // 
+            this.btnMoXeRa.BorderRadius = 4;
+            this.btnMoXeRa.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoXeRa.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoXeRa.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnMoXeRa.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnMoXeRa.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnMoXeRa.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnMoXeRa.ForeColor = System.Drawing.Color.White;
+            this.btnMoXeRa.Location = new System.Drawing.Point(445, 38);
+            this.btnMoXeRa.Name = "btnMoXeRa";
+            this.btnMoXeRa.Size = new System.Drawing.Size(48, 24);
+            this.btnMoXeRa.TabIndex = 130;
+            this.btnMoXeRa.Text = "Mở";
+            this.btnMoXeRa.Click += new System.EventHandler(this.btnMoXeRa_Click);
             // 
             // btnXoaXeRa
             // 
@@ -2408,7 +2467,7 @@ namespace IDT_PARKING
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(24, 11);
+            this.label1.Location = new System.Drawing.Point(14, 12);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(73, 15);
@@ -2419,7 +2478,7 @@ namespace IDT_PARKING
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(209, 40);
+            this.label2.Location = new System.Drawing.Point(199, 41);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(59, 15);
@@ -2429,7 +2488,7 @@ namespace IDT_PARKING
             // dtXeRaDenDate
             // 
             this.dtXeRaDenDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtXeRaDenDate.Location = new System.Drawing.Point(272, 40);
+            this.dtXeRaDenDate.Location = new System.Drawing.Point(262, 41);
             this.dtXeRaDenDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeRaDenDate.Name = "dtXeRaDenDate";
             this.dtXeRaDenDate.Size = new System.Drawing.Size(92, 20);
@@ -2439,7 +2498,7 @@ namespace IDT_PARKING
             // dtXeRaTuDate
             // 
             this.dtXeRaTuDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtXeRaTuDate.Location = new System.Drawing.Point(272, 11);
+            this.dtXeRaTuDate.Location = new System.Drawing.Point(262, 12);
             this.dtXeRaTuDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeRaTuDate.Name = "dtXeRaTuDate";
             this.dtXeRaTuDate.Size = new System.Drawing.Size(92, 20);
@@ -2467,7 +2526,7 @@ namespace IDT_PARKING
             // 
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(217, 11);
+            this.label3.Location = new System.Drawing.Point(206, 12);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 15);
@@ -2494,7 +2553,7 @@ namespace IDT_PARKING
             this.txtBienSoXeRa.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtBienSoXeRa.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtBienSoXeRa.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtBienSoXeRa.Location = new System.Drawing.Point(104, 37);
+            this.txtBienSoXeRa.Location = new System.Drawing.Point(94, 38);
             this.txtBienSoXeRa.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtBienSoXeRa.Name = "txtBienSoXeRa";
             this.txtBienSoXeRa.PlaceholderText = "";
@@ -2505,7 +2564,7 @@ namespace IDT_PARKING
             // dtXeRaTuTime
             // 
             this.dtXeRaTuTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtXeRaTuTime.Location = new System.Drawing.Point(368, 11);
+            this.dtXeRaTuTime.Location = new System.Drawing.Point(358, 12);
             this.dtXeRaTuTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeRaTuTime.Name = "dtXeRaTuTime";
             this.dtXeRaTuTime.Size = new System.Drawing.Size(75, 20);
@@ -2523,7 +2582,7 @@ namespace IDT_PARKING
             this.txtSoTheXeRa.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSoTheXeRa.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtSoTheXeRa.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSoTheXeRa.Location = new System.Drawing.Point(104, 7);
+            this.txtSoTheXeRa.Location = new System.Drawing.Point(94, 8);
             this.txtSoTheXeRa.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSoTheXeRa.Name = "txtSoTheXeRa";
             this.txtSoTheXeRa.PlaceholderText = "";
@@ -2534,7 +2593,7 @@ namespace IDT_PARKING
             // dtXeRaDenTime
             // 
             this.dtXeRaDenTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtXeRaDenTime.Location = new System.Drawing.Point(368, 40);
+            this.dtXeRaDenTime.Location = new System.Drawing.Point(358, 41);
             this.dtXeRaDenTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeRaDenTime.Name = "dtXeRaDenTime";
             this.dtXeRaDenTime.Size = new System.Drawing.Size(75, 20);
@@ -2565,7 +2624,7 @@ namespace IDT_PARKING
             // 
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label9.Location = new System.Drawing.Point(19, 40);
+            this.label9.Location = new System.Drawing.Point(8, 41);
             this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(78, 15);
@@ -2596,7 +2655,7 @@ namespace IDT_PARKING
             this.tabXeVao.Location = new System.Drawing.Point(4, 44);
             this.tabXeVao.Name = "tabXeVao";
             this.tabXeVao.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabXeVao.Size = new System.Drawing.Size(1344, 670);
+            this.tabXeVao.Size = new System.Drawing.Size(1346, 670);
             this.tabXeVao.TabIndex = 0;
             this.tabXeVao.Text = "Xe vào";
             this.tabXeVao.UseVisualStyleBackColor = true;
@@ -2646,6 +2705,8 @@ namespace IDT_PARKING
             this.guna2Panel11.BorderColor = System.Drawing.Color.Black;
             this.guna2Panel11.BorderStyle = System.Drawing.Drawing2D.DashStyle.Dash;
             this.guna2Panel11.BorderThickness = 1;
+            this.guna2Panel11.Controls.Add(this.btnMoXeVao);
+            this.guna2Panel11.Controls.Add(this.btnXuatXeVao);
             this.guna2Panel11.Controls.Add(this.btnXoaXeVao);
             this.guna2Panel11.Controls.Add(this.label11);
             this.guna2Panel11.Controls.Add(this.label12);
@@ -2665,6 +2726,23 @@ namespace IDT_PARKING
             this.guna2Panel11.Name = "guna2Panel11";
             this.guna2Panel11.Size = new System.Drawing.Size(728, 86);
             this.guna2Panel11.TabIndex = 69;
+            // 
+            // btnMoXeVao
+            // 
+            this.btnMoXeVao.BorderRadius = 4;
+            this.btnMoXeVao.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoXeVao.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoXeVao.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnMoXeVao.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnMoXeVao.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnMoXeVao.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnMoXeVao.ForeColor = System.Drawing.Color.White;
+            this.btnMoXeVao.Location = new System.Drawing.Point(445, 37);
+            this.btnMoXeVao.Name = "btnMoXeVao";
+            this.btnMoXeVao.Size = new System.Drawing.Size(48, 24);
+            this.btnMoXeVao.TabIndex = 132;
+            this.btnMoXeVao.Text = "Mở";
+            this.btnMoXeVao.Click += new System.EventHandler(this.btnMoXeVao_Click);
             // 
             // btnXoaXeVao
             // 
@@ -2686,7 +2764,7 @@ namespace IDT_PARKING
             // 
             this.label11.AutoSize = true;
             this.label11.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label11.Location = new System.Drawing.Point(24, 11);
+            this.label11.Location = new System.Drawing.Point(14, 15);
             this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(73, 15);
@@ -2697,7 +2775,7 @@ namespace IDT_PARKING
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label12.Location = new System.Drawing.Point(209, 40);
+            this.label12.Location = new System.Drawing.Point(199, 44);
             this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(59, 15);
@@ -2707,7 +2785,7 @@ namespace IDT_PARKING
             // dtXeVaoDenDate
             // 
             this.dtXeVaoDenDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtXeVaoDenDate.Location = new System.Drawing.Point(272, 40);
+            this.dtXeVaoDenDate.Location = new System.Drawing.Point(262, 44);
             this.dtXeVaoDenDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeVaoDenDate.Name = "dtXeVaoDenDate";
             this.dtXeVaoDenDate.Size = new System.Drawing.Size(92, 20);
@@ -2717,7 +2795,7 @@ namespace IDT_PARKING
             // dtXeVaoTuDate
             // 
             this.dtXeVaoTuDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtXeVaoTuDate.Location = new System.Drawing.Point(272, 11);
+            this.dtXeVaoTuDate.Location = new System.Drawing.Point(262, 15);
             this.dtXeVaoTuDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeVaoTuDate.Name = "dtXeVaoTuDate";
             this.dtXeVaoTuDate.Size = new System.Drawing.Size(92, 20);
@@ -2745,7 +2823,7 @@ namespace IDT_PARKING
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label13.Location = new System.Drawing.Point(217, 11);
+            this.label13.Location = new System.Drawing.Point(206, 15);
             this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(51, 15);
@@ -2772,7 +2850,7 @@ namespace IDT_PARKING
             this.txtBienSoXeVao.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtBienSoXeVao.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtBienSoXeVao.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtBienSoXeVao.Location = new System.Drawing.Point(104, 37);
+            this.txtBienSoXeVao.Location = new System.Drawing.Point(94, 41);
             this.txtBienSoXeVao.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtBienSoXeVao.Name = "txtBienSoXeVao";
             this.txtBienSoXeVao.PlaceholderText = "";
@@ -2783,7 +2861,7 @@ namespace IDT_PARKING
             // dtXeVaoTuTime
             // 
             this.dtXeVaoTuTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtXeVaoTuTime.Location = new System.Drawing.Point(368, 11);
+            this.dtXeVaoTuTime.Location = new System.Drawing.Point(358, 15);
             this.dtXeVaoTuTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeVaoTuTime.Name = "dtXeVaoTuTime";
             this.dtXeVaoTuTime.Size = new System.Drawing.Size(75, 20);
@@ -2801,7 +2879,7 @@ namespace IDT_PARKING
             this.txtSoTheXeVao.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
             this.txtSoTheXeVao.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.txtSoTheXeVao.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.txtSoTheXeVao.Location = new System.Drawing.Point(104, 7);
+            this.txtSoTheXeVao.Location = new System.Drawing.Point(94, 11);
             this.txtSoTheXeVao.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txtSoTheXeVao.Name = "txtSoTheXeVao";
             this.txtSoTheXeVao.PlaceholderText = "";
@@ -2812,7 +2890,7 @@ namespace IDT_PARKING
             // dtXeVaoDenTime
             // 
             this.dtXeVaoDenTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dtXeVaoDenTime.Location = new System.Drawing.Point(368, 40);
+            this.dtXeVaoDenTime.Location = new System.Drawing.Point(358, 44);
             this.dtXeVaoDenTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.dtXeVaoDenTime.Name = "dtXeVaoDenTime";
             this.dtXeVaoDenTime.Size = new System.Drawing.Size(75, 20);
@@ -2843,7 +2921,7 @@ namespace IDT_PARKING
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.label15.Location = new System.Drawing.Point(19, 40);
+            this.label15.Location = new System.Drawing.Point(8, 44);
             this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(78, 15);
@@ -2876,7 +2954,7 @@ namespace IDT_PARKING
             this.tabControl.Location = new System.Drawing.Point(0, 0);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(1352, 718);
+            this.tabControl.Size = new System.Drawing.Size(1354, 718);
             this.tabControl.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty;
             this.tabControl.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
             this.tabControl.TabButtonHoverState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
@@ -3376,7 +3454,7 @@ namespace IDT_PARKING
             // 
             this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.loadingControl.Location = new System.Drawing.Point(495, 250);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(4);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.loadingControl.Name = "loadingControl";
             this.loadingControl.Size = new System.Drawing.Size(350, 150);
             this.loadingControl.TabIndex = 1002;
@@ -3386,7 +3464,7 @@ namespace IDT_PARKING
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1352, 718);
+            this.ClientSize = new System.Drawing.Size(1354, 718);
             this.Controls.Add(this.loadingControl);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -3642,5 +3720,9 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2Button btnOpenBackup;
         private Guna.UI2.WinForms.Guna2Button btnBackUp;
         private System.Windows.Forms.Label txtCountTT;
+        private Guna.UI2.WinForms.Guna2Button btnMoXeRa;
+        private Guna.UI2.WinForms.Guna2Button btnXuatXeRa;
+        private Guna.UI2.WinForms.Guna2Button btnMoXeVao;
+        private Guna.UI2.WinForms.Guna2Button btnXuatXeVao;
     }
 }
