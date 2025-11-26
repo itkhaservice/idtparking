@@ -1825,6 +1825,7 @@ namespace IDT_PARKING
                 return;
             }
 
+            ShowLoading();
             try
             {
                 if (connection.State != ConnectionState.Open)
@@ -1832,25 +1833,35 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
-                // Build the parameter names for the IN clause
-                List<string> paramNames = new List<string>();
-                SqlCommand command = new SqlCommand();
-                for (int i = 0; i < soTTList.Count; i++)
+                int batchSize = 500;
+                int totalRowsAffected = 0;
+                for (int i = 0; i < soTTList.Count; i += batchSize)
                 {
-                    string paramName = "@soTT" + i;
-                    paramNames.Add(paramName);
-                    command.Parameters.AddWithValue(paramName, soTTList[i]);
+                    var batch = soTTList.Skip(i).Take(batchSize).ToList();
+                    if (!batch.Any()) continue;
+
+                    List<string> paramNames = new List<string>();
+                    SqlCommand command = new SqlCommand();
+                    command.CommandTimeout = 120; // 2 minutes timeout
+                    for (int j = 0; j < batch.Count; j++)
+                    {
+                        string paramName = "@soTT" + j;
+                        paramNames.Add(paramName);
+                        command.Parameters.AddWithValue(paramName, batch[j]);
+                    }
+
+                    string query = $"UPDATE TheThang SET NgayKT = @newNgayKT WHERE SoTT IN ({string.Join(", ", paramNames)})";
+                    command.CommandText = query;
+                    command.Connection = connection;
+                    command.Parameters.AddWithValue("@newNgayKT", newNgayKT);
+
+                    int rowsAffected = await command.ExecuteNonQueryAsync();
+                    totalRowsAffected += rowsAffected;
                 }
 
-                string query = $"UPDATE TheThang SET NgayKT = @newNgayKT WHERE SoTT IN ({string.Join(", ", paramNames)})";
-                command.CommandText = query;
-                command.Connection = connection;
-                command.Parameters.AddWithValue("@newNgayKT", newNgayKT);
-
-                int rowsAffected = await command.ExecuteNonQueryAsync();
-                if (rowsAffected > 0)
+                if (totalRowsAffected > 0)
                 {
-                    MessageBox.Show($"Gia hạn thành công cho {rowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show($"Gia hạn thành công cho {totalRowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await PerformTheThangSearch(); // Refresh data
                 }
                 else
@@ -1861,6 +1872,10 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi gia hạn thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
             }
         }
 
