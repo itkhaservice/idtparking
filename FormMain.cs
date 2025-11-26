@@ -1177,6 +1177,7 @@ namespace IDT_PARKING
 
                 try
                 {
+                    ShowLoading(); // Show loading indicator
                     if (connection.State != ConnectionState.Open)
                     {
                         await connection.OpenAsync();
@@ -1227,6 +1228,10 @@ namespace IDT_PARKING
                 catch (Exception ex)
                 {
                     MessageBox.Show($"Lỗi khi xóa khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    HideLoading(); // Hide loading indicator
                 }
             }
         }
@@ -1943,6 +1948,7 @@ namespace IDT_PARKING
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
@@ -1979,6 +1985,7 @@ namespace IDT_PARKING
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -2008,6 +2015,7 @@ namespace IDT_PARKING
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
@@ -2044,6 +2052,7 @@ namespace IDT_PARKING
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -2806,6 +2815,7 @@ namespace IDT_PARKING
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 InitializeDatabaseConnection();
                 if (connection.State != ConnectionState.Open)
                 {
@@ -2844,6 +2854,7 @@ namespace IDT_PARKING
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -3429,7 +3440,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void EvenDelete()
-#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
@@ -3448,80 +3458,95 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (confirm != DialogResult.Yes)
                 return;
 
+            List<DataGridViewRow> rowsToDelete = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in dgvResults.SelectedRows)
+            {
+                if (!row.IsNewRow)
+                {
+                    rowsToDelete.Add(row);
+                }
+            }
+
+            if (rowsToDelete.Count == 0)
+            {
+                MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int batchSize = 500; // Giảm kích thước batch để an toàn hơn (2100 params / 3 params/row = 700)
+            int totalRowsAffected = 0;
+
             SqlTransaction transaction = null;
             bool connectionOpenedHere = false;
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 InitializeDatabaseConnection();
 
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     connectionOpenedHere = true;
                 }
 
-                transaction = connection.BeginTransaction();
-
-                StringBuilder whereClauseBuilder = new StringBuilder();
-                List<SqlParameter> logParameters = new List<SqlParameter>();
-                List<SqlParameter> deleteParameters = new List<SqlParameter>();
-
-                int paramIndex = 0;
-                foreach (DataGridViewRow row in dgvResults.SelectedRows)
+                for (int i = 0; i < rowsToDelete.Count; i += batchSize)
                 {
-                    if (row.IsNewRow) continue;
+                    var batch = rowsToDelete.Skip(i).Take(batchSize).ToList();
+                    if (!batch.Any()) continue;
 
-                    string cardId = row.Cells["Mã thẻ"].Value?.ToString();
-                    string idXe = row.Cells["IDXe"].Value?.ToString();
-                    string idMat = row.Cells["Mã mặt"].Value?.ToString();
+                    StringBuilder whereClauseBuilder = new StringBuilder();
+                    List<SqlParameter> deleteParameters = new List<SqlParameter>();
+                    int paramIndex = 0;
 
-                    if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                    foreach (var row in batch)
                     {
-                        // Skip rows with incomplete data, but don't count as failure for the user message
-                        continue;
+                        string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+                        string idXe = row.Cells["IDXe"].Value?.ToString();
+                        string idMat = row.Cells["Mã mặt"].Value?.ToString();
+
+                        if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                        {
+                            continue;
+                        }
+
+                        string cardIdParam = "@cardId" + paramIndex;
+                        string idXeParam = "@idXe" + paramIndex;
+                        string idMatParam = "@idMat" + paramIndex;
+
+                        if (whereClauseBuilder.Length > 0)
+                        {
+                            whereClauseBuilder.Append(" OR ");
+                        }
+                        whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+
+                        deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
+                        deleteParameters.Add(new SqlParameter(idXeParam, idXe));
+                        deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                        paramIndex++;
                     }
 
-                    string cardIdParam = "@cardId" + paramIndex;
-                    string idXeParam = "@idXe" + paramIndex;
-                    string idMatParam = "@idMat" + paramIndex;
-
-                    if (whereClauseBuilder.Length > 0)
+                    if (whereClauseBuilder.Length == 0)
                     {
-                        whereClauseBuilder.Append(" OR ");
+                        continue; // Bỏ qua batch nếu không có dòng nào hợp lệ
                     }
-                    whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
 
-                    logParameters.Add(new SqlParameter(cardIdParam, cardId));
-                    logParameters.Add(new SqlParameter(idXeParam, idXe));
-                    logParameters.Add(new SqlParameter(idMatParam, idMat));
+                    transaction = connection.BeginTransaction();
 
-                    deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
-                    deleteParameters.Add(new SqlParameter(idXeParam, idXe));
-                    deleteParameters.Add(new SqlParameter(idMatParam, idMat));
-
-                    paramIndex++;
-                }
-
-                if (whereClauseBuilder.Length == 0)
-                {
-                    MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    transaction.Rollback();
-                    return;
-                }
-
-                // 🔹 Thực hiện xóa (batch delete)
-                string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
-                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
-                {
-                    deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
-                    int rowsAffected = deleteCmd.ExecuteNonQuery();
+                    string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
+                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                    {
+                        deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
+                        int rowsAffected = await deleteCmd.ExecuteNonQueryAsync();
+                        totalRowsAffected += rowsAffected;
+                    }
 
                     transaction.Commit();
-
-                    MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnRevenue_Click(this, EventArgs.Empty); // Refresh the DataGridView
                 }
+
+                MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                btnRevenue_Click(this, EventArgs.Empty); // Refresh the DataGridView
             }
             catch (Exception ex)
             {
@@ -3530,6 +3555,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -4136,6 +4162,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 if (connection.State != ConnectionState.Open)
                 {
                     connection.Open();
@@ -4173,6 +4200,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -4776,7 +4804,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
         }
 
-        private void EvenDeleteXeRa()
+        private async void EvenDeleteXeRa()
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
@@ -4795,89 +4823,116 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             if (confirm != DialogResult.Yes)
                 return;
 
+            List<DataGridViewRow> rowsToDelete = new List<DataGridViewRow>();
+            foreach (DataGridViewRow row in dgvXeRa.SelectedRows)
+            {
+                if (!row.IsNewRow)
+                {
+                    rowsToDelete.Add(row);
+                }
+            }
+
+            if (rowsToDelete.Count == 0)
+            {
+                MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int batchSize = 500; // Giảm kích thước batch để an toàn hơn
+            int totalRowsAffected = 0;
             SqlTransaction transaction = null;
             bool connectionOpenedHere = false;
 
             try
             {
+                ShowLoading(); // Show loading indicator
                 InitializeDatabaseConnection();
 
                 if (connection.State != ConnectionState.Open)
                 {
-                    connection.Open();
+                    await connection.OpenAsync();
                     connectionOpenedHere = true;
                 }
 
-                transaction = connection.BeginTransaction();
-
-                StringBuilder whereClauseBuilder = new StringBuilder();
-                List<SqlParameter> logParameters = new List<SqlParameter>();
-                List<SqlParameter> deleteParameters = new List<SqlParameter>();
-
-                int paramIndex = 0;
-                foreach (DataGridViewRow row in dgvXeRa.SelectedRows)
+                for (int i = 0; i < rowsToDelete.Count; i += batchSize)
                 {
-                    if (row.IsNewRow) continue;
+                    var batch = rowsToDelete.Skip(i).Take(batchSize).ToList();
+                    if (!batch.Any()) continue;
 
-                    string cardId = row.Cells["Mã thẻ"].Value?.ToString();
-                    string idXe = row.Cells["IDXe"].Value?.ToString();
-                    string idMat = row.Cells["IDMat"].Value?.ToString();
+                    StringBuilder whereClauseBuilder = new StringBuilder();
+                    List<SqlParameter> deleteParameters = new List<SqlParameter>();
+                    int paramIndex = 0;
 
-                    if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                    foreach (var row in batch)
                     {
-                        // Skip rows with incomplete data, but don't count as failure for the user message
+                        string cardId = row.Cells["Mã thẻ"].Value?.ToString();
+                        string idXe = row.Cells["IDXe"].Value?.ToString();
+                        string idMat = row.Cells["IDMat"].Value?.ToString();
+
+                        if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
+                        {
+                            continue;
+                        }
+
+                        string cardIdParam = "@cardId" + paramIndex;
+                        string idXeParam = "@idXe" + paramIndex;
+                        string idMatParam = "@idMat" + paramIndex;
+
+                        if (whereClauseBuilder.Length > 0)
+                        {
+                            whereClauseBuilder.Append(" OR ");
+                        }
+                        whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+
+                        deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
+                        deleteParameters.Add(new SqlParameter(idXeParam, idXe));
+                        deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+
+                        paramIndex++;
+                    }
+
+                    if (whereClauseBuilder.Length == 0)
+                    {
                         continue;
                     }
 
-                    string cardIdParam = "@cardId" + paramIndex;
-                    string idXeParam = "@idXe" + paramIndex;
-                    string idMatParam = "@idMat" + paramIndex;
+                    transaction = connection.BeginTransaction();
 
-                    if (whereClauseBuilder.Length > 0)
+                    // For EvenDeleteXeRa, we also have a logging step
+                    string insertLogQuery = $@"
+                        INSERT INTO [dbo].[ITKHA]
+                        (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
+                        SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
+                        FROM [dbo].[Ra]
+                        WHERE {whereClauseBuilder.ToString()}";
+
+                    // It's safer to add parameters to the log query as well, even if they are the same.
+                    using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
                     {
-                        whereClauseBuilder.Append(" OR ");
+                        logCmd.Parameters.AddRange(deleteParameters.ToArray());
+                        // await logCmd.ExecuteNonQueryAsync(); // Uncomment if logging is required
                     }
-                    whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
 
-                    logParameters.Add(new SqlParameter(cardIdParam, cardId));
-                    logParameters.Add(new SqlParameter(idXeParam, idXe));
-                    logParameters.Add(new SqlParameter(idMatParam, idMat));
 
-                    deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
-                    deleteParameters.Add(new SqlParameter(idXeParam, idXe));
-                    deleteParameters.Add(new SqlParameter(idMatParam, idMat));
-
-                    paramIndex++;
-                }
-
-                if (whereClauseBuilder.Length == 0)
-                {
-                    MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    transaction.Rollback();
-                    return;
-                }
-
-                // 🔹 Ghi log trước khi xóa (batch insert)
-                string insertLogQuery = $"\n                    INSERT INTO [dbo].[ITKHA]\n                    (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)\n                    SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()\n                    FROM [dbo].[Ra]\n                    WHERE {whereClauseBuilder.ToString()}";
-
-                using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
-                {
-                    //logCmd.Parameters.AddRange(logParameters.ToArray());
-                    //logCmd.ExecuteNonQuery();
-                }
-
-                // 🔹 Thực hiện xóa (batch delete)
-                string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
-                using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
-                {
-                    deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
-                    int rowsAffected = deleteCmd.ExecuteNonQuery();
+                    string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
+                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                    {
+                        // Create a new list of parameters for the delete command to avoid conflicts
+                        List<SqlParameter> finalDeleteParams = new List<SqlParameter>();
+                        foreach (SqlParameter p in deleteParameters)
+                        {
+                            finalDeleteParams.Add(new SqlParameter(p.ParameterName, p.Value));
+                        }
+                        deleteCmd.Parameters.AddRange(finalDeleteParams.ToArray());
+                        int rowsAffected = await deleteCmd.ExecuteNonQueryAsync();
+                        totalRowsAffected += rowsAffected;
+                    }
 
                     transaction.Commit();
-
-                    MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    btnLocXeRa_Click(this, EventArgs.Empty); // Refresh the DataGridView
                 }
+
+                MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                await LoadXeRaData(); // Refresh the DataGridView
             }
             catch (Exception ex)
             {
@@ -4886,6 +4941,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
+                HideLoading(); // Hide loading indicator
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
