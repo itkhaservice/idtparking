@@ -3124,16 +3124,38 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnExport_TTT_Click(object sender, EventArgs e)
+        private async void btnExport_TTT_Click(object sender, EventArgs e)
         {
-            // Placeholder for export functionality
-            MessageBox.Show("Chức năng xuất danh sách thẻ đang được phát triển.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (guna2DataGridView3.Rows.Count == 0)
+            {
+                MessageBox.Show("Không có dữ liệu 'Active' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            ShowLoading();
+            try
+            {
+                string exportedFilePath = await RunSTATask(() => ExportDataGridViewToExcel(guna2DataGridView3, "DANH-SACH-ACTIVE"));
+
+                if (!string.IsNullOrEmpty(exportedFilePath))
+                {
+                    active_export_path = exportedFilePath; // Store the path
+                    MessageBox.Show("Xuất dữ liệu 'Active' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         private void btnOpen_TTT_Click(object sender, EventArgs e)
         {
-            // Placeholder for open functionality
-            MessageBox.Show("Chức năng mở thư mục đang được phát triển.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            OpenExportedFileDirectory(active_export_path);
         }
 
         #endregion
