@@ -74,7 +74,6 @@ namespace IDT_PARKING
             ptHinhXeVaoVao.Click += pictureBox_Click;
 
             btnXoaXeVao.Click += btnXoaXeVao_Click;
-            btnXoaXeRa.Click += btnXoaXeRa_Click;
 
             dgvXeVao.CellClick += dgvXeVao_CellClick;
             dgvXeVao.KeyDown += dgvXeVao_KeyDown;
@@ -3135,7 +3134,7 @@ namespace IDT_PARKING
             ShowLoading();
             try
             {
-                string exportedFilePath = await RunSTATask(() => ExportDataGridViewToExcel(guna2DataGridView3, "DANH-SACH-ACTIVE"));
+                string exportedFilePath = await RunSTATask(() => ExportDataGridViewToExcel(guna2DataGridView3, "DANH-SACH-TOAN-BO-THE"));
 
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {

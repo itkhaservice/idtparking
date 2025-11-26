@@ -450,8 +450,8 @@ namespace IDT_PARKING
             this.tabThe.Controls.Add(this.groupBox3);
             this.tabThe.Location = new System.Drawing.Point(4, 44);
             this.tabThe.Name = "tabThe";
-            this.tabThe.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabThe.Size = new System.Drawing.Size(1344, 670);
+            this.tabThe.Padding = new System.Windows.Forms.Padding(3);
+            this.tabThe.Size = new System.Drawing.Size(1346, 670);
             this.tabThe.TabIndex = 4;
             this.tabThe.Text = "Thẻ";
             this.tabThe.UseVisualStyleBackColor = true;
@@ -890,8 +890,8 @@ namespace IDT_PARKING
             this.tabKhachHang.Controls.Add(this.dgvKhachHang_KH);
             this.tabKhachHang.Location = new System.Drawing.Point(4, 44);
             this.tabKhachHang.Name = "tabKhachHang";
-            this.tabKhachHang.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhachHang.Size = new System.Drawing.Size(1344, 670);
+            this.tabKhachHang.Padding = new System.Windows.Forms.Padding(3);
+            this.tabKhachHang.Size = new System.Drawing.Size(1346, 670);
             this.tabKhachHang.TabIndex = 3;
             this.tabKhachHang.Text = "Khách hàng";
             this.tabKhachHang.UseVisualStyleBackColor = true;
@@ -1105,7 +1105,7 @@ namespace IDT_PARKING
             // 
             this.dtDen_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtDen_TTr.Location = new System.Drawing.Point(596, 63);
-            this.dtDen_TTr.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtDen_TTr.Margin = new System.Windows.Forms.Padding(2);
             this.dtDen_TTr.Name = "dtDen_TTr";
             this.dtDen_TTr.Size = new System.Drawing.Size(116, 20);
             this.dtDen_TTr.TabIndex = 127;
@@ -1115,7 +1115,7 @@ namespace IDT_PARKING
             // 
             this.dtTu_TTr.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtTu_TTr.Location = new System.Drawing.Point(595, 34);
-            this.dtTu_TTr.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtTu_TTr.Margin = new System.Windows.Forms.Padding(2);
             this.dtTu_TTr.Name = "dtTu_TTr";
             this.dtTu_TTr.Size = new System.Drawing.Size(116, 20);
             this.dtTu_TTr.TabIndex = 126;
@@ -1868,7 +1868,7 @@ namespace IDT_PARKING
             // 
             this.dtDen_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtDen_TT.Location = new System.Drawing.Point(73, 37);
-            this.dtDen_TT.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtDen_TT.Margin = new System.Windows.Forms.Padding(2);
             this.dtDen_TT.Name = "dtDen_TT";
             this.dtDen_TT.Size = new System.Drawing.Size(159, 20);
             this.dtDen_TT.TabIndex = 129;
@@ -1878,7 +1878,7 @@ namespace IDT_PARKING
             // 
             this.dtTu_TT.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtTu_TT.Location = new System.Drawing.Point(73, 6);
-            this.dtTu_TT.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtTu_TT.Margin = new System.Windows.Forms.Padding(2);
             this.dtTu_TT.Name = "dtTu_TT";
             this.dtTu_TT.Size = new System.Drawing.Size(159, 20);
             this.dtTu_TT.TabIndex = 128;
@@ -1922,7 +1922,7 @@ namespace IDT_PARKING
             this.dgvTheThang_KH.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvTheThang_KH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTheThang_KH.Location = new System.Drawing.Point(721, 5);
-            this.dgvTheThang_KH.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvTheThang_KH.Margin = new System.Windows.Forms.Padding(2);
             this.dgvTheThang_KH.Name = "dgvTheThang_KH";
             this.dgvTheThang_KH.ReadOnly = true;
             this.dgvTheThang_KH.RowHeadersWidth = 51;
@@ -1937,7 +1937,7 @@ namespace IDT_PARKING
             this.dgvTheTrong_KH.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvTheTrong_KH.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvTheTrong_KH.Location = new System.Drawing.Point(495, 5);
-            this.dgvTheTrong_KH.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvTheTrong_KH.Margin = new System.Windows.Forms.Padding(2);
             this.dgvTheTrong_KH.Name = "dgvTheTrong_KH";
             this.dgvTheTrong_KH.ReadOnly = true;
             this.dgvTheTrong_KH.RowHeadersWidth = 51;
@@ -1990,8 +1990,8 @@ namespace IDT_PARKING
             this.tabDoanhThu.Controls.Add(this.label10);
             this.tabDoanhThu.Location = new System.Drawing.Point(4, 44);
             this.tabDoanhThu.Name = "tabDoanhThu";
-            this.tabDoanhThu.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabDoanhThu.Size = new System.Drawing.Size(1344, 670);
+            this.tabDoanhThu.Padding = new System.Windows.Forms.Padding(3);
+            this.tabDoanhThu.Size = new System.Drawing.Size(1346, 670);
             this.tabDoanhThu.TabIndex = 2;
             this.tabDoanhThu.Text = "Doanh thu";
             this.tabDoanhThu.UseVisualStyleBackColor = true;
@@ -2038,7 +2038,7 @@ namespace IDT_PARKING
             // progressBarExport
             // 
             this.progressBarExport.Location = new System.Drawing.Point(21, 519);
-            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBarExport.Margin = new System.Windows.Forms.Padding(2);
             this.progressBarExport.Name = "progressBarExport";
             this.progressBarExport.Size = new System.Drawing.Size(354, 11);
             this.progressBarExport.TabIndex = 65;
@@ -2070,7 +2070,7 @@ namespace IDT_PARKING
             // 
             this.cmbTypeDoanhThu.FormattingEnabled = true;
             this.cmbTypeDoanhThu.Location = new System.Drawing.Point(128, 204);
-            this.cmbTypeDoanhThu.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbTypeDoanhThu.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTypeDoanhThu.Name = "cmbTypeDoanhThu";
             this.cmbTypeDoanhThu.Size = new System.Drawing.Size(92, 21);
             this.cmbTypeDoanhThu.TabIndex = 42;
@@ -2101,7 +2101,7 @@ namespace IDT_PARKING
             // 
             this.dateTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimeEnd.Location = new System.Drawing.Point(128, 180);
-            this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dateTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeEnd.Name = "dateTimeEnd";
             this.dateTimeEnd.Size = new System.Drawing.Size(92, 20);
             this.dateTimeEnd.TabIndex = 37;
@@ -2111,7 +2111,7 @@ namespace IDT_PARKING
             // 
             this.dateTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dateTimeStart.Location = new System.Drawing.Point(128, 151);
-            this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dateTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.dateTimeStart.Name = "dateTimeStart";
             this.dateTimeStart.Size = new System.Drawing.Size(92, 20);
             this.dateTimeStart.TabIndex = 34;
@@ -2161,7 +2161,7 @@ namespace IDT_PARKING
             // 
             this.timeTimeStart.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.timeTimeStart.Location = new System.Drawing.Point(224, 151);
-            this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.timeTimeStart.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeStart.Name = "timeTimeStart";
             this.timeTimeStart.Size = new System.Drawing.Size(75, 20);
             this.timeTimeStart.TabIndex = 36;
@@ -2188,7 +2188,7 @@ namespace IDT_PARKING
             // 
             this.timeTimeEnd.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.timeTimeEnd.Location = new System.Drawing.Point(224, 180);
-            this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.timeTimeEnd.Margin = new System.Windows.Forms.Padding(2);
             this.timeTimeEnd.Name = "timeTimeEnd";
             this.timeTimeEnd.Size = new System.Drawing.Size(75, 20);
             this.timeTimeEnd.TabIndex = 38;
@@ -2317,8 +2317,8 @@ namespace IDT_PARKING
             this.tabXeRa.Controls.Add(this.dgvXeRa);
             this.tabXeRa.Location = new System.Drawing.Point(4, 44);
             this.tabXeRa.Name = "tabXeRa";
-            this.tabXeRa.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabXeRa.Size = new System.Drawing.Size(1344, 670);
+            this.tabXeRa.Padding = new System.Windows.Forms.Padding(3);
+            this.tabXeRa.Size = new System.Drawing.Size(1346, 670);
             this.tabXeRa.TabIndex = 1;
             this.tabXeRa.Text = "Xe ra";
             this.tabXeRa.UseVisualStyleBackColor = true;
@@ -2462,6 +2462,7 @@ namespace IDT_PARKING
             this.btnXoaXeRa.Size = new System.Drawing.Size(115, 24);
             this.btnXoaXeRa.TabIndex = 60;
             this.btnXoaXeRa.Text = "Xóa dữ liệu rác";
+            this.btnXoaXeRa.Click += new System.EventHandler(this.btnXoaXeRa_Click);
             // 
             // label1
             // 
@@ -2489,7 +2490,7 @@ namespace IDT_PARKING
             // 
             this.dtXeRaDenDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtXeRaDenDate.Location = new System.Drawing.Point(262, 41);
-            this.dtXeRaDenDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeRaDenDate.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeRaDenDate.Name = "dtXeRaDenDate";
             this.dtXeRaDenDate.Size = new System.Drawing.Size(92, 20);
             this.dtXeRaDenDate.TabIndex = 37;
@@ -2499,7 +2500,7 @@ namespace IDT_PARKING
             // 
             this.dtXeRaTuDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtXeRaTuDate.Location = new System.Drawing.Point(262, 12);
-            this.dtXeRaTuDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeRaTuDate.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeRaTuDate.Name = "dtXeRaTuDate";
             this.dtXeRaTuDate.Size = new System.Drawing.Size(92, 20);
             this.dtXeRaTuDate.TabIndex = 34;
@@ -2537,7 +2538,7 @@ namespace IDT_PARKING
             // 
             this.cbbXeRa.FormattingEnabled = true;
             this.cbbXeRa.Location = new System.Drawing.Point(517, 9);
-            this.cbbXeRa.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbbXeRa.Margin = new System.Windows.Forms.Padding(2);
             this.cbbXeRa.Name = "cbbXeRa";
             this.cbbXeRa.Size = new System.Drawing.Size(75, 21);
             this.cbbXeRa.TabIndex = 42;
@@ -2565,7 +2566,7 @@ namespace IDT_PARKING
             // 
             this.dtXeRaTuTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.dtXeRaTuTime.Location = new System.Drawing.Point(358, 12);
-            this.dtXeRaTuTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeRaTuTime.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeRaTuTime.Name = "dtXeRaTuTime";
             this.dtXeRaTuTime.Size = new System.Drawing.Size(75, 20);
             this.dtXeRaTuTime.TabIndex = 36;
@@ -2594,7 +2595,7 @@ namespace IDT_PARKING
             // 
             this.dtXeRaDenTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.dtXeRaDenTime.Location = new System.Drawing.Point(358, 41);
-            this.dtXeRaDenTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeRaDenTime.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeRaDenTime.Name = "dtXeRaDenTime";
             this.dtXeRaDenTime.Size = new System.Drawing.Size(75, 20);
             this.dtXeRaDenTime.TabIndex = 38;
@@ -2603,7 +2604,7 @@ namespace IDT_PARKING
             // progressBar1
             // 
             this.progressBar1.Location = new System.Drawing.Point(8, 67);
-            this.progressBar1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar1.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(708, 11);
             this.progressBar1.TabIndex = 55;
@@ -2637,7 +2638,7 @@ namespace IDT_PARKING
             this.dgvXeRa.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvXeRa.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvXeRa.Location = new System.Drawing.Point(6, 3);
-            this.dgvXeRa.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvXeRa.Margin = new System.Windows.Forms.Padding(2);
             this.dgvXeRa.Name = "dgvXeRa";
             this.dgvXeRa.RowHeadersWidth = 51;
             this.dgvXeRa.Size = new System.Drawing.Size(723, 569);
@@ -2654,7 +2655,7 @@ namespace IDT_PARKING
             this.tabXeVao.Controls.Add(this.dgvXeVao);
             this.tabXeVao.Location = new System.Drawing.Point(4, 44);
             this.tabXeVao.Name = "tabXeVao";
-            this.tabXeVao.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tabXeVao.Padding = new System.Windows.Forms.Padding(3);
             this.tabXeVao.Size = new System.Drawing.Size(1346, 670);
             this.tabXeVao.TabIndex = 0;
             this.tabXeVao.Text = "Xe vào";
@@ -2786,7 +2787,7 @@ namespace IDT_PARKING
             // 
             this.dtXeVaoDenDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtXeVaoDenDate.Location = new System.Drawing.Point(262, 44);
-            this.dtXeVaoDenDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeVaoDenDate.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeVaoDenDate.Name = "dtXeVaoDenDate";
             this.dtXeVaoDenDate.Size = new System.Drawing.Size(92, 20);
             this.dtXeVaoDenDate.TabIndex = 37;
@@ -2796,7 +2797,7 @@ namespace IDT_PARKING
             // 
             this.dtXeVaoTuDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
             this.dtXeVaoTuDate.Location = new System.Drawing.Point(262, 15);
-            this.dtXeVaoTuDate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeVaoTuDate.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeVaoTuDate.Name = "dtXeVaoTuDate";
             this.dtXeVaoTuDate.Size = new System.Drawing.Size(92, 20);
             this.dtXeVaoTuDate.TabIndex = 34;
@@ -2834,7 +2835,7 @@ namespace IDT_PARKING
             // 
             this.cbbXeVao.FormattingEnabled = true;
             this.cbbXeVao.Location = new System.Drawing.Point(517, 9);
-            this.cbbXeVao.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cbbXeVao.Margin = new System.Windows.Forms.Padding(2);
             this.cbbXeVao.Name = "cbbXeVao";
             this.cbbXeVao.Size = new System.Drawing.Size(75, 21);
             this.cbbXeVao.TabIndex = 42;
@@ -2862,7 +2863,7 @@ namespace IDT_PARKING
             // 
             this.dtXeVaoTuTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.dtXeVaoTuTime.Location = new System.Drawing.Point(358, 15);
-            this.dtXeVaoTuTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeVaoTuTime.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeVaoTuTime.Name = "dtXeVaoTuTime";
             this.dtXeVaoTuTime.Size = new System.Drawing.Size(75, 20);
             this.dtXeVaoTuTime.TabIndex = 36;
@@ -2891,7 +2892,7 @@ namespace IDT_PARKING
             // 
             this.dtXeVaoDenTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
             this.dtXeVaoDenTime.Location = new System.Drawing.Point(358, 44);
-            this.dtXeVaoDenTime.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dtXeVaoDenTime.Margin = new System.Windows.Forms.Padding(2);
             this.dtXeVaoDenTime.Name = "dtXeVaoDenTime";
             this.dtXeVaoDenTime.Size = new System.Drawing.Size(75, 20);
             this.dtXeVaoDenTime.TabIndex = 38;
@@ -2900,7 +2901,7 @@ namespace IDT_PARKING
             // progressBar2
             // 
             this.progressBar2.Location = new System.Drawing.Point(8, 67);
-            this.progressBar2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.progressBar2.Margin = new System.Windows.Forms.Padding(2);
             this.progressBar2.Name = "progressBar2";
             this.progressBar2.Size = new System.Drawing.Size(708, 11);
             this.progressBar2.TabIndex = 55;
@@ -2934,7 +2935,7 @@ namespace IDT_PARKING
             this.dgvXeVao.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dgvXeVao.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvXeVao.Location = new System.Drawing.Point(4, 5);
-            this.dgvXeVao.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvXeVao.Margin = new System.Windows.Forms.Padding(2);
             this.dgvXeVao.Name = "dgvXeVao";
             this.dgvXeVao.RowHeadersWidth = 51;
             this.dgvXeVao.Size = new System.Drawing.Size(725, 567);
@@ -2981,8 +2982,8 @@ namespace IDT_PARKING
             this.tabKhac.Controls.Add(this.groupBox7);
             this.tabKhac.Location = new System.Drawing.Point(4, 44);
             this.tabKhac.Name = "tabKhac";
-            this.tabKhac.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhac.Size = new System.Drawing.Size(1344, 670);
+            this.tabKhac.Padding = new System.Windows.Forms.Padding(3);
+            this.tabKhac.Size = new System.Drawing.Size(1346, 670);
             this.tabKhac.TabIndex = 5;
             this.tabKhac.Text = "Khác";
             this.tabKhac.UseVisualStyleBackColor = true;
@@ -2991,9 +2992,9 @@ namespace IDT_PARKING
             // 
             this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox7.Location = new System.Drawing.Point(7, 5);
-            this.groupBox7.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox7.Size = new System.Drawing.Size(1335, 661);
             this.groupBox7.TabIndex = 31;
             this.groupBox7.TabStop = false;
@@ -3010,8 +3011,8 @@ namespace IDT_PARKING
             this.tabCaiDat.Controls.Add(this.groupBox1);
             this.tabCaiDat.Location = new System.Drawing.Point(4, 44);
             this.tabCaiDat.Name = "tabCaiDat";
-            this.tabCaiDat.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabCaiDat.Size = new System.Drawing.Size(1344, 670);
+            this.tabCaiDat.Padding = new System.Windows.Forms.Padding(3);
+            this.tabCaiDat.Size = new System.Drawing.Size(1346, 670);
             this.tabCaiDat.TabIndex = 6;
             this.tabCaiDat.Text = "Cài đặt";
             this.tabCaiDat.UseVisualStyleBackColor = true;
@@ -3089,9 +3090,9 @@ namespace IDT_PARKING
             this.groupBox4.Controls.Add(this.dgvQuery_CaiDat);
             this.groupBox4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox4.Location = new System.Drawing.Point(411, 329);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox4.Size = new System.Drawing.Size(923, 335);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
@@ -3122,7 +3123,7 @@ namespace IDT_PARKING
             this.dgvQuery_CaiDat.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgvQuery_CaiDat.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvQuery_CaiDat.Location = new System.Drawing.Point(4, 20);
-            this.dgvQuery_CaiDat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvQuery_CaiDat.Margin = new System.Windows.Forms.Padding(2);
             this.dgvQuery_CaiDat.Name = "dgvQuery_CaiDat";
             this.dgvQuery_CaiDat.RowHeadersVisible = false;
             this.dgvQuery_CaiDat.RowHeadersWidth = 51;
@@ -3155,9 +3156,9 @@ namespace IDT_PARKING
             // 
             this.dgvLoaiThe_CaiDat.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.dgvLoaiThe_CaiDat.Location = new System.Drawing.Point(6, 329);
-            this.dgvLoaiThe_CaiDat.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvLoaiThe_CaiDat.Margin = new System.Windows.Forms.Padding(2);
             this.dgvLoaiThe_CaiDat.Name = "dgvLoaiThe_CaiDat";
-            this.dgvLoaiThe_CaiDat.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dgvLoaiThe_CaiDat.Padding = new System.Windows.Forms.Padding(2);
             this.dgvLoaiThe_CaiDat.Size = new System.Drawing.Size(399, 335);
             this.dgvLoaiThe_CaiDat.TabIndex = 30;
             this.dgvLoaiThe_CaiDat.TabStop = false;
@@ -3168,9 +3169,9 @@ namespace IDT_PARKING
             this.groupBox2.Controls.Add(this.txtQuerry_CaiDat);
             this.groupBox2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox2.Location = new System.Drawing.Point(411, 36);
-            this.groupBox2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox2.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox2.Size = new System.Drawing.Size(923, 288);
             this.groupBox2.TabIndex = 29;
             this.groupBox2.TabStop = false;
@@ -3217,9 +3218,9 @@ namespace IDT_PARKING
             this.groupBox1.Controls.Add(this.txtServer_Main);
             this.groupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox1.Location = new System.Drawing.Point(5, 5);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox1.Size = new System.Drawing.Size(400, 319);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
@@ -3454,7 +3455,7 @@ namespace IDT_PARKING
             // 
             this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
             this.loadingControl.Location = new System.Drawing.Point(495, 250);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(4);
             this.loadingControl.Name = "loadingControl";
             this.loadingControl.Size = new System.Drawing.Size(350, 150);
             this.loadingControl.TabIndex = 1002;
