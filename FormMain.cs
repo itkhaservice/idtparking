@@ -891,6 +891,7 @@ namespace IDT_PARKING
 
                 using (SqlCommand command = new SqlCommand(finalQuery, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddRange(parameters.ToArray());
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
@@ -1569,6 +1570,7 @@ namespace IDT_PARKING
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddRange(parameters.ToArray());
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
@@ -2358,6 +2360,7 @@ namespace IDT_PARKING
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddRange(parameters.ToArray());
                     DataTable dataTable = new DataTable();
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
@@ -2580,6 +2583,7 @@ namespace IDT_PARKING
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     if (parameters.Any())
                     {
                         command.Parameters.AddRange(parameters.ToArray());
@@ -3345,6 +3349,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
+                        command.CommandTimeout = 120; // 2 minutes timeout
                         command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                         command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
@@ -3638,6 +3643,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
+                        command.CommandTimeout = 120; // 2 minutes timeout
                         command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                         command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
@@ -3750,6 +3756,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                     command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
@@ -4299,6 +4306,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                     command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
@@ -4561,6 +4569,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+                    command.CommandTimeout = 120; // 2 minutes timeout
                     command.Parameters.AddWithValue("@fullStartDateTime", fullStartDateTime);
                     command.Parameters.AddWithValue("@fullEndDateTime", fullEndDateTime);
 
@@ -5189,7 +5198,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                             using (SqlCommand cmd = new SqlCommand(backupCmd, conn))
                             {
-                                cmd.CommandTimeout = 3600; // 1 hour timeout for large databases
+                                cmd.CommandTimeout = 7200; // 2 hours timeout for large databases
                                 await cmd.ExecuteNonQueryAsync();
                             }
                         }
