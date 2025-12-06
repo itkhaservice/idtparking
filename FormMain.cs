@@ -59,6 +59,8 @@ namespace IDT_PARKING
             InitializeComponent();
        
             txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
+            txtQuerry_CaiDat.ReadOnly = true;
+            txtQuerry_CaiDat.Enabled = false;
             //this.tabControl.SelectedTab = tabCaiDat;
             
 
@@ -831,6 +833,34 @@ namespace IDT_PARKING
                     e.SuppressKeyPress = true; // Chỉ chặn Enter khi có truy vấn được thực thi
                 }
                 // Nếu không có text nào được bôi đen, không làm gì cả, để Enter tự xuống dòng
+            }
+        }
+
+        private void btnQuery_Click(object sender, EventArgs e)
+        {
+            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            {
+                DialogResult result = passwordForm.ShowDialog();
+
+                if (result == DialogResult.OK)
+                {
+                    string enteredPassword = passwordForm.EnteredPassword;
+
+                    if (enteredPassword == CORRECT_PASSWORD)
+                    {
+                        txtQuerry_CaiDat.ReadOnly = false;
+                        txtQuerry_CaiDat.Enabled = true;
+                        MessageBox.Show("Đã mở khóa ô nhập truy vấn. Bạn có thể chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Hủy thao tác mở khóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
         }
 
