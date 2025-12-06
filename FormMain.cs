@@ -3481,6 +3481,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async void EvenDelete()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
@@ -3514,15 +3515,14 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 return;
             }
 
-            int batchSize = 500; // Giảm kích thước batch để an toàn hơn (2100 params / 3 params/row = 700)
-            int totalRowsAffected = 0;
-
+            int batchSize = 1000; // Optimized batch size for inserting into temp table
+            int totalRowsAffected = 0; // To store the count from the final DELETE statement
             SqlTransaction transaction = null;
             bool connectionOpenedHere = false;
 
             try
             {
-                ShowLoading(); // Show loading indicator
+                ShowLoading();
                 InitializeDatabaseConnection();
 
                 if (connection.State != ConnectionState.Open)
@@ -3531,20 +3531,37 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     connectionOpenedHere = true;
                 }
 
+                // Start a single transaction for the entire operation
+                transaction = connection.BeginTransaction();
+
+                // 1. Create Temporary Table
+                string createTempTableQuery = @"
+                    IF OBJECT_ID('tempdb..#TempDeleteIDs') IS NOT NULL DROP TABLE #TempDeleteIDs;
+                    CREATE TABLE #TempDeleteIDs (
+                        CardID NVARCHAR(50) NOT NULL,
+                        IDXe NVARCHAR(50) NOT NULL,
+                        IDMat NVARCHAR(50) NOT NULL
+                    );";
+                using (SqlCommand createTempCmd = new SqlCommand(createTempTableQuery, connection, transaction))
+                {
+                    await createTempCmd.ExecuteNonQueryAsync();
+                }
+
+                // 2. Insert IDs into Temporary Table in batches
                 for (int i = 0; i < rowsToDelete.Count; i += batchSize)
                 {
                     var batch = rowsToDelete.Skip(i).Take(batchSize).ToList();
                     if (!batch.Any()) continue;
 
-                    StringBuilder whereClauseBuilder = new StringBuilder();
-                    List<SqlParameter> deleteParameters = new List<SqlParameter>();
+                    StringBuilder insertValues = new StringBuilder();
+                    List<SqlParameter> insertParameters = new List<SqlParameter>();
                     int paramIndex = 0;
 
                     foreach (var row in batch)
                     {
                         string cardId = row.Cells["Mã thẻ"].Value?.ToString();
                         string idXe = row.Cells["IDXe"].Value?.ToString();
-                        string idMat = row.Cells["Mã mặt"].Value?.ToString();
+                        string idMat = row.Cells["IDMat"].Value?.ToString();
 
                         if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
                         {
@@ -3555,36 +3572,47 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         string idXeParam = "@idXe" + paramIndex;
                         string idMatParam = "@idMat" + paramIndex;
 
-                        if (whereClauseBuilder.Length > 0)
+                        if (insertValues.Length > 0)
                         {
-                            whereClauseBuilder.Append(" OR ");
+                            insertValues.Append(", ");
                         }
-                        whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+                        insertValues.Append($"({cardIdParam}, {idXeParam}, {idMatParam})");
 
-                        deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
-                        deleteParameters.Add(new SqlParameter(idXeParam, idXe));
-                        deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+                        insertParameters.Add(new SqlParameter(cardIdParam, cardId));
+                        insertParameters.Add(new SqlParameter(idXeParam, idXe));
+                        insertParameters.Add(new SqlParameter(idMatParam, idMat));
 
                         paramIndex++;
                     }
 
-                    if (whereClauseBuilder.Length == 0)
+                    if (insertValues.Length == 0) continue;
+
+                    string insertTempTableQuery = $"INSERT INTO #TempDeleteIDs (CardID, IDXe, IDMat) VALUES {insertValues.ToString()}";
+                    using (SqlCommand insertTempCmd = new SqlCommand(insertTempTableQuery, connection, transaction))
                     {
-                        continue; // Bỏ qua batch nếu không có dòng nào hợp lệ
+                        insertTempCmd.Parameters.AddRange(insertParameters.ToArray());
+                        await insertTempCmd.ExecuteNonQueryAsync();
                     }
-
-                    transaction = connection.BeginTransaction();
-
-                    string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
-                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
-                    {
-                        deleteCmd.Parameters.AddRange(deleteParameters.ToArray());
-                        int rowsAffected = await deleteCmd.ExecuteNonQueryAsync();
-                        totalRowsAffected += rowsAffected;
-                    }
-
-                    transaction.Commit();
                 }
+
+                // 3. Perform the actual DELETE using JOIN with the temporary table
+                string deleteQuery = @"
+                    DELETE R
+                    FROM [dbo].[Ra] R
+                    INNER JOIN #TempDeleteIDs T ON R.CardID = T.CardID AND R.IDXe = T.IDXe AND R.IDMat = T.IDMat;";
+                using (SqlCommand finalDeleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                {
+                    totalRowsAffected = await finalDeleteCmd.ExecuteNonQueryAsync();
+                }
+
+                // 4. Drop the temporary table (optional, but good practice)
+                string dropTempTableQuery = "DROP TABLE #TempDeleteIDs;";
+                using (SqlCommand dropTempCmd = new SqlCommand(dropTempTableQuery, connection, transaction))
+                {
+                    await dropTempCmd.ExecuteNonQueryAsync();
+                }
+
+                transaction.Commit();
 
                 MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnRevenue_Click(this, EventArgs.Empty); // Refresh the DataGridView
@@ -3596,7 +3624,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
+                HideLoading();
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
@@ -4883,14 +4911,14 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 return;
             }
 
-            int batchSize = 500; // Giảm kích thước batch để an toàn hơn
+            int batchSize = 700; // Optimized batch size for inserting into temp table, considering SQL Server 2100 parameter limit
             int totalRowsAffected = 0;
             SqlTransaction transaction = null;
             bool connectionOpenedHere = false;
 
             try
             {
-                ShowLoading(); // Show loading indicator
+                ShowLoading();
                 InitializeDatabaseConnection();
 
                 if (connection.State != ConnectionState.Open)
@@ -4899,13 +4927,29 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     connectionOpenedHere = true;
                 }
 
+                transaction = connection.BeginTransaction();
+
+                // 1. Create Temporary Table
+                string createTempTableQuery = @"
+                    IF OBJECT_ID('tempdb..#TempDeleteIDsXeRa') IS NOT NULL DROP TABLE #TempDeleteIDsXeRa;
+                    CREATE TABLE #TempDeleteIDsXeRa (
+                        CardID NVARCHAR(50) NOT NULL,
+                        IDXe NVARCHAR(50) NOT NULL,
+                        IDMat NVARCHAR(50) NOT NULL
+                    );";
+                using (SqlCommand createTempCmd = new SqlCommand(createTempTableQuery, connection, transaction))
+                {
+                    await createTempCmd.ExecuteNonQueryAsync();
+                }
+
+                // 2. Insert IDs into Temporary Table in batches
                 for (int i = 0; i < rowsToDelete.Count; i += batchSize)
                 {
                     var batch = rowsToDelete.Skip(i).Take(batchSize).ToList();
                     if (!batch.Any()) continue;
 
-                    StringBuilder whereClauseBuilder = new StringBuilder();
-                    List<SqlParameter> deleteParameters = new List<SqlParameter>();
+                    StringBuilder insertValues = new StringBuilder();
+                    List<SqlParameter> insertParameters = new List<SqlParameter>();
                     int paramIndex = 0;
 
                     foreach (var row in batch)
@@ -4923,58 +4967,49 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         string idXeParam = "@idXe" + paramIndex;
                         string idMatParam = "@idMat" + paramIndex;
 
-                        if (whereClauseBuilder.Length > 0)
+                        if (insertValues.Length > 0)
                         {
-                            whereClauseBuilder.Append(" OR ");
+                            insertValues.Append(", ");
                         }
-                        whereClauseBuilder.Append($"(CardID = {cardIdParam} AND IDXe = {idXeParam} AND IDMat = {idMatParam})");
+                        insertValues.Append($"({cardIdParam}, {idXeParam}, {idMatParam})");
 
-                        deleteParameters.Add(new SqlParameter(cardIdParam, cardId));
-                        deleteParameters.Add(new SqlParameter(idXeParam, idXe));
-                        deleteParameters.Add(new SqlParameter(idMatParam, idMat));
+                        insertParameters.Add(new SqlParameter(cardIdParam, cardId));
+                        insertParameters.Add(new SqlParameter(idXeParam, idXe));
+                        insertParameters.Add(new SqlParameter(idMatParam, idMat));
 
                         paramIndex++;
                     }
 
-                    if (whereClauseBuilder.Length == 0)
+                    if (insertValues.Length == 0) continue;
+
+                    string insertTempTableQuery = $"INSERT INTO #TempDeleteIDsXeRa (CardID, IDXe, IDMat) VALUES {insertValues.ToString()}";
+                    using (SqlCommand insertTempCmd = new SqlCommand(insertTempTableQuery, connection, transaction))
                     {
-                        continue;
+                        insertTempCmd.Parameters.AddRange(insertParameters.ToArray());
+                        await insertTempCmd.ExecuteNonQueryAsync();
                     }
-
-                    transaction = connection.BeginTransaction();
-
-                    // For EvenDeleteXeRa, we also have a logging step
-                    string insertLogQuery = $@"
-                        INSERT INTO [dbo].[ITKHA]
-                        (STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, Thao_Tac, Ngay_Thuc_Hien)
-                        SELECT STTThe, CardID, NgayRa, THoiGianRa, MaLoaiThe, GiaTien, username, IDXe, IDMat, GioRa, cong, soxe, soxera, N'Xóa', GETDATE()
-                        FROM [dbo].[Ra]
-                        WHERE {whereClauseBuilder.ToString()}";
-
-                    // It's safer to add parameters to the log query as well, even if they are the same.
-                    using (SqlCommand logCmd = new SqlCommand(insertLogQuery, connection, transaction))
-                    {
-                        logCmd.Parameters.AddRange(deleteParameters.ToArray());
-                        // await logCmd.ExecuteNonQueryAsync(); // Uncomment if logging is required
-                    }
-
-
-                    string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereClauseBuilder.ToString()}";
-                    using (SqlCommand deleteCmd = new SqlCommand(deleteQuery, connection, transaction))
-                    {
-                        // Create a new list of parameters for the delete command to avoid conflicts
-                        List<SqlParameter> finalDeleteParams = new List<SqlParameter>();
-                        foreach (SqlParameter p in deleteParameters)
-                        {
-                            finalDeleteParams.Add(new SqlParameter(p.ParameterName, p.Value));
-                        }
-                        deleteCmd.Parameters.AddRange(finalDeleteParams.ToArray());
-                        int rowsAffected = await deleteCmd.ExecuteNonQueryAsync();
-                        totalRowsAffected += rowsAffected;
-                    }
-
-                    transaction.Commit();
                 }
+
+                // User requested to remove ITKHA logging, so the logging step is removed.
+
+                // 3. Perform the actual DELETE from [dbo].[Ra] using JOIN with the temporary table
+                string deleteQuery = @"
+                    DELETE R
+                    FROM [dbo].[Ra] R
+                    INNER JOIN #TempDeleteIDsXeRa T ON R.CardID = T.CardID AND R.IDXe = T.IDXe AND R.IDMat = T.IDMat;";
+                using (SqlCommand finalDeleteCmd = new SqlCommand(deleteQuery, connection, transaction))
+                {
+                    totalRowsAffected = await finalDeleteCmd.ExecuteNonQueryAsync();
+                }
+
+                // 4. Drop the temporary table
+                string dropTempTableQuery = "DROP TABLE #TempDeleteIDsXeRa;";
+                using (SqlCommand dropTempCmd = new SqlCommand(dropTempTableQuery, connection, transaction))
+                {
+                    await dropTempCmd.ExecuteNonQueryAsync();
+                }
+
+                transaction.Commit();
 
                 MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadXeRaData(); // Refresh the DataGridView
@@ -4986,7 +5021,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             finally
             {
-                HideLoading(); // Hide loading indicator
+                HideLoading();
                 if (connectionOpenedHere && connection.State == ConnectionState.Open)
                 {
                     connection.Close();
