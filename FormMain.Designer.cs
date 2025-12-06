@@ -247,6 +247,21 @@ namespace IDT_PARKING
             this.btnConnect_Main = new Guna.UI2.WinForms.Guna2Button();
             this.txtServer_Main = new Guna.UI2.WinForms.Guna2TextBox();
             this.loadingControl = new IDT_PARKING.LoadingControl();
+            this.btnMoQuery = new Guna.UI2.WinForms.Guna2Button();
+            this.cbb_XR_KHAC = new System.Windows.Forms.ComboBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.dtdT_XR_KHAC = new System.Windows.Forms.DateTimePicker();
+            this.dtdF_XR_KHAC = new System.Windows.Forms.DateTimePicker();
+            this.label55 = new System.Windows.Forms.Label();
+            this.dttF_XR_KHAC = new System.Windows.Forms.DateTimePicker();
+            this.dttT_XR_KHAC = new System.Windows.Forms.DateTimePicker();
+            this.txtSumGD_XR_KHAC = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label56 = new System.Windows.Forms.Label();
+            this.label57 = new System.Windows.Forms.Label();
+            this.guna2Panel8 = new Guna.UI2.WinForms.Guna2Panel();
+            this.btnDelete_XR_KHAC = new Guna.UI2.WinForms.Guna2Button();
+            this.label58 = new System.Windows.Forms.Label();
+            this.btnQuerry_XR_KHAC = new Guna.UI2.WinForms.Guna2Button();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -276,11 +291,13 @@ namespace IDT_PARKING
             ((System.ComponentModel.ISupportInitialize)(this.dgvXeVao)).BeginInit();
             this.tabControl.SuspendLayout();
             this.tabKhac.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.tabCaiDat.SuspendLayout();
             this.groupBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuery_CaiDat)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.guna2Panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExportExcel_KH
@@ -2990,6 +3007,8 @@ namespace IDT_PARKING
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.guna2Panel8);
+            this.groupBox7.Controls.Add(this.loadingControl);
             this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox7.Location = new System.Drawing.Point(7, 5);
             this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
@@ -3002,6 +3021,7 @@ namespace IDT_PARKING
             // tabCaiDat
             // 
             this.tabCaiDat.Controls.Add(this.btnBackUp);
+            this.tabCaiDat.Controls.Add(this.btnMoQuery);
             this.tabCaiDat.Controls.Add(this.btnOpenBackup);
             this.tabCaiDat.Controls.Add(this.btnHideProgram);
             this.tabCaiDat.Controls.Add(this.btnExitProgram);
@@ -3454,19 +3474,211 @@ namespace IDT_PARKING
             // loadingControl
             // 
             this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.loadingControl.Location = new System.Drawing.Point(495, 250);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(4);
+            this.loadingControl.Location = new System.Drawing.Point(574, 58);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
             this.loadingControl.Name = "loadingControl";
-            this.loadingControl.Size = new System.Drawing.Size(350, 150);
+            this.loadingControl.Size = new System.Drawing.Size(408, 173);
             this.loadingControl.TabIndex = 1002;
             this.loadingControl.Visible = false;
+            // 
+            // btnMoQuery
+            // 
+            this.btnMoQuery.BorderRadius = 4;
+            this.btnMoQuery.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoQuery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnMoQuery.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnMoQuery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnMoQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnMoQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnMoQuery.ForeColor = System.Drawing.Color.White;
+            this.btnMoQuery.Location = new System.Drawing.Point(628, 6);
+            this.btnMoQuery.Name = "btnMoQuery";
+            this.btnMoQuery.Size = new System.Drawing.Size(111, 25);
+            this.btnMoQuery.TabIndex = 95;
+            this.btnMoQuery.Text = "Mở truy vấn";
+            this.btnMoQuery.Click += new System.EventHandler(this.btnMoQuery_Click);
+            // 
+            // cbb_XR_KHAC
+            // 
+            this.cbb_XR_KHAC.FormattingEnabled = true;
+            this.cbb_XR_KHAC.Location = new System.Drawing.Point(153, 130);
+            this.cbb_XR_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.cbb_XR_KHAC.Name = "cbb_XR_KHAC";
+            this.cbb_XR_KHAC.Size = new System.Drawing.Size(92, 23);
+            this.cbb_XR_KHAC.TabIndex = 64;
+            // 
+            // label54
+            // 
+            this.label54.AutoSize = true;
+            this.label54.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label54.Location = new System.Drawing.Point(89, 106);
+            this.label54.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(59, 15);
+            this.label54.TabIndex = 63;
+            this.label54.Text = "Đến ngày";
+            // 
+            // dtdT_XR_KHAC
+            // 
+            this.dtdT_XR_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtdT_XR_KHAC.Location = new System.Drawing.Point(153, 106);
+            this.dtdT_XR_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.dtdT_XR_KHAC.Name = "dtdT_XR_KHAC";
+            this.dtdT_XR_KHAC.Size = new System.Drawing.Size(92, 23);
+            this.dtdT_XR_KHAC.TabIndex = 61;
+            this.dtdT_XR_KHAC.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dtdF_XR_KHAC
+            // 
+            this.dtdF_XR_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtdF_XR_KHAC.Location = new System.Drawing.Point(153, 77);
+            this.dtdF_XR_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.dtdF_XR_KHAC.Name = "dtdF_XR_KHAC";
+            this.dtdF_XR_KHAC.Size = new System.Drawing.Size(92, 23);
+            this.dtdF_XR_KHAC.TabIndex = 58;
+            this.dtdF_XR_KHAC.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // label55
+            // 
+            this.label55.AutoSize = true;
+            this.label55.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label55.Location = new System.Drawing.Point(95, 78);
+            this.label55.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(51, 15);
+            this.label55.TabIndex = 59;
+            this.label55.Text = "Từ ngày";
+            // 
+            // dttF_XR_KHAC
+            // 
+            this.dttF_XR_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dttF_XR_KHAC.Location = new System.Drawing.Point(249, 77);
+            this.dttF_XR_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.dttF_XR_KHAC.Name = "dttF_XR_KHAC";
+            this.dttF_XR_KHAC.Size = new System.Drawing.Size(75, 23);
+            this.dttF_XR_KHAC.TabIndex = 60;
+            this.dttF_XR_KHAC.Value = new System.DateTime(2025, 8, 8, 0, 0, 0, 0);
+            // 
+            // dttT_XR_KHAC
+            // 
+            this.dttT_XR_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dttT_XR_KHAC.Location = new System.Drawing.Point(249, 106);
+            this.dttT_XR_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.dttT_XR_KHAC.Name = "dttT_XR_KHAC";
+            this.dttT_XR_KHAC.Size = new System.Drawing.Size(75, 23);
+            this.dttT_XR_KHAC.TabIndex = 62;
+            this.dttT_XR_KHAC.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
+            // 
+            // txtSumGD_XR_KHAC
+            // 
+            this.txtSumGD_XR_KHAC.Cursor = System.Windows.Forms.Cursors.IBeam;
+            this.txtSumGD_XR_KHAC.DefaultText = "";
+            this.txtSumGD_XR_KHAC.DisabledState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(208)))), ((int)(((byte)(208)))));
+            this.txtSumGD_XR_KHAC.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(226)))), ((int)(((byte)(226)))), ((int)(((byte)(226)))));
+            this.txtSumGD_XR_KHAC.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtSumGD_XR_KHAC.DisabledState.PlaceholderForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(138)))), ((int)(((byte)(138)))), ((int)(((byte)(138)))));
+            this.txtSumGD_XR_KHAC.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtSumGD_XR_KHAC.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtSumGD_XR_KHAC.HoverState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
+            this.txtSumGD_XR_KHAC.Location = new System.Drawing.Point(153, 47);
+            this.txtSumGD_XR_KHAC.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
+            this.txtSumGD_XR_KHAC.Name = "txtSumGD_XR_KHAC";
+            this.txtSumGD_XR_KHAC.PlaceholderText = "";
+            this.txtSumGD_XR_KHAC.SelectedText = "";
+            this.txtSumGD_XR_KHAC.Size = new System.Drawing.Size(171, 24);
+            this.txtSumGD_XR_KHAC.TabIndex = 67;
+            // 
+            // label56
+            // 
+            this.label56.AutoSize = true;
+            this.label56.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label56.Location = new System.Drawing.Point(97, 134);
+            this.label56.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(51, 15);
+            this.label56.TabIndex = 65;
+            this.label56.Text = "Loại thẻ";
+            // 
+            // label57
+            // 
+            this.label57.AutoSize = true;
+            this.label57.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label57.Location = new System.Drawing.Point(46, 56);
+            this.label57.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(102, 15);
+            this.label57.TabIndex = 66;
+            this.label57.Text = "Tổng số giao dịch";
+            // 
+            // guna2Panel8
+            // 
+            this.guna2Panel8.BackColor = System.Drawing.Color.Cornsilk;
+            this.guna2Panel8.Controls.Add(this.btnQuerry_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.label58);
+            this.guna2Panel8.Controls.Add(this.btnDelete_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.txtSumGD_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.label57);
+            this.guna2Panel8.Controls.Add(this.cbb_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.label56);
+            this.guna2Panel8.Controls.Add(this.label54);
+            this.guna2Panel8.Controls.Add(this.dttT_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.dtdT_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.dttF_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.dtdF_XR_KHAC);
+            this.guna2Panel8.Controls.Add(this.label55);
+            this.guna2Panel8.Location = new System.Drawing.Point(5, 21);
+            this.guna2Panel8.Name = "guna2Panel8";
+            this.guna2Panel8.Size = new System.Drawing.Size(381, 220);
+            this.guna2Panel8.TabIndex = 1003;
+            // 
+            // btnDelete_XR_KHAC
+            // 
+            this.btnDelete_XR_KHAC.BorderRadius = 4;
+            this.btnDelete_XR_KHAC.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete_XR_KHAC.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnDelete_XR_KHAC.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnDelete_XR_KHAC.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnDelete_XR_KHAC.FillColor = System.Drawing.Color.Red;
+            this.btnDelete_XR_KHAC.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnDelete_XR_KHAC.ForeColor = System.Drawing.Color.White;
+            this.btnDelete_XR_KHAC.Location = new System.Drawing.Point(232, 169);
+            this.btnDelete_XR_KHAC.Name = "btnDelete_XR_KHAC";
+            this.btnDelete_XR_KHAC.Size = new System.Drawing.Size(92, 24);
+            this.btnDelete_XR_KHAC.TabIndex = 68;
+            this.btnDelete_XR_KHAC.Text = "Xóa ";
+            // 
+            // label58
+            // 
+            this.label58.AutoSize = true;
+            this.label58.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label58.Location = new System.Drawing.Point(45, 24);
+            this.label58.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(171, 19);
+            this.label58.TabIndex = 69;
+            this.label58.Text = "TÌM KIẾM DỮ LIỆU XE RA";
+            // 
+            // btnQuerry_XR_KHAC
+            // 
+            this.btnQuerry_XR_KHAC.BorderRadius = 4;
+            this.btnQuerry_XR_KHAC.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnQuerry_XR_KHAC.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnQuerry_XR_KHAC.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnQuerry_XR_KHAC.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnQuerry_XR_KHAC.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnQuerry_XR_KHAC.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnQuerry_XR_KHAC.ForeColor = System.Drawing.Color.White;
+            this.btnQuerry_XR_KHAC.Location = new System.Drawing.Point(100, 169);
+            this.btnQuerry_XR_KHAC.Name = "btnQuerry_XR_KHAC";
+            this.btnQuerry_XR_KHAC.Size = new System.Drawing.Size(126, 24);
+            this.btnQuerry_XR_KHAC.TabIndex = 70;
+            this.btnQuerry_XR_KHAC.Text = "Tìm kiếm";
             // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1354, 718);
-            this.Controls.Add(this.loadingControl);
             this.Controls.Add(this.tabControl);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -3510,12 +3722,15 @@ namespace IDT_PARKING
             ((System.ComponentModel.ISupportInitialize)(this.dgvXeVao)).EndInit();
             this.tabControl.ResumeLayout(false);
             this.tabKhac.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.tabCaiDat.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuery_CaiDat)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.guna2Panel8.ResumeLayout(false);
+            this.guna2Panel8.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -3725,5 +3940,20 @@ namespace IDT_PARKING
         private Guna.UI2.WinForms.Guna2Button btnXuatXeRa;
         private Guna.UI2.WinForms.Guna2Button btnMoXeVao;
         private Guna.UI2.WinForms.Guna2Button btnXuatXeVao;
+        private Guna.UI2.WinForms.Guna2Button btnMoQuery;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel8;
+        private System.Windows.Forms.ComboBox cbb_XR_KHAC;
+        private System.Windows.Forms.Label label54;
+        private System.Windows.Forms.DateTimePicker dtdT_XR_KHAC;
+        private System.Windows.Forms.DateTimePicker dtdF_XR_KHAC;
+        private System.Windows.Forms.Label label55;
+        private System.Windows.Forms.DateTimePicker dttF_XR_KHAC;
+        private System.Windows.Forms.DateTimePicker dttT_XR_KHAC;
+        private Guna.UI2.WinForms.Guna2TextBox txtSumGD_XR_KHAC;
+        private System.Windows.Forms.Label label56;
+        private System.Windows.Forms.Label label57;
+        private System.Windows.Forms.Label label58;
+        private Guna.UI2.WinForms.Guna2Button btnDelete_XR_KHAC;
+        private Guna.UI2.WinForms.Guna2Button btnQuerry_XR_KHAC;
     }
 }

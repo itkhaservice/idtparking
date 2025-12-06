@@ -140,6 +140,10 @@ namespace IDT_PARKING
             txtTinhTrang_TTT1.Enabled = true;
             txtTinhTrang_TTT2.Enabled = true;
             txtMaThe_TTT.PlaceholderText = "Chỉ tìm kiếm bằng Số thẻ";
+
+            btnDelete_XR_KHAC.Click += new System.EventHandler(this.btnDelete_XR_KHAC_Click);
+            btnQuerry_XR_KHAC.Click += new System.EventHandler(this.btnQuerry_XR_KHAC_Click);
+            btnDelete_XR_KHAC.Enabled = false;
         }
 
         #endregion
@@ -836,7 +840,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void btnQuery_Click(object sender, EventArgs e)
+        private void btnMoQuery_Click(object sender, EventArgs e)
         {
             using (PasswordPromptForm passwordForm = new PasswordPromptForm())
             {
@@ -867,6 +871,169 @@ namespace IDT_PARKING
         private void guna2Button2_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Chức năng đang được viết...", "Lỗi Kết Nối", MessageBoxButtons.OK);
+        }
+
+        #endregion
+
+        #region Khác (Other) Tab
+
+        private async void btnQuerry_XR_KHAC_Click(object sender, EventArgs e)
+        {
+            DateTime startDate = dtdF_XR_KHAC.Value.Date;
+            DateTime startTime = dttF_XR_KHAC.Value;
+            DateTime endDate = dtdT_XR_KHAC.Value.Date;
+            DateTime endTime = dttT_XR_KHAC.Value;
+
+            int startTimeInSeconds = (int)startTime.TimeOfDay.TotalSeconds;
+            int endTimeInSeconds = (int)endTime.TimeOfDay.TotalSeconds;
+            string maLoaiThe = cbb_XR_KHAC.SelectedValue?.ToString();
+
+            if (string.IsNullOrEmpty(maLoaiThe))
+            {
+                MessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@startDate", startDate),
+                new SqlParameter("@endDate", endDate),
+                new SqlParameter("@startTime", startTimeInSeconds),
+                new SqlParameter("@endTime", endTimeInSeconds)
+            };
+
+            whereClauses.Add("((NgayRa > @startDate AND NgayRa < @endDate) OR (NgayRa = @startDate AND ThoiGianRa >= @startTime) OR (NgayRa = @endDate AND ThoiGianRa <= @endTime))");
+
+            if (maLoaiThe != ALL_MATERIAL_TYPE)
+            {
+                whereClauses.Add("MaLoaiThe = @maLoaiThe");
+                parameters.Add(new SqlParameter("@maLoaiThe", maLoaiThe));
+            }
+
+            string whereSql = string.Join(" AND ", whereClauses);
+            string countQuery = $"SELECT COUNT(*) FROM [dbo].[Ra] WHERE {whereSql}";
+            int recordCount = 0;
+
+            try
+            {
+                ShowLoading();
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    countCommand.Parameters.AddRange(parameters.ToArray());
+                    recordCount = (int)await countCommand.ExecuteScalarAsync();
+                }
+
+                txtSumGD_XR_KHAC.Text = recordCount.ToString();
+                btnDelete_XR_KHAC.Enabled = recordCount > 0;
+
+                if (recordCount == 0)
+                {
+                    MessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtSumGD_XR_KHAC.Text = "0";
+                btnDelete_XR_KHAC.Enabled = false;
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+
+        private async void btnDelete_XR_KHAC_Click(object sender, EventArgs e)
+        {
+            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            {
+                if (passwordForm.ShowDialog() != DialogResult.OK)
+                {
+                    MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (passwordForm.EnteredPassword != CORRECT_PASSWORD)
+                {
+                    MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            DateTime startDate = dtdF_XR_KHAC.Value.Date;
+            DateTime startTime = dttF_XR_KHAC.Value;
+            DateTime endDate = dtdT_XR_KHAC.Value.Date;
+            DateTime endTime = dttT_XR_KHAC.Value;
+
+            int startTimeInSeconds = (int)startTime.TimeOfDay.TotalSeconds;
+            int endTimeInSeconds = (int)endTime.TimeOfDay.TotalSeconds;
+            string maLoaiThe = cbb_XR_KHAC.SelectedValue?.ToString();
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@startDate", startDate),
+                new SqlParameter("@endDate", endDate),
+                new SqlParameter("@startTime", startTimeInSeconds),
+                new SqlParameter("@endTime", endTimeInSeconds)
+            };
+
+            whereClauses.Add("((NgayRa > @startDate AND NgayRa < @endDate) OR (NgayRa = @startDate AND ThoiGianRa >= @startTime) OR (NgayRa = @endDate AND ThoiGianRa <= @endTime))");
+
+            if (maLoaiThe != ALL_MATERIAL_TYPE)
+            {
+                whereClauses.Add("MaLoaiThe = @maLoaiThe");
+                parameters.Add(new SqlParameter("@maLoaiThe", maLoaiThe));
+            }
+
+            string whereSql = string.Join(" AND ", whereClauses);
+            string deleteQuery = $"DELETE FROM [dbo].[Ra] WHERE {whereSql}";
+            int rowsAffected = 0;
+
+            try
+            {
+                ShowLoading();
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XR_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection))
+                {
+                    deleteCommand.Parameters.AddRange(parameters.ToArray());
+                    rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+                }
+
+                MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Reset UI
+                txtSumGD_XR_KHAC.Text = "0";
+                btnDelete_XR_KHAC.Enabled = false;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
+            }
         }
 
         #endregion
@@ -3338,6 +3505,12 @@ namespace IDT_PARKING
                         cbbXeRa.DataSource = dataTableForCbbXeRa;
                         cbbXeRa.DisplayMember = "MaLoaiThe";
                         cbbXeRa.ValueMember = "MaLoaiThe";
+
+                        // Create a new DataTable for comboBox1 (cbb_XR_KHAC)
+                        DataTable dataTableForCbb_XR_KHAC = dataTable.Copy();
+                        cbb_XR_KHAC.DataSource = dataTableForCbb_XR_KHAC;
+                        cbb_XR_KHAC.DisplayMember = "MaLoaiThe";
+                        cbb_XR_KHAC.ValueMember = "MaLoaiThe";
                     }
                 }
             }
