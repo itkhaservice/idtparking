@@ -30,7 +30,14 @@ namespace IDT_PARKING
         public string txtPassword = Properties.Settings.Default.Password;
 
         // KHAI BÁO HẰNG SỐ CỦA TAB DOANH THU
-        private const string CORRECT_PASSWORD = "9999";
+                private string DynamicPassword => GenerateDynamicPassword();
+
+        private string GenerateDynamicPassword()
+        {
+            DateTime now = DateTime.Now;
+            // Ensure hours are in 24-hour format
+            return now.ToString("HHmmddMM"); // hhmmddMM format
+        }
         public const string ALL_MATERIAL_TYPE = "ALL";
         public const string PRICE_COLUMN_NAME = "PRICE";
         private SqlConnection connection;
@@ -850,7 +857,7 @@ namespace IDT_PARKING
                 {
                     string enteredPassword = passwordForm.EnteredPassword;
 
-                    if (enteredPassword == CORRECT_PASSWORD)
+                    if (enteredPassword == DynamicPassword)
                     {
                         txtQuerry_CaiDat.ReadOnly = false;
                         txtQuerry_CaiDat.Enabled = true;
@@ -961,7 +968,7 @@ namespace IDT_PARKING
                     return;
                 }
 
-                if (passwordForm.EnteredPassword != CORRECT_PASSWORD)
+                if (passwordForm.EnteredPassword != DynamicPassword)
                 {
                     MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -1119,7 +1126,7 @@ namespace IDT_PARKING
                     return;
                 }
 
-                if (passwordForm.EnteredPassword != CORRECT_PASSWORD)
+                if (passwordForm.EnteredPassword != DynamicPassword)
                 {
                     MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
@@ -3844,7 +3851,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     string enteredPassword = passwordForm.EnteredPassword;
 
-                    if (enteredPassword == CORRECT_PASSWORD)
+                    if (enteredPassword == DynamicPassword)
                     {
                         EvenDelete();
                     }
@@ -5242,7 +5249,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 {
                     string enteredPassword = passwordForm.EnteredPassword;
 
-                    if (enteredPassword == CORRECT_PASSWORD)
+                    if (enteredPassword == DynamicPassword)
                     {
                         EvenDeleteXeRa();
                     }
