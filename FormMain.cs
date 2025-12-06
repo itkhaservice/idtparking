@@ -1036,6 +1036,163 @@ namespace IDT_PARKING
             }
         }
 
+        private async void btnQuerry_XV_KHAC_Click(object sender, EventArgs e)
+        {
+            DateTime startDate = dtdF_XV_KHAC.Value.Date;
+            DateTime startTime = dttF_XV_KHAC.Value;
+            DateTime endDate = dtdT_XV_KHAC.Value.Date;
+            DateTime endTime = dttT_XV_KHAC.Value;
+
+            int startTimeInSeconds = (int)startTime.TimeOfDay.TotalSeconds;
+            int endTimeInSeconds = (int)endTime.TimeOfDay.TotalSeconds;
+            string maLoaiThe = cbb_XV_KHAC.SelectedValue?.ToString();
+
+            if (string.IsNullOrEmpty(maLoaiThe))
+            {
+                MessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@startDate", startDate),
+                new SqlParameter("@endDate", endDate),
+                new SqlParameter("@startTime", startTimeInSeconds),
+                new SqlParameter("@endTime", endTimeInSeconds)
+            };
+
+            whereClauses.Add("((NgayVao > @startDate AND NgayVao < @endDate) OR (NgayVao = @startDate AND ThoiGian >= @startTime) OR (NgayVao = @endDate AND ThoiGian <= @endTime))");
+
+            if (maLoaiThe != ALL_MATERIAL_TYPE)
+            {
+                whereClauses.Add("MaLoaiThe = @maLoaiThe");
+                parameters.Add(new SqlParameter("@maLoaiThe", maLoaiThe));
+            }
+
+            string whereSql = string.Join(" AND ", whereClauses);
+            string countQuery = $"SELECT COUNT(*) FROM [dbo].[Vao] WHERE {whereSql}";
+            int recordCount = 0;
+
+            try
+            {
+                ShowLoading();
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                using (SqlCommand countCommand = new SqlCommand(countQuery, connection))
+                {
+                    countCommand.Parameters.AddRange(parameters.ToArray());
+                    recordCount = (int)await countCommand.ExecuteScalarAsync();
+                }
+
+                txtSumGD_XV_KHAC.Text = recordCount.ToString();
+                btnDelete_XV_KHAC.Enabled = recordCount > 0;
+
+                if (recordCount == 0)
+                {
+                    MessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtSumGD_XV_KHAC.Text = "0";
+                btnDelete_XV_KHAC.Enabled = false;
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        private async void btnDelete_XV_KHAC_Click(object sender, EventArgs e)
+        {
+            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            {
+                if (passwordForm.ShowDialog() != DialogResult.OK)
+                {
+                    MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+                if (passwordForm.EnteredPassword != CORRECT_PASSWORD)
+                {
+                    MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+
+            DateTime startDate = dtdF_XV_KHAC.Value.Date;
+            DateTime startTime = dttF_XV_KHAC.Value;
+            DateTime endDate = dtdT_XV_KHAC.Value.Date;
+            DateTime endTime = dttT_XV_KHAC.Value;
+
+            int startTimeInSeconds = (int)startTime.TimeOfDay.TotalSeconds;
+            int endTimeInSeconds = (int)endTime.TimeOfDay.TotalSeconds;
+            string maLoaiThe = cbb_XV_KHAC.SelectedValue?.ToString();
+
+            var whereClauses = new List<string>();
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@startDate", startDate),
+                new SqlParameter("@endDate", endDate),
+                new SqlParameter("@startTime", startTimeInSeconds),
+                new SqlParameter("@endTime", endTimeInSeconds)
+            };
+
+            whereClauses.Add("((NgayVao > @startDate AND NgayVao < @endDate) OR (NgayVao = @startDate AND ThoiGian >= @startTime) OR (NgayVao = @endDate AND ThoiGian <= @endTime))");
+
+            if (maLoaiThe != ALL_MATERIAL_TYPE)
+            {
+                whereClauses.Add("MaLoaiThe = @maLoaiThe");
+                parameters.Add(new SqlParameter("@maLoaiThe", maLoaiThe));
+            }
+
+            string whereSql = string.Join(" AND ", whereClauses);
+            string deleteQuery = $"DELETE FROM [dbo].[Vao] WHERE {whereSql}";
+            int rowsAffected = 0;
+
+            try
+            {
+                ShowLoading();
+                InitializeDatabaseConnection();
+                if (connection.State != ConnectionState.Open)
+                {
+                    await connection.OpenAsync();
+                }
+
+                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XV_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (confirm != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (SqlCommand deleteCommand = new SqlCommand(deleteQuery, connection))
+                {
+                    deleteCommand.Parameters.AddRange(parameters.ToArray());
+                    rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
+                }
+
+                MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Reset UI
+                txtSumGD_XV_KHAC.Text = "0";
+                btnDelete_XV_KHAC.Enabled = false;
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
         #endregion
 
         #region Khách Hàng (Customers) Tab
@@ -3409,6 +3566,16 @@ namespace IDT_PARKING
             {
                 cbbXeVao.SelectedIndex = 0;
             }
+            // Set "All" as selected for cbb_XR_KHAC (it's already added in LoadLoaiTheData at index 0)
+            if (cbb_XR_KHAC.Items.Count > 0)
+            {
+                cbb_XR_KHAC.SelectedIndex = 0;
+            }
+            // Set "All" as selected for cbb_XV_KHAC (it's already added in LoadLoaiTheData at index 0)
+            if (cbb_XV_KHAC.Items.Count > 0)
+            {
+                cbb_XV_KHAC.SelectedIndex = 0;
+            }
 
             // Initialize Xe Ra tab controls
             dtXeRaTuDate.Value = firstDayOfMonth;
@@ -3472,6 +3639,12 @@ namespace IDT_PARKING
                         DataTable dataTable = new DataTable();
                         adapter.Fill(dataTable);
 
+                        if (dataTable.Rows.Count == 0)
+                        {
+                            MessageBox.Show("Bảng 'LoaiThe' không có dữ liệu. Vui lòng kiểm tra cơ sở dữ liệu.", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return; // Exit if no data
+                        }
+
                         // Add "All" option to the DataTable
                         DataRow allRow = dataTable.NewRow();
                         allRow["MaLoaiThe"] = ALL_MATERIAL_TYPE;
@@ -3511,6 +3684,11 @@ namespace IDT_PARKING
                         cbb_XR_KHAC.DataSource = dataTableForCbb_XR_KHAC;
                         cbb_XR_KHAC.DisplayMember = "MaLoaiThe";
                         cbb_XR_KHAC.ValueMember = "MaLoaiThe";
+
+                        DataTable dataTableForCbb_XV_KHAC = dataTable.Copy();
+                        cbb_XV_KHAC.DataSource = dataTableForCbb_XV_KHAC;
+                        cbb_XV_KHAC.DisplayMember = "MaLoaiThe";
+                        cbb_XV_KHAC.ValueMember = "MaLoaiThe";
                     }
                 }
             }
