@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -13,6 +14,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
+using Guna.UI2.WinForms;
+using Guna.UI2.WinForms.Suite;
 using static System.Windows.Forms.AxHost;
 using Excel = Microsoft.Office.Interop.Excel;
 
@@ -54,6 +58,9 @@ namespace IDT_PARKING
         private string active_export_path;
         private bool isDragging = false;
         private Point lastCursorPos;
+
+
+
         //private SqlConnection _connection;
         //private DataTable _currentQueryResult;
 
@@ -151,9 +158,194 @@ namespace IDT_PARKING
             btnDelete_XR_KHAC.Click += new System.EventHandler(this.btnDelete_XR_KHAC_Click);
             btnQuerry_XR_KHAC.Click += new System.EventHandler(this.btnQuerry_XR_KHAC_Click);
             btnDelete_XR_KHAC.Enabled = false;
+
+            InitializeThongKePanel();
         }
 
         #endregion
+
+        #region Báo cáo - Thống kê
+
+        private void InitializeThongKePanel()
+        {
+            // Configure controls created by the designer
+            PopulateThongKeReportTypes();
+            btnTKGenerate.Click += new System.EventHandler(this.btnThongKeGenerate_Click);
+
+            // Set default values for DateTimePickers
+            dtpTKStartDate.Value = DateTime.Now.Date;
+            dtpTKStartTime.Value = DateTime.Now.Date; // Sets time to 00:00:00
+            dtpTKEndDate.Value = DateTime.Now.Date;
+            dtpTKEndTime.Value = DateTime.Now.Date.AddDays(1).AddSeconds(-1); // Sets time to 23:59:59
+
+            // Initialize dgvRevenueReport
+            this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
+            this.dgvRevenueReport.Name = "dgvRevenueReport";
+            this.dgvRevenueReport.Dock = DockStyle.Fill;
+            this.dgvRevenueReport.ReadOnly = true;
+            this.dgvRevenueReport.AllowUserToAddRows = false;
+            this.dgvRevenueReport.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvRevenueReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRevenueReport.ScrollBars = ScrollBars.Both; // Enable both scrollbars
+            if (this.dgvTK != null)
+            {
+                this.dgvTK.Controls.Add(this.dgvRevenueReport);
+            }
+
+            // Initialize chartRevenueReport
+            this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.chartRevenueReport.Name = "chartRevenueReport";
+            this.chartRevenueReport.Dock = DockStyle.Fill;
+            this.chartRevenueReport.ChartAreas.Add(new ChartArea()); // Add a default chart area
+            // Visual adjustments for the chart
+            this.chartRevenueReport.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
+            this.chartRevenueReport.ChartAreas[0].AxisX.LabelStyle.Angle = -45; // Rotate X-axis labels to prevent overlap
+            this.chartRevenueReport.ChartAreas[0].AxisY.IsStartedFromZero = true; // Ensure Y-axis starts from zero
+            // Note: Series will be cleared and re-added in btnThongKeGenerate_Click
+            if (this.chartTk != null)
+            {
+                this.chartTk.Controls.Add(this.chartRevenueReport);
+            }
+        }
+
+        private void PopulateThongKeReportTypes()
+        {
+            var reportTypes = new Dictionary<string, string>
+            {
+                { "revenue_daily", "Doanh thu tổng hợp (theo ngày)" },
+                { "revenue_by_card", "Doanh thu theo loại thẻ" },
+                { "traffic_hourly", "Lưu lượng xe vào/ra (theo giờ)" },
+                { "monthly_cards", "Thống kê thẻ tháng" }
+            };
+
+            cbbTKReportType.DataSource = new BindingSource(reportTypes, null);
+            cbbTKReportType.DisplayMember = "Value";
+            cbbTKReportType.ValueMember = "Key";
+        }
+        
+        private async void btnThongKeGenerate_Click(object sender, EventArgs e)
+        {
+            if (cbbTKReportType.SelectedValue == null)
+            {
+                MessageBox.Show("Vui lòng chọn loại báo cáo.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            string reportType = cbbTKReportType.SelectedValue.ToString();
+            
+            DateTime startDate = dtpTKStartDate.Value.Date + dtpTKStartTime.Value.TimeOfDay;
+            DateTime endDate = dtpTKEndDate.Value.Date + dtpTKEndTime.Value.TimeOfDay;
+
+            if (startDate >= endDate)
+            {
+                MessageBox.Show("Ngày/giờ bắt đầu phải sớm hơn ngày/giờ kết thúc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            ShowLoading();
+            try
+            {
+                if (connection == null || connection.State != ConnectionState.Open)
+                {
+                   InitializeDatabaseConnection();
+                   if (connection == null) // Add this null check
+                   {
+                       return; // Exit if connection failed to initialize
+                   }
+                   if (connection.State != ConnectionState.Open)
+                   {
+                        await connection.OpenAsync();
+                   }
+                }
+
+                DataTable dt = new DataTable();
+                long totalRevenue = 0;
+                int totalVehicles = 0;
+
+                string query = "";
+
+                switch (reportType)
+                {
+                    case "revenue_daily":
+                        query = @"
+                            SELECT 
+                                CAST(NgayRa AS DATE) AS Ngay, 
+                                SUM(GiaTien) AS DoanhThu,
+                                COUNT(*) AS SoLuotXe
+                            FROM Ra 
+                            WHERE NgayRa >= @startDate AND NgayRa < @endDate
+                            GROUP BY CAST(NgayRa AS DATE)
+                            ORDER BY Ngay;";
+                        
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
+                        {
+                            cmd.Parameters.AddWithValue("@startDate", startDate);
+                            cmd.Parameters.AddWithValue("@endDate", endDate);
+                            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                            {
+                                adapter.Fill(dt);
+                            }
+                        }
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            totalRevenue += Convert.ToInt64(row["DoanhThu"]);
+                            totalVehicles += Convert.ToInt32(row["SoLuotXe"]);
+                        }
+
+                        if (lblTKTotalRevenue != null)
+                        {
+                            lblTKTotalRevenue.Text = $"Tổng Doanh Thu: {totalRevenue:N0} VNĐ";
+                        }
+                        if (lblTKTotalVehicles != null)
+                        {
+                            lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
+                        }
+                        
+                        // Populate the new DataGridView
+                        if (dgvRevenueReport != null)
+                        {
+                            dgvRevenueReport.DataSource = dt;
+                        }
+                        
+                        // Populate the new Chart
+                        if (chartRevenueReport != null)
+                        {
+                            chartRevenueReport.Series.Clear();
+                            var series = new Series("Doanh thu")
+                            {
+                                ChartType = SeriesChartType.Column
+                            };
+                            chartRevenueReport.Series.Add(series);
+
+                            foreach (DataRow row in dt.Rows)
+                            {
+                                series.Points.AddXY(Convert.ToDateTime(row["Ngay"]).ToString("dd/MM"), Convert.ToDouble(row["DoanhThu"]));
+                            }
+                            chartRevenueReport.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+                            chartRevenueReport.ChartAreas[0].AxisY.MajorGrid.Enabled = true;
+                            chartRevenueReport.Invalidate();
+                        }
+                        
+                        break;
+                    
+                    default:
+                        MessageBox.Show("Loại báo cáo này chưa được hỗ trợ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi khi tạo báo cáo: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                HideLoading();
+            }
+        }
+
+        #endregion
+
 
         #region Common / General Methods
 
@@ -5929,6 +6121,31 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             {
                 HideLoading();
             }
+        }
+
+        private void dtpTKStartDate_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpTKStartTime_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpTKEndDate_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dtpTKEndTime_ValueChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnTKGenerate_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

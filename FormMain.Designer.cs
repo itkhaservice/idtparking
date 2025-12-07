@@ -43,6 +43,9 @@ namespace IDT_PARKING
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnExportExcel_KH = new Guna.UI2.WinForms.Guna2Button();
@@ -221,6 +224,15 @@ namespace IDT_PARKING
             this.tabControl = new Guna.UI2.WinForms.Guna2TabControl();
             this.tabKhac = new System.Windows.Forms.TabPage();
             this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.guna2Panel10 = new Guna.UI2.WinForms.Guna2Panel();
+            this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
+            this.chartTk = new System.Windows.Forms.TabPage();
+            this.dgvTK = new System.Windows.Forms.TabPage();
+            this.lblTKTotalVehicles = new System.Windows.Forms.Label();
+            this.lblTKTotalRevenue = new System.Windows.Forms.Label();
+            this.filterPanel = new System.Windows.Forms.Panel();
+            this.btnTKGenerate = new Guna.UI2.WinForms.Guna2Button();
+            this.cbbTKReportType = new System.Windows.Forms.ComboBox();
             this.guna2Panel9 = new Guna.UI2.WinForms.Guna2Panel();
             this.btnQuerry_XV_KHAC = new Guna.UI2.WinForms.Guna2Button();
             this.label59 = new System.Windows.Forms.Label();
@@ -230,7 +242,6 @@ namespace IDT_PARKING
             this.cbb_XV_KHAC = new System.Windows.Forms.ComboBox();
             this.label61 = new System.Windows.Forms.Label();
             this.label62 = new System.Windows.Forms.Label();
-            this.dttT_XV_KHAC = new System.Windows.Forms.DateTimePicker();
             this.dtdT_XV_KHAC = new System.Windows.Forms.DateTimePicker();
             this.dttF_XV_KHAC = new System.Windows.Forms.DateTimePicker();
             this.dtdF_XV_KHAC = new System.Windows.Forms.DateTimePicker();
@@ -275,7 +286,24 @@ namespace IDT_PARKING
             this.txtDatabase_Main = new Guna.UI2.WinForms.Guna2TextBox();
             this.btnConnect_Main = new Guna.UI2.WinForms.Guna2Button();
             this.txtServer_Main = new Guna.UI2.WinForms.Guna2TextBox();
+            this.label64 = new System.Windows.Forms.Label();
+            this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
+            this.label65 = new System.Windows.Forms.Label();
+            this.label66 = new System.Windows.Forms.Label();
+            this.dateTimePicker3 = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePicker4 = new System.Windows.Forms.DateTimePicker();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label67 = new System.Windows.Forms.Label();
+            this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
+            this.dttT_XV_KHAC = new System.Windows.Forms.DateTimePicker();
+            this.dtpTKStartTime = new System.Windows.Forms.DateTimePicker();
+            this.dtpTKEndTime = new System.Windows.Forms.DateTimePicker();
             this.loadingControl = new IDT_PARKING.LoadingControl();
+            this.dtpTKStartDate = new System.Windows.Forms.DateTimePicker();
+            this.dtpTKEndDate = new System.Windows.Forms.DateTimePicker();
+            this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
+            this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -306,6 +334,11 @@ namespace IDT_PARKING
             this.tabControl.SuspendLayout();
             this.tabKhac.SuspendLayout();
             this.groupBox7.SuspendLayout();
+            this.guna2Panel10.SuspendLayout();
+            this.guna2TabControl1.SuspendLayout();
+            this.chartTk.SuspendLayout();
+            this.dgvTK.SuspendLayout();
+            this.filterPanel.SuspendLayout();
             this.guna2Panel9.SuspendLayout();
             this.guna2Panel8.SuspendLayout();
             this.tabCaiDat.SuspendLayout();
@@ -313,6 +346,8 @@ namespace IDT_PARKING
             ((System.ComponentModel.ISupportInitialize)(this.dgvQuery_CaiDat)).BeginInit();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRevenueReport)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartRevenueReport)).BeginInit();
             this.SuspendLayout();
             // 
             // btnExportExcel_KH
@@ -3017,22 +3052,146 @@ namespace IDT_PARKING
             this.tabKhac.Padding = new System.Windows.Forms.Padding(3);
             this.tabKhac.Size = new System.Drawing.Size(1346, 670);
             this.tabKhac.TabIndex = 5;
-            this.tabKhac.Text = "Khác";
+            this.tabKhac.Text = "Thống kê";
             this.tabKhac.UseVisualStyleBackColor = true;
             // 
             // groupBox7
             // 
+            this.groupBox7.Controls.Add(this.guna2Panel10);
             this.groupBox7.Controls.Add(this.guna2Panel9);
             this.groupBox7.Controls.Add(this.guna2Panel8);
-            this.groupBox7.Controls.Add(this.loadingControl);
             this.groupBox7.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.groupBox7.Location = new System.Drawing.Point(7, 5);
             this.groupBox7.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox7.Name = "groupBox7";
             this.groupBox7.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox7.Size = new System.Drawing.Size(1335, 661);
+            this.groupBox7.Size = new System.Drawing.Size(1332, 658);
             this.groupBox7.TabIndex = 31;
             this.groupBox7.TabStop = false;
+            // 
+            // guna2Panel10
+            // 
+            this.guna2Panel10.BackColor = System.Drawing.Color.Cornsilk;
+            this.guna2Panel10.Controls.Add(this.guna2TabControl1);
+            this.guna2Panel10.Controls.Add(this.filterPanel);
+            this.guna2Panel10.Location = new System.Drawing.Point(392, 21);
+            this.guna2Panel10.Name = "guna2Panel10";
+            this.guna2Panel10.Size = new System.Drawing.Size(938, 632);
+            this.guna2Panel10.TabIndex = 1005;
+            // 
+            // guna2TabControl1
+            // 
+            this.guna2TabControl1.Alignment = System.Windows.Forms.TabAlignment.Left;
+            this.guna2TabControl1.Controls.Add(this.chartTk);
+            this.guna2TabControl1.Controls.Add(this.dgvTK);
+            this.guna2TabControl1.ItemSize = new System.Drawing.Size(180, 40);
+            this.guna2TabControl1.Location = new System.Drawing.Point(20, 89);
+            this.guna2TabControl1.Name = "guna2TabControl1";
+            this.guna2TabControl1.SelectedIndex = 0;
+            this.guna2TabControl1.Size = new System.Drawing.Size(915, 540);
+            this.guna2TabControl1.TabButtonHoverState.BorderColor = System.Drawing.Color.Empty;
+            this.guna2TabControl1.TabButtonHoverState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
+            this.guna2TabControl1.TabButtonHoverState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
+            this.guna2TabControl1.TabButtonHoverState.ForeColor = System.Drawing.Color.White;
+            this.guna2TabControl1.TabButtonHoverState.InnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(52)))), ((int)(((byte)(70)))));
+            this.guna2TabControl1.TabButtonIdleState.BorderColor = System.Drawing.Color.Empty;
+            this.guna2TabControl1.TabButtonIdleState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.guna2TabControl1.TabButtonIdleState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
+            this.guna2TabControl1.TabButtonIdleState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(156)))), ((int)(((byte)(160)))), ((int)(((byte)(167)))));
+            this.guna2TabControl1.TabButtonIdleState.InnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.guna2TabControl1.TabButtonSelectedState.BorderColor = System.Drawing.Color.Empty;
+            this.guna2TabControl1.TabButtonSelectedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(29)))), ((int)(((byte)(37)))), ((int)(((byte)(49)))));
+            this.guna2TabControl1.TabButtonSelectedState.Font = new System.Drawing.Font("Segoe UI Semibold", 10F);
+            this.guna2TabControl1.TabButtonSelectedState.ForeColor = System.Drawing.Color.White;
+            this.guna2TabControl1.TabButtonSelectedState.InnerColor = System.Drawing.Color.FromArgb(((int)(((byte)(76)))), ((int)(((byte)(132)))), ((int)(((byte)(255)))));
+            this.guna2TabControl1.TabButtonSize = new System.Drawing.Size(180, 40);
+            this.guna2TabControl1.TabIndex = 73;
+            this.guna2TabControl1.TabMenuBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            // 
+            // chartTk
+            // 
+            this.chartTk.Controls.Add(this.chartRevenueReport);
+            this.chartTk.Controls.Add(this.loadingControl);
+            this.chartTk.Location = new System.Drawing.Point(184, 4);
+            this.chartTk.Name = "chartTk";
+            this.chartTk.Padding = new System.Windows.Forms.Padding(3);
+            this.chartTk.Size = new System.Drawing.Size(727, 532);
+            this.chartTk.TabIndex = 0;
+            this.chartTk.Text = "Biểu Đồ";
+            this.chartTk.UseVisualStyleBackColor = true;
+            // 
+            // dgvTK
+            // 
+            this.dgvTK.Controls.Add(this.dgvRevenueReport);
+            this.dgvTK.Location = new System.Drawing.Point(184, 4);
+            this.dgvTK.Name = "dgvTK";
+            this.dgvTK.Padding = new System.Windows.Forms.Padding(3);
+            this.dgvTK.Size = new System.Drawing.Size(727, 532);
+            this.dgvTK.TabIndex = 1;
+            this.dgvTK.Text = "Chi Tiết";
+            this.dgvTK.UseVisualStyleBackColor = true;
+            // 
+            // lblTKTotalVehicles
+            // 
+            this.lblTKTotalVehicles.AutoSize = true;
+            this.lblTKTotalVehicles.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblTKTotalVehicles.Location = new System.Drawing.Point(282, 53);
+            this.lblTKTotalVehicles.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTKTotalVehicles.Name = "lblTKTotalVehicles";
+            this.lblTKTotalVehicles.Size = new System.Drawing.Size(102, 15);
+            this.lblTKTotalVehicles.TabIndex = 72;
+            this.lblTKTotalVehicles.Text = "Tổng số giao dịch";
+            // 
+            // lblTKTotalRevenue
+            // 
+            this.lblTKTotalRevenue.AutoSize = true;
+            this.lblTKTotalRevenue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblTKTotalRevenue.Location = new System.Drawing.Point(14, 53);
+            this.lblTKTotalRevenue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblTKTotalRevenue.Name = "lblTKTotalRevenue";
+            this.lblTKTotalRevenue.Size = new System.Drawing.Size(102, 15);
+            this.lblTKTotalRevenue.TabIndex = 71;
+            this.lblTKTotalRevenue.Text = "Tổng số giao dịch";
+            // 
+            // filterPanel
+            // 
+            this.filterPanel.Controls.Add(this.dtpTKEndDate);
+            this.filterPanel.Controls.Add(this.lblTKTotalVehicles);
+            this.filterPanel.Controls.Add(this.dtpTKStartDate);
+            this.filterPanel.Controls.Add(this.lblTKTotalRevenue);
+            this.filterPanel.Controls.Add(this.dtpTKEndTime);
+            this.filterPanel.Controls.Add(this.dtpTKStartTime);
+            this.filterPanel.Controls.Add(this.btnTKGenerate);
+            this.filterPanel.Controls.Add(this.cbbTKReportType);
+            this.filterPanel.Location = new System.Drawing.Point(3, 3);
+            this.filterPanel.Name = "filterPanel";
+            this.filterPanel.Size = new System.Drawing.Size(932, 90);
+            this.filterPanel.TabIndex = 0;
+            // 
+            // btnTKGenerate
+            // 
+            this.btnTKGenerate.BorderRadius = 4;
+            this.btnTKGenerate.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnTKGenerate.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnTKGenerate.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnTKGenerate.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnTKGenerate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.btnTKGenerate.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnTKGenerate.ForeColor = System.Drawing.Color.White;
+            this.btnTKGenerate.Location = new System.Drawing.Point(802, 17);
+            this.btnTKGenerate.Name = "btnTKGenerate";
+            this.btnTKGenerate.Size = new System.Drawing.Size(126, 24);
+            this.btnTKGenerate.TabIndex = 71;
+            this.btnTKGenerate.Text = "Tìm kiếm";
+            this.btnTKGenerate.Click += new System.EventHandler(this.btnTKGenerate_Click);
+            // 
+            // cbbTKReportType
+            // 
+            this.cbbTKReportType.FormattingEnabled = true;
+            this.cbbTKReportType.Location = new System.Drawing.Point(17, 17);
+            this.cbbTKReportType.Name = "cbbTKReportType";
+            this.cbbTKReportType.Size = new System.Drawing.Size(219, 23);
+            this.cbbTKReportType.TabIndex = 0;
             // 
             // guna2Panel9
             // 
@@ -3160,16 +3319,6 @@ namespace IDT_PARKING
             this.label62.Size = new System.Drawing.Size(59, 15);
             this.label62.TabIndex = 63;
             this.label62.Text = "Đến ngày";
-            // 
-            // dttT_XV_KHAC
-            // 
-            this.dttT_XV_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Time;
-            this.dttT_XV_KHAC.Location = new System.Drawing.Point(249, 106);
-            this.dttT_XV_KHAC.Margin = new System.Windows.Forms.Padding(2);
-            this.dttT_XV_KHAC.Name = "dttT_XV_KHAC";
-            this.dttT_XV_KHAC.Size = new System.Drawing.Size(75, 23);
-            this.dttT_XV_KHAC.TabIndex = 62;
-            this.dttT_XV_KHAC.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
             // 
             // dtdT_XV_KHAC
             // 
@@ -3858,15 +4007,202 @@ namespace IDT_PARKING
             this.txtServer_Main.Size = new System.Drawing.Size(162, 24);
             this.txtServer_Main.TabIndex = 82;
             // 
+            // label64
+            // 
+            this.label64.AutoSize = true;
+            this.label64.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.label64.Location = new System.Drawing.Point(45, 24);
+            this.label64.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(170, 19);
+            this.label64.TabIndex = 69;
+            this.label64.Text = "BÁO CÁO VÀ THỐNG KÊ";
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePicker1.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dateTimePicker1.Location = new System.Drawing.Point(202, 56);
+            this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker1.Name = "dateTimePicker1";
+            this.dateTimePicker1.Size = new System.Drawing.Size(75, 20);
+            this.dateTimePicker1.TabIndex = 73;
+            this.dateTimePicker1.Value = new System.DateTime(2025, 8, 8, 0, 0, 0, 0);
+            // 
+            // dateTimePicker2
+            // 
+            this.dateTimePicker2.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker2.Location = new System.Drawing.Point(106, 56);
+            this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker2.Name = "dateTimePicker2";
+            this.dateTimePicker2.Size = new System.Drawing.Size(92, 20);
+            this.dateTimePicker2.TabIndex = 71;
+            this.dateTimePicker2.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // label65
+            // 
+            this.label65.AutoSize = true;
+            this.label65.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label65.Location = new System.Drawing.Point(51, 62);
+            this.label65.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(51, 15);
+            this.label65.TabIndex = 72;
+            this.label65.Text = "Từ ngày";
+            // 
+            // label66
+            // 
+            this.label66.AutoSize = true;
+            this.label66.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label66.Location = new System.Drawing.Point(281, 62);
+            this.label66.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(59, 15);
+            this.label66.TabIndex = 73;
+            this.label66.Text = "Đến ngày";
+            // 
+            // dateTimePicker3
+            // 
+            this.dateTimePicker3.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dateTimePicker3.Location = new System.Drawing.Point(440, 56);
+            this.dateTimePicker3.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker3.Name = "dateTimePicker3";
+            this.dateTimePicker3.Size = new System.Drawing.Size(75, 20);
+            this.dateTimePicker3.TabIndex = 72;
+            this.dateTimePicker3.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
+            // 
+            // dateTimePicker4
+            // 
+            this.dateTimePicker4.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dateTimePicker4.Location = new System.Drawing.Point(344, 56);
+            this.dateTimePicker4.Margin = new System.Windows.Forms.Padding(2);
+            this.dateTimePicker4.Name = "dateTimePicker4";
+            this.dateTimePicker4.Size = new System.Drawing.Size(92, 20);
+            this.dateTimePicker4.TabIndex = 71;
+            this.dateTimePicker4.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(597, 56);
+            this.comboBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(92, 21);
+            this.comboBox1.TabIndex = 71;
+            // 
+            // label67
+            // 
+            this.label67.AutoSize = true;
+            this.label67.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.label67.Location = new System.Drawing.Point(519, 62);
+            this.label67.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(74, 15);
+            this.label67.TabIndex = 72;
+            this.label67.Text = "Loại báo cáo";
+            // 
+            // guna2Button4
+            // 
+            this.guna2Button4.BorderRadius = 4;
+            this.guna2Button4.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.guna2Button4.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.guna2Button4.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.guna2Button4.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.guna2Button4.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.guna2Button4.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.guna2Button4.ForeColor = System.Drawing.Color.White;
+            this.guna2Button4.Location = new System.Drawing.Point(694, 55);
+            this.guna2Button4.Name = "guna2Button4";
+            this.guna2Button4.Size = new System.Drawing.Size(126, 24);
+            this.guna2Button4.TabIndex = 71;
+            this.guna2Button4.Text = "Tìm kiếm";
+            // 
+            // dttT_XV_KHAC
+            // 
+            this.dttT_XV_KHAC.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dttT_XV_KHAC.Location = new System.Drawing.Point(249, 106);
+            this.dttT_XV_KHAC.Margin = new System.Windows.Forms.Padding(2);
+            this.dttT_XV_KHAC.Name = "dttT_XV_KHAC";
+            this.dttT_XV_KHAC.Size = new System.Drawing.Size(75, 23);
+            this.dttT_XV_KHAC.TabIndex = 62;
+            this.dttT_XV_KHAC.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
+            // 
+            // dtpTKStartTime
+            // 
+            this.dtpTKStartTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpTKStartTime.Location = new System.Drawing.Point(381, 17);
+            this.dtpTKStartTime.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTKStartTime.Name = "dtpTKStartTime";
+            this.dtpTKStartTime.Size = new System.Drawing.Size(134, 23);
+            this.dtpTKStartTime.TabIndex = 71;
+            this.dtpTKStartTime.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
+            this.dtpTKStartTime.ValueChanged += new System.EventHandler(this.dtpTKStartTime_ValueChanged);
+            // 
+            // dtpTKEndTime
+            // 
+            this.dtpTKEndTime.Format = System.Windows.Forms.DateTimePickerFormat.Time;
+            this.dtpTKEndTime.Location = new System.Drawing.Point(661, 17);
+            this.dtpTKEndTime.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTKEndTime.Name = "dtpTKEndTime";
+            this.dtpTKEndTime.Size = new System.Drawing.Size(134, 23);
+            this.dtpTKEndTime.TabIndex = 72;
+            this.dtpTKEndTime.Value = new System.DateTime(2025, 5, 27, 0, 0, 0, 0);
+            this.dtpTKEndTime.ValueChanged += new System.EventHandler(this.dtpTKEndTime_ValueChanged);
+            // 
             // loadingControl
             // 
             this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.loadingControl.Location = new System.Drawing.Point(574, 58);
+            this.loadingControl.Location = new System.Drawing.Point(311, 351);
             this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
             this.loadingControl.Name = "loadingControl";
             this.loadingControl.Size = new System.Drawing.Size(408, 173);
             this.loadingControl.TabIndex = 1002;
             this.loadingControl.Visible = false;
+            // 
+            // dtpTKStartDate
+            // 
+            this.dtpTKStartDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpTKStartDate.Location = new System.Drawing.Point(285, 18);
+            this.dtpTKStartDate.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTKStartDate.Name = "dtpTKStartDate";
+            this.dtpTKStartDate.Size = new System.Drawing.Size(92, 23);
+            this.dtpTKStartDate.TabIndex = 71;
+            this.dtpTKStartDate.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dtpTKEndDate
+            // 
+            this.dtpTKEndDate.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpTKEndDate.Location = new System.Drawing.Point(565, 18);
+            this.dtpTKEndDate.Margin = new System.Windows.Forms.Padding(2);
+            this.dtpTKEndDate.Name = "dtpTKEndDate";
+            this.dtpTKEndDate.Size = new System.Drawing.Size(92, 23);
+            this.dtpTKEndDate.TabIndex = 73;
+            this.dtpTKEndDate.Value = new System.DateTime(2025, 1, 1, 12, 28, 0, 0);
+            // 
+            // dgvRevenueReport
+            // 
+            this.dgvRevenueReport.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvRevenueReport.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvRevenueReport.Location = new System.Drawing.Point(3, 3);
+            this.dgvRevenueReport.Name = "dgvRevenueReport";
+            this.dgvRevenueReport.Size = new System.Drawing.Size(721, 526);
+            this.dgvRevenueReport.TabIndex = 0;
+            // 
+            // chartRevenueReport
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartRevenueReport.ChartAreas.Add(chartArea1);
+            this.chartRevenueReport.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartRevenueReport.Legends.Add(legend1);
+            this.chartRevenueReport.Location = new System.Drawing.Point(3, 3);
+            this.chartRevenueReport.Name = "chartRevenueReport";
+            series1.ChartArea = "ChartArea1";
+            series1.Legend = "Legend1";
+            series1.Name = "Series1";
+            this.chartRevenueReport.Series.Add(series1);
+            this.chartRevenueReport.Size = new System.Drawing.Size(721, 526);
+            this.chartRevenueReport.TabIndex = 1003;
+            this.chartRevenueReport.Text = "chart1";
             // 
             // FormMain
             // 
@@ -3917,6 +4253,12 @@ namespace IDT_PARKING
             this.tabControl.ResumeLayout(false);
             this.tabKhac.ResumeLayout(false);
             this.groupBox7.ResumeLayout(false);
+            this.guna2Panel10.ResumeLayout(false);
+            this.guna2TabControl1.ResumeLayout(false);
+            this.chartTk.ResumeLayout(false);
+            this.dgvTK.ResumeLayout(false);
+            this.filterPanel.ResumeLayout(false);
+            this.filterPanel.PerformLayout();
             this.guna2Panel9.ResumeLayout(false);
             this.guna2Panel9.PerformLayout();
             this.guna2Panel8.ResumeLayout(false);
@@ -3927,6 +4269,8 @@ namespace IDT_PARKING
             this.groupBox2.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvRevenueReport)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartRevenueReport)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -4160,10 +4504,35 @@ namespace IDT_PARKING
         private System.Windows.Forms.ComboBox cbb_XV_KHAC;
         private System.Windows.Forms.Label label61;
         private System.Windows.Forms.Label label62;
-        private System.Windows.Forms.DateTimePicker dttT_XV_KHAC;
         private System.Windows.Forms.DateTimePicker dtdT_XV_KHAC;
         private System.Windows.Forms.DateTimePicker dttF_XV_KHAC;
         private System.Windows.Forms.DateTimePicker dtdF_XV_KHAC;
         private System.Windows.Forms.Label label63;
+        private Guna.UI2.WinForms.Guna2Panel guna2Panel10;
+        private System.Windows.Forms.Label label64;
+        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label67;
+        private System.Windows.Forms.Label label66;
+        private System.Windows.Forms.DateTimePicker dateTimePicker1;
+        private System.Windows.Forms.DateTimePicker dateTimePicker3;
+        private System.Windows.Forms.DateTimePicker dateTimePicker4;
+        private System.Windows.Forms.DateTimePicker dateTimePicker2;
+        private System.Windows.Forms.Label label65;
+        private Guna.UI2.WinForms.Guna2Button guna2Button4;
+        private System.Windows.Forms.Panel filterPanel;
+        private System.Windows.Forms.ComboBox cbbTKReportType;
+        private System.Windows.Forms.Label lblTKTotalVehicles;
+        private System.Windows.Forms.Label lblTKTotalRevenue;
+        private Guna.UI2.WinForms.Guna2Button btnTKGenerate;
+        private Guna.UI2.WinForms.Guna2TabControl guna2TabControl1;
+        private System.Windows.Forms.TabPage chartTk;
+        private System.Windows.Forms.TabPage dgvTK;
+        private System.Windows.Forms.DateTimePicker dttT_XV_KHAC;
+        private System.Windows.Forms.DateTimePicker dtpTKEndTime;
+        private System.Windows.Forms.DateTimePicker dtpTKStartTime;
+        private System.Windows.Forms.DateTimePicker dtpTKEndDate;
+        private System.Windows.Forms.DateTimePicker dtpTKStartDate;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartRevenueReport;
+        private System.Windows.Forms.DataGridView dgvRevenueReport;
     }
 }
