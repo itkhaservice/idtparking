@@ -228,7 +228,6 @@ namespace IDT_PARKING
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.chartTk = new System.Windows.Forms.TabPage();
             this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.dgvTK = new System.Windows.Forms.TabPage();
             this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
             this.filterPanel = new System.Windows.Forms.Panel();
@@ -304,6 +303,7 @@ namespace IDT_PARKING
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label67 = new System.Windows.Forms.Label();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
+            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -518,7 +518,7 @@ namespace IDT_PARKING
             this.tabThe.Location = new System.Drawing.Point(4, 44);
             this.tabThe.Name = "tabThe";
             this.tabThe.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabThe.Size = new System.Drawing.Size(1346, 670);
+            this.tabThe.Size = new System.Drawing.Size(1351, 667);
             this.tabThe.TabIndex = 4;
             this.tabThe.Text = "Thẻ";
             this.tabThe.UseVisualStyleBackColor = true;
@@ -958,7 +958,7 @@ namespace IDT_PARKING
             this.tabKhachHang.Location = new System.Drawing.Point(4, 44);
             this.tabKhachHang.Name = "tabKhachHang";
             this.tabKhachHang.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhachHang.Size = new System.Drawing.Size(1346, 670);
+            this.tabKhachHang.Size = new System.Drawing.Size(1351, 667);
             this.tabKhachHang.TabIndex = 3;
             this.tabKhachHang.Text = "Khách hàng";
             this.tabKhachHang.UseVisualStyleBackColor = true;
@@ -2058,7 +2058,7 @@ namespace IDT_PARKING
             this.tabDoanhThu.Location = new System.Drawing.Point(4, 44);
             this.tabDoanhThu.Name = "tabDoanhThu";
             this.tabDoanhThu.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabDoanhThu.Size = new System.Drawing.Size(1346, 670);
+            this.tabDoanhThu.Size = new System.Drawing.Size(1351, 667);
             this.tabDoanhThu.TabIndex = 2;
             this.tabDoanhThu.Text = "Doanh thu";
             this.tabDoanhThu.UseVisualStyleBackColor = true;
@@ -2385,7 +2385,7 @@ namespace IDT_PARKING
             this.tabXeRa.Location = new System.Drawing.Point(4, 44);
             this.tabXeRa.Name = "tabXeRa";
             this.tabXeRa.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabXeRa.Size = new System.Drawing.Size(1346, 670);
+            this.tabXeRa.Size = new System.Drawing.Size(1351, 667);
             this.tabXeRa.TabIndex = 1;
             this.tabXeRa.Text = "Xe ra";
             this.tabXeRa.UseVisualStyleBackColor = true;
@@ -3050,7 +3050,7 @@ namespace IDT_PARKING
             this.tabKhac.Location = new System.Drawing.Point(4, 44);
             this.tabKhac.Name = "tabKhac";
             this.tabKhac.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabKhac.Size = new System.Drawing.Size(1346, 670);
+            this.tabKhac.Size = new System.Drawing.Size(1351, 667);
             this.tabKhac.TabIndex = 5;
             this.tabKhac.Text = "Thống kê";
             this.tabKhac.UseVisualStyleBackColor = true;
@@ -3137,16 +3137,6 @@ namespace IDT_PARKING
             this.chartRevenueReport.TabIndex = 1003;
             this.chartRevenueReport.Text = "chart1";
             // 
-            // loadingControl
-            // 
-            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.loadingControl.Location = new System.Drawing.Point(311, 351);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.loadingControl.Name = "loadingControl";
-            this.loadingControl.Size = new System.Drawing.Size(408, 173);
-            this.loadingControl.TabIndex = 1002;
-            this.loadingControl.Visible = false;
-            // 
             // dgvTK
             // 
             this.dgvTK.Controls.Add(this.dgvRevenueReport);
@@ -3221,9 +3211,9 @@ namespace IDT_PARKING
             this.lblTKTotalRevenue.Location = new System.Drawing.Point(14, 53);
             this.lblTKTotalRevenue.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTKTotalRevenue.Name = "lblTKTotalRevenue";
-            this.lblTKTotalRevenue.Size = new System.Drawing.Size(102, 15);
+            this.lblTKTotalRevenue.Size = new System.Drawing.Size(94, 15);
             this.lblTKTotalRevenue.TabIndex = 71;
-            this.lblTKTotalRevenue.Text = "Tổng số giao dịch";
+            this.lblTKTotalRevenue.Text = "Tổng doanh thu";
             // 
             // dtpTKEndTime
             // 
@@ -3640,7 +3630,7 @@ namespace IDT_PARKING
             this.tabCaiDat.Location = new System.Drawing.Point(4, 44);
             this.tabCaiDat.Name = "tabCaiDat";
             this.tabCaiDat.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
-            this.tabCaiDat.Size = new System.Drawing.Size(1346, 670);
+            this.tabCaiDat.Size = new System.Drawing.Size(1351, 667);
             this.tabCaiDat.TabIndex = 6;
             this.tabCaiDat.Text = "Cài đặt";
             this.tabCaiDat.UseVisualStyleBackColor = true;
@@ -4204,6 +4194,16 @@ namespace IDT_PARKING
             this.guna2Button4.Size = new System.Drawing.Size(126, 24);
             this.guna2Button4.TabIndex = 71;
             this.guna2Button4.Text = "Tìm kiếm";
+            // 
+            // loadingControl
+            // 
+            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.loadingControl.Location = new System.Drawing.Point(311, 351);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
+            this.loadingControl.Name = "loadingControl";
+            this.loadingControl.Size = new System.Drawing.Size(408, 173);
+            this.loadingControl.TabIndex = 1002;
+            this.loadingControl.Visible = false;
             // 
             // FormMain
             // 

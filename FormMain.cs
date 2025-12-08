@@ -230,10 +230,12 @@ namespace IDT_PARKING
 
             string reportType = cbbTKReportType.SelectedValue.ToString();
             
-            DateTime startDate = dtpTKStartDate.Value.Date + dtpTKStartTime.Value.TimeOfDay;
-            DateTime endDate = dtpTKEndDate.Value.Date + dtpTKEndTime.Value.TimeOfDay;
+            DateTime startDate = dtpTKStartDate.Value.Date;
+            DateTime endDate = dtpTKEndDate.Value.Date;
+            int startTimeInSeconds = (int)dtpTKStartTime.Value.TimeOfDay.TotalSeconds;
+            int endTimeInSeconds = (int)dtpTKEndTime.Value.TimeOfDay.TotalSeconds;
 
-            if (startDate >= endDate)
+            if (startDate.AddSeconds(startTimeInSeconds) >= endDate.AddSeconds(endTimeInSeconds))
             {
                 MessageBox.Show("Ngày/giờ bắt đầu phải sớm hơn ngày/giờ kết thúc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -247,39 +249,40 @@ namespace IDT_PARKING
                 if (connection == null || connection.State != ConnectionState.Open)
                 {
                    InitializeDatabaseConnection();
-                   if (connection == null) // Add this null check
-                   {
-                       return; // Exit if connection failed to initialize
-                   }
-                   if (connection.State != ConnectionState.Open)
-                   {
-                        await connection.OpenAsync();
-                   }
+                   if (connection == null) { return; }
+                   if (connection.State != ConnectionState.Open) { await connection.OpenAsync(); }
                 }
 
                 DataTable dt = new DataTable();
                 long totalRevenue = 0;
                 int totalVehicles = 0;
-
                 string query = "";
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@startDate", startDate),
+                    new SqlParameter("@endDate", endDate),
+                    new SqlParameter("@startTime", startTimeInSeconds),
+                    new SqlParameter("@endTime", endTimeInSeconds)
+                };
 
                 switch (reportType)
                 {
                     case "revenue_daily":
+                        lblTKTotalRevenue.Visible = true;
+                        lblTKTotalVehicles.Visible = true;
                         query = @"
                             SELECT 
                                 CAST(NgayRa AS DATE) AS 'Ngày', 
                                 SUM(GiaTien) AS 'Doanh thu',
                                 COUNT(*) AS 'Số lượt xe'
                             FROM Ra 
-                            WHERE NgayRa >= @startDate AND NgayRa < @endDate
+                            WHERE ((NgayRa > @startDate AND NgayRa < @endDate) OR (NgayRa = @startDate AND THoiGianRa >= @startTime) OR (NgayRa = @endDate AND THoiGianRa <= @endTime))
                             GROUP BY CAST(NgayRa AS DATE)
                             ORDER BY CAST(NgayRa AS DATE);";
                         
                         using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
-                            cmd.Parameters.AddWithValue("@startDate", startDate);
-                            cmd.Parameters.AddWithValue("@endDate", endDate);
+                            cmd.Parameters.AddRange(parameters.ToArray());
                             using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
                             {
                                 adapter.Fill(dt);
@@ -292,48 +295,257 @@ namespace IDT_PARKING
                             totalVehicles += Convert.ToInt32(row["Số lượt xe"]);
                         }
 
-                        if (lblTKTotalRevenue != null)
+                        lblTKTotalRevenue.Text = $"Tổng Doanh Thu: {totalRevenue:N0} VNĐ";
+                        lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
+                        
+                        dgvRevenueReport.DataSource = dt;
+                        if (dgvRevenueReport.Columns.Contains("Doanh thu"))
                         {
-                            lblTKTotalRevenue.Text = $"Tổng Doanh Thu: {totalRevenue:N0} VNĐ";
-                        }
-                        if (lblTKTotalVehicles != null)
-                        {
-                            lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
+                            dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Format = "N0";
+                            dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         }
                         
-                        // Populate the DataGridView
-                        if (dgvRevenueReport != null)
-                        {
-                            dgvRevenueReport.DataSource = dt;
-                            if (dgvRevenueReport.Columns.Contains("Doanh thu"))
-                            {
-                                dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Format = "N0";
-                                dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                            }
-                        }
-                        
-                        // Populate the Chart
-                        if (chartRevenueReport != null)
-                        {
-                            chartRevenueReport.Series.Clear();
-                            var series = new Series("Doanh thu")
-                            {
-                                ChartType = SeriesChartType.Column
-                            };
-                            chartRevenueReport.Series.Add(series);
+                        chartRevenueReport.Series.Clear();
+                        var series = new Series("Doanh thu") { ChartType = SeriesChartType.Column };
+                        chartRevenueReport.Series.Add(series);
 
-                            foreach (DataRow row in dt.Rows)
-                            {
-                                series.Points.AddXY(Convert.ToDateTime(row["Ngày"]).ToString("dd/MM"), Convert.ToDouble(row["Doanh thu"]));
-                            }
-                            chartRevenueReport.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
-                            chartRevenueReport.ChartAreas[0].AxisY.MajorGrid.Enabled = true;
-                            chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
-                            chartRevenueReport.Invalidate();
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            series.Points.AddXY(Convert.ToDateTime(row["Ngày"]).ToString("dd/MM"), Convert.ToDouble(row["Doanh thu"]));
                         }
-                        
+                        chartRevenueReport.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
+                        chartRevenueReport.ChartAreas[0].AxisY.MajorGrid.Enabled = true;
+                        chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
+                        chartRevenueReport.Invalidate();
                         break;
                     
+                    case "revenue_by_card":
+                        lblTKTotalRevenue.Visible = true;
+                        lblTKTotalVehicles.Visible = true;
+                        query = @"
+                            SELECT
+                                ISNULL(lt.MaLoaiThe, N'Không xác định') AS N'Loại thẻ',
+                                SUM(r.GiaTien) AS N'Doanh thu',
+                                COUNT(*) AS N'Số lượt xe'
+                            FROM Ra r
+                            LEFT JOIN LoaiThe lt ON r.MaLoaiThe = lt.MaLoaiThe
+                            WHERE ((r.NgayRa > @startDate AND r.NgayRa < @endDate) OR (r.NgayRa = @startDate AND r.THoiGianRa >= @startTime) OR (r.NgayRa = @endDate AND r.THoiGianRa <= @endTime))
+                            GROUP BY ISNULL(lt.MaLoaiThe, N'Không xác định')
+                            ORDER BY SUM(r.GiaTien) DESC;";
+
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
+                        {
+                            cmd.Parameters.AddRange(parameters.ToArray());
+                            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                            {
+                                adapter.Fill(dt);
+                            }
+                        }
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            totalRevenue += Convert.ToInt64(row["Doanh thu"]);
+                            totalVehicles += Convert.ToInt32(row["Số lượt xe"]);
+                        }
+
+                        lblTKTotalRevenue.Text = $"Tổng Doanh Thu: {totalRevenue:N0} VNĐ";
+                        lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
+
+                        dgvRevenueReport.DataSource = dt;
+                        if (dgvRevenueReport.Columns.Contains("Doanh thu"))
+                        {
+                            dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Format = "N0";
+                            dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                        }
+
+                        chartRevenueReport.Series.Clear();
+                        var pieSeries = new Series("Doanh thu")
+                        {
+                            ChartType = SeriesChartType.Pie,
+                            IsValueShownAsLabel = true,
+                            LabelFormat = "N0"
+                        };
+                        chartRevenueReport.Series.Add(pieSeries);
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            var point = new DataPoint();
+                            point.SetValueY(Convert.ToDouble(row["Doanh thu"]));
+                            point.AxisLabel = row["Loại thẻ"].ToString();
+                            point.LegendText = row["Loại thẻ"].ToString();
+                            pieSeries.Points.Add(point);
+                        }
+                        chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
+                        chartRevenueReport.Invalidate();
+                        break;
+
+                    case "traffic_hourly":
+                        lblTKTotalRevenue.Visible = false;
+                        lblTKTotalVehicles.Visible = true;
+
+                        var vaoData = new Dictionary<int, int>();
+                        var raData = new Dictionary<int, int>();
+
+                        // Khởi tạo mặc định 0 cho 24 giờ
+                        for (int i = 0; i < 24; i++)
+                        {
+                            vaoData[i] = 0;
+                            raData[i] = 0;
+                        }
+
+                        string queryVao = @"
+        SELECT ThoiGian
+        FROM Vao
+        WHERE 
+        (
+            (NgayVao > @startDate AND NgayVao < @endDate)
+            OR
+            (NgayVao = @startDate AND ThoiGian >= @startTime)
+            OR
+            (NgayVao = @endDate AND ThoiGian <= @endTime)
+        )
+    ";
+
+                        using (SqlCommand cmd = new SqlCommand(queryVao, connection))
+                        {
+                            cmd.Parameters.AddRange(parameters.Select(p => new SqlParameter(p.ParameterName, p.Value)).ToArray());
+                            using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                            {
+                                while (await reader.ReadAsync())
+                                {
+                                    int seconds = Convert.ToInt32(reader["ThoiGian"]);
+                                    int hour = seconds / 3600;
+                                    if (hour >= 0 && hour < 24)
+                                        vaoData[hour]++;
+                                }
+                            }
+                        }
+
+                        string queryRa = @"
+        SELECT THoiGianRa
+        FROM Ra
+        WHERE 
+        (
+            (NgayRa > @startDate AND NgayRa < @endDate)
+            OR
+            (NgayRa = @startDate AND THoiGianRa >= @startTime)
+            OR
+            (NgayRa = @endDate AND THoiGianRa <= @endTime)
+        )
+    ";
+
+                        using (SqlCommand cmd = new SqlCommand(queryRa, connection))
+                        {
+                            cmd.Parameters.AddRange(parameters.Select(p => new SqlParameter(p.ParameterName, p.Value)).ToArray());
+                            using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                            {
+                                while (await reader.ReadAsync())
+                                {
+                                    int seconds = Convert.ToInt32(reader["THoiGianRa"]);
+                                    int hour = seconds / 3600;
+                                    if (hour >= 0 && hour < 24)
+                                        raData[hour]++;
+                                }
+                            }
+                        }
+
+                        // Tạo DataTable
+                        dt.Columns.Add("Giờ", typeof(int));
+                        dt.Columns.Add("Lượt vào", typeof(int));
+                        dt.Columns.Add("Lượt ra", typeof(int));
+
+                        int totalIn = 0;
+                        int totalOut = 0;
+
+                        for (int i = 0; i < 24; i++)
+                        {
+                            int luotVao = vaoData[i];
+                            int luotRa = raData[i];
+
+                            dt.Rows.Add(i, luotVao, luotRa);
+                            totalIn += luotVao;
+                            totalOut += luotRa;
+                        }
+
+                        totalVehicles = totalIn + totalOut;
+
+                        lblTKTotalVehicles.Text = $"Tổng lượt xe: {totalVehicles} (Vào: {totalIn}, Ra: {totalOut})";
+
+                        dgvRevenueReport.DataSource = dt;
+
+                        // Chart
+                        chartRevenueReport.Series.Clear();
+                        var inSeries = new Series("Lượt vào") { ChartType = SeriesChartType.Column };
+                        var outSeries = new Series("Lượt ra") { ChartType = SeriesChartType.Column };
+                        chartRevenueReport.Series.Add(inSeries);
+                        chartRevenueReport.Series.Add(outSeries);
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            inSeries.Points.AddXY(Convert.ToInt32(row["Giờ"]), Convert.ToInt32(row["Lượt vào"]));
+                            outSeries.Points.AddXY(Convert.ToInt32(row["Giờ"]), Convert.ToInt32(row["Lượt ra"]));
+                        }
+
+                        chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
+                        chartRevenueReport.ChartAreas[0].AxisX.Title = "Giờ trong ngày";
+                        chartRevenueReport.Invalidate();
+                        break;
+
+
+                    case "monthly_cards":
+                        lblTKTotalRevenue.Visible = false;
+                        lblTKTotalVehicles.Visible = true;
+                        query = @"
+                            SELECT N'Thẻ còn hạn' AS 'Tình trạng', COUNT(*) AS 'Số lượng' FROM TheThang WHERE TTrang = 1 AND NgayKT >= GETDATE()
+                            UNION ALL
+                            SELECT N'Sắp hết hạn (<30 ngày)' AS 'Tình trạng', COUNT(*) AS 'Số lượng' FROM TheThang WHERE TTrang = 1 AND NgayKT >= GETDATE() AND NgayKT < DATEADD(day, 30, GETDATE())
+                            UNION ALL
+                            SELECT N'Đã hết hạn' AS 'Tình trạng', COUNT(*) AS 'Số lượng' FROM TheThang WHERE TTrang = 1 AND NgayKT < GETDATE()
+                            UNION ALL
+                            SELECT N'Đã bị khóa' AS 'Tình trạng', COUNT(*) AS 'Số lượng' FROM TheThang WHERE TTrang = 5;";
+
+                        using (SqlCommand cmd = new SqlCommand(query, connection))
+                        {
+                            using (SqlDataAdapter adapter = new SqlDataAdapter(cmd))
+                            {
+                                adapter.Fill(dt);
+                            }
+                        }
+
+                        totalVehicles = 0;
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            totalVehicles += Convert.ToInt32(row["Số lượng"]);
+                        }
+
+                        lblTKTotalVehicles.Text = $"Tổng số thẻ tháng: {totalVehicles}";
+
+                        dgvRevenueReport.DataSource = dt;
+
+                        chartRevenueReport.Series.Clear();
+                        var pieSeriesCards = new Series("Thẻ tháng")
+                        {
+                            ChartType = SeriesChartType.Pie,
+                            IsValueShownAsLabel = true,
+                            LabelFormat = "#"
+                        };
+                        chartRevenueReport.Series.Add(pieSeriesCards);
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            if (Convert.ToInt32(row["Số lượng"]) > 0)
+                            {
+                                var point = new DataPoint();
+                                point.SetValueY(Convert.ToInt32(row["Số lượng"]));
+                                point.AxisLabel = row["Tình trạng"].ToString();
+                                point.LegendText = $"{row["Tình trạng"]} ({row["Số lượng"]})";
+                                pieSeriesCards.Points.Add(point);
+                            }
+                        }
+                        chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "";
+                        chartRevenueReport.Invalidate();
+                        break;
+
                     default:
                         MessageBox.Show("Loại báo cáo này chưa được hỗ trợ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
@@ -398,12 +610,12 @@ namespace IDT_PARKING
         {
             this.Invoke((MethodInvoker)delegate
             {
+                loadingControl.Parent = this; // Ensure the form is the parent
                 loadingControl.Location = new Point(
                     (this.ClientSize.Width - loadingControl.Width) / 2,
                     (this.ClientSize.Height - loadingControl.Height) / 2
                 );
-
-                loadingControl.BringToFront();
+                this.Controls.SetChildIndex(loadingControl, 0); // Force it to the top of Z-order
                 loadingControl.Visible = true;
                 loadingControl.Enabled = true;
             });
