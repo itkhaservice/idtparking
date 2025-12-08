@@ -193,6 +193,16 @@ namespace IDT_PARKING
                 this.chartRevenueReport.ChartAreas[0].AxisY.IsStartedFromZero = true; // Ensure Y-axis starts from zero
             }
             // Note: Series will be cleared and re-added in btnThongKeGenerate_Click
+
+            // Enable zooming and scrolling for chartRevenueReport
+            if (this.chartRevenueReport.ChartAreas.Count > 0)
+            {
+                ChartArea chartArea = this.chartRevenueReport.ChartAreas[0];
+                chartArea.CursorX.IsUserEnabled = true;
+                chartArea.CursorX.IsUserSelectionEnabled = true;
+                chartArea.AxisX.ScaleView.Zoomable = true;
+
+            }
         }
 
         private void PopulateThongKeReportTypes()
@@ -230,8 +240,10 @@ namespace IDT_PARKING
             }
             
             ShowLoading();
+            var originalCulture = Thread.CurrentThread.CurrentCulture;
             try
             {
+                Thread.CurrentThread.CurrentCulture = new CultureInfo("vi-VN");
                 if (connection == null || connection.State != ConnectionState.Open)
                 {
                    InitializeDatabaseConnection();
@@ -256,13 +268,13 @@ namespace IDT_PARKING
                     case "revenue_daily":
                         query = @"
                             SELECT 
-                                CAST(NgayRa AS DATE) AS Ngay, 
-                                SUM(GiaTien) AS DoanhThu,
-                                COUNT(*) AS SoLuotXe
+                                CAST(NgayRa AS DATE) AS 'Ngày', 
+                                SUM(GiaTien) AS 'Doanh thu',
+                                COUNT(*) AS 'Số lượt xe'
                             FROM Ra 
                             WHERE NgayRa >= @startDate AND NgayRa < @endDate
                             GROUP BY CAST(NgayRa AS DATE)
-                            ORDER BY Ngay;";
+                            ORDER BY CAST(NgayRa AS DATE);";
                         
                         using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
@@ -276,8 +288,8 @@ namespace IDT_PARKING
 
                         foreach (DataRow row in dt.Rows)
                         {
-                            totalRevenue += Convert.ToInt64(row["DoanhThu"]);
-                            totalVehicles += Convert.ToInt32(row["SoLuotXe"]);
+                            totalRevenue += Convert.ToInt64(row["Doanh thu"]);
+                            totalVehicles += Convert.ToInt32(row["Số lượt xe"]);
                         }
 
                         if (lblTKTotalRevenue != null)
@@ -289,13 +301,18 @@ namespace IDT_PARKING
                             lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
                         }
                         
-                        // Populate the new DataGridView
+                        // Populate the DataGridView
                         if (dgvRevenueReport != null)
                         {
                             dgvRevenueReport.DataSource = dt;
+                            if (dgvRevenueReport.Columns.Contains("Doanh thu"))
+                            {
+                                dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Format = "N0";
+                                dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                            }
                         }
                         
-                        // Populate the new Chart
+                        // Populate the Chart
                         if (chartRevenueReport != null)
                         {
                             chartRevenueReport.Series.Clear();
@@ -307,10 +324,11 @@ namespace IDT_PARKING
 
                             foreach (DataRow row in dt.Rows)
                             {
-                                series.Points.AddXY(Convert.ToDateTime(row["Ngay"]).ToString("dd/MM"), Convert.ToDouble(row["DoanhThu"]));
+                                series.Points.AddXY(Convert.ToDateTime(row["Ngày"]).ToString("dd/MM"), Convert.ToDouble(row["Doanh thu"]));
                             }
                             chartRevenueReport.ChartAreas[0].AxisX.MajorGrid.Enabled = false;
                             chartRevenueReport.ChartAreas[0].AxisY.MajorGrid.Enabled = true;
+                            chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
                             chartRevenueReport.Invalidate();
                         }
                         
@@ -327,6 +345,7 @@ namespace IDT_PARKING
             }
             finally
             {
+                Thread.CurrentThread.CurrentCulture = originalCulture;
                 HideLoading();
             }
         }
