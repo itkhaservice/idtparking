@@ -178,34 +178,21 @@ namespace IDT_PARKING
             dtpTKEndDate.Value = DateTime.Now.Date;
             dtpTKEndTime.Value = DateTime.Now.Date.AddDays(1).AddSeconds(-1); // Sets time to 23:59:59
 
-            // Initialize dgvRevenueReport
-            this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
-            this.dgvRevenueReport.Name = "dgvRevenueReport";
-            this.dgvRevenueReport.Dock = DockStyle.Fill;
             this.dgvRevenueReport.ReadOnly = true;
             this.dgvRevenueReport.AllowUserToAddRows = false;
             this.dgvRevenueReport.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvRevenueReport.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvRevenueReport.ScrollBars = ScrollBars.Both; // Enable both scrollbars
-            if (this.dgvTK != null)
-            {
-                this.dgvTK.Controls.Add(this.dgvRevenueReport);
-            }
 
             // Initialize chartRevenueReport
-            this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.chartRevenueReport.Name = "chartRevenueReport";
-            this.chartRevenueReport.Dock = DockStyle.Fill;
-            this.chartRevenueReport.ChartAreas.Add(new ChartArea()); // Add a default chart area
             // Visual adjustments for the chart
-            this.chartRevenueReport.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
-            this.chartRevenueReport.ChartAreas[0].AxisX.LabelStyle.Angle = -45; // Rotate X-axis labels to prevent overlap
-            this.chartRevenueReport.ChartAreas[0].AxisY.IsStartedFromZero = true; // Ensure Y-axis starts from zero
-            // Note: Series will be cleared and re-added in btnThongKeGenerate_Click
-            if (this.chartTk != null)
+            if (this.chartRevenueReport.ChartAreas.Count > 0)
             {
-                this.chartTk.Controls.Add(this.chartRevenueReport);
+                this.chartRevenueReport.ChartAreas[0].AxisX.IntervalAutoMode = IntervalAutoMode.VariableCount;
+                this.chartRevenueReport.ChartAreas[0].AxisX.LabelStyle.Angle = -45; // Rotate X-axis labels to prevent overlap
+                this.chartRevenueReport.ChartAreas[0].AxisY.IsStartedFromZero = true; // Ensure Y-axis starts from zero
             }
+            // Note: Series will be cleared and re-added in btnThongKeGenerate_Click
         }
 
         private void PopulateThongKeReportTypes()
