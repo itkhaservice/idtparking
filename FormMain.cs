@@ -71,6 +71,8 @@ namespace IDT_PARKING
         public FormMain()
         {
             InitializeComponent();
+
+            // Default state for query mode controls
             btnDelete.Visible = false;
             btnXoaXeRa.Visible = false;
             btnXoaXeVao.Visible = false;
@@ -82,8 +84,10 @@ namespace IDT_PARKING
             btnXoaXeVao.Enabled = false;
             btnDelete_XV_KHAC.Enabled = false;
             btnDelete_XR_KHAC.Enabled = false;
-            txtQuerry_CaiDat.Enabled = false; // Ensure it's disabled by default
-            txtQuerry_CaiDat.ReadOnly = true; // Ensure it's read-only by default
+
+            txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
+            txtQuerry_CaiDat.ReadOnly = true;
+            txtQuerry_CaiDat.Enabled = false;
             //this.tabControl.SelectedTab = tabCaiDat;
             
 
@@ -166,7 +170,7 @@ namespace IDT_PARKING
 
             btnDelete_XR_KHAC.Click += new System.EventHandler(this.btnDelete_XR_KHAC_Click);
             btnQuerry_XR_KHAC.Click += new System.EventHandler(this.btnQuerry_XR_KHAC_Click);
-            btnDelete_XR_KHAC.Enabled = false;
+            // btnDelete_XR_KHAC.Enabled = false; // This is now handled in the default state settings above
 
             InitializeThongKePanel();
         }
@@ -1292,7 +1296,7 @@ namespace IDT_PARKING
                         btnXoaXeVao.Enabled = true;
                         btnDelete_XV_KHAC.Enabled = true;
                         btnDelete_XR_KHAC.Enabled = true;
-                        MessageBox.Show("Đã mở khóa ô nhập truy vấn và các nút xóa. Bạn có thể chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBox.Show("Đã mở khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
@@ -6401,7 +6405,6 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             btnDelete_XV_KHAC.Enabled = false;
             btnDelete_XR_KHAC.Enabled = false;
 
-            txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
             txtQuerry_CaiDat.ReadOnly = true;
             txtQuerry_CaiDat.Enabled = false;
             MessageBox.Show("Đã đóng khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);

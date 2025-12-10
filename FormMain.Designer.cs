@@ -228,7 +228,6 @@ namespace IDT_PARKING
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.chartTk = new System.Windows.Forms.TabPage();
             this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.dgvTK = new System.Windows.Forms.TabPage();
             this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
             this.filterPanel = new System.Windows.Forms.Panel();
@@ -308,6 +307,7 @@ namespace IDT_PARKING
             this.label67 = new System.Windows.Forms.Label();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
             this.btnDongQuery = new Guna.UI2.WinForms.Guna2Button();
+            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -2209,11 +2209,10 @@ namespace IDT_PARKING
             this.btnDelete.FillColor = System.Drawing.Color.Red;
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnDelete.ForeColor = System.Drawing.Color.White;
-            this.btnDelete.Location = new System.Drawing.Point(111, 490);
+            this.btnDelete.Location = new System.Drawing.Point(21, 490);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(84, 24);
             this.btnDelete.TabIndex = 62;
-            this.btnDelete.Visible = false;
             this.btnDelete.Text = "Xóa ";
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
@@ -2295,7 +2294,7 @@ namespace IDT_PARKING
             this.btnUpdate.FillColor = System.Drawing.Color.Yellow;
             this.btnUpdate.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnUpdate.ForeColor = System.Drawing.Color.Black;
-            this.btnUpdate.Location = new System.Drawing.Point(21, 490);
+            this.btnUpdate.Location = new System.Drawing.Point(111, 490);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(84, 24);
             this.btnUpdate.TabIndex = 61;
@@ -2533,7 +2532,6 @@ namespace IDT_PARKING
             this.btnXoaXeRa.Name = "btnXoaXeRa";
             this.btnXoaXeRa.Size = new System.Drawing.Size(115, 24);
             this.btnXoaXeRa.TabIndex = 60;
-            this.btnXoaXeRa.Visible = false;
             this.btnXoaXeRa.Text = "Xóa dữ liệu rác";
             this.btnXoaXeRa.Click += new System.EventHandler(this.btnXoaXeRa_Click);
             // 
@@ -2832,7 +2830,6 @@ namespace IDT_PARKING
             this.btnXoaXeVao.Name = "btnXoaXeVao";
             this.btnXoaXeVao.Size = new System.Drawing.Size(115, 24);
             this.btnXoaXeVao.TabIndex = 61;
-            this.btnXoaXeVao.Visible = false;
             this.btnXoaXeVao.Text = "Xóa dữ liệu rác";
             // 
             // label11
@@ -3144,16 +3141,6 @@ namespace IDT_PARKING
             this.chartRevenueReport.TabIndex = 1003;
             this.chartRevenueReport.Text = "chart1";
             // 
-            // loadingControl
-            // 
-            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.loadingControl.Location = new System.Drawing.Point(311, 351);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
-            this.loadingControl.Name = "loadingControl";
-            this.loadingControl.Size = new System.Drawing.Size(408, 173);
-            this.loadingControl.TabIndex = 1002;
-            this.loadingControl.Visible = false;
-            // 
             // dgvTK
             // 
             this.dgvTK.Controls.Add(this.dgvRevenueReport);
@@ -3378,7 +3365,6 @@ namespace IDT_PARKING
             this.btnDelete_XV_KHAC.Name = "btnDelete_XV_KHAC";
             this.btnDelete_XV_KHAC.Size = new System.Drawing.Size(92, 24);
             this.btnDelete_XV_KHAC.TabIndex = 68;
-            this.btnDelete_XV_KHAC.Visible = false;
             this.btnDelete_XV_KHAC.Text = "Xóa ";
             this.btnDelete_XV_KHAC.Click += new System.EventHandler(this.btnDelete_XV_KHAC_Click);
             // 
@@ -3556,7 +3542,6 @@ namespace IDT_PARKING
             this.btnDelete_XR_KHAC.Name = "btnDelete_XR_KHAC";
             this.btnDelete_XR_KHAC.Size = new System.Drawing.Size(92, 24);
             this.btnDelete_XR_KHAC.TabIndex = 68;
-            this.btnDelete_XR_KHAC.Visible = false;
             this.btnDelete_XR_KHAC.Text = "Xóa ";
             // 
             // txtSumGD_XR_KHAC
@@ -3715,7 +3700,7 @@ namespace IDT_PARKING
             this.btnMoQuery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
             this.btnMoQuery.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
             this.btnMoQuery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnMoQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnMoQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
             this.btnMoQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.btnMoQuery.ForeColor = System.Drawing.Color.White;
             this.btnMoQuery.Location = new System.Drawing.Point(628, 6);
@@ -4267,6 +4252,16 @@ namespace IDT_PARKING
             this.btnDongQuery.TabIndex = 96;
             this.btnDongQuery.Text = "Đóng truy vấn";
             this.btnDongQuery.Click += new System.EventHandler(this.btnDongQuery_Click);
+            // 
+            // loadingControl
+            // 
+            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.loadingControl.Location = new System.Drawing.Point(311, 351);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
+            this.loadingControl.Name = "loadingControl";
+            this.loadingControl.Size = new System.Drawing.Size(408, 173);
+            this.loadingControl.TabIndex = 1002;
+            this.loadingControl.Visible = false;
             // 
             // FormMain
             // 
