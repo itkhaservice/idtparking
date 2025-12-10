@@ -71,10 +71,19 @@ namespace IDT_PARKING
         public FormMain()
         {
             InitializeComponent();
-       
-            txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
-            txtQuerry_CaiDat.ReadOnly = true;
-            txtQuerry_CaiDat.Enabled = false;
+            btnDelete.Visible = false;
+            btnXoaXeRa.Visible = false;
+            btnXoaXeVao.Visible = false;
+            btnDelete_XV_KHAC.Visible = false;
+            btnDelete_XR_KHAC.Visible = false;
+
+            btnDelete.Enabled = false;
+            btnXoaXeRa.Enabled = false;
+            btnXoaXeVao.Enabled = false;
+            btnDelete_XV_KHAC.Enabled = false;
+            btnDelete_XR_KHAC.Enabled = false;
+            txtQuerry_CaiDat.Enabled = false; // Ensure it's disabled by default
+            txtQuerry_CaiDat.ReadOnly = true; // Ensure it's read-only by default
             //this.tabControl.SelectedTab = tabCaiDat;
             
 
@@ -1271,7 +1280,19 @@ namespace IDT_PARKING
                     {
                         txtQuerry_CaiDat.ReadOnly = false;
                         txtQuerry_CaiDat.Enabled = true;
-                        MessageBox.Show("Đã mở khóa ô nhập truy vấn. Bạn có thể chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                        btnDelete.Visible = true;
+                        btnXoaXeRa.Visible = true;
+                        btnXoaXeVao.Visible = true;
+                        btnDelete_XV_KHAC.Visible = true;
+                        btnDelete_XR_KHAC.Visible = true;
+
+                        btnDelete.Enabled = true;
+                        btnXoaXeRa.Enabled = true;
+                        btnXoaXeVao.Enabled = true;
+                        btnDelete_XV_KHAC.Enabled = true;
+                        btnDelete_XR_KHAC.Enabled = true;
+                        MessageBox.Show("Đã mở khóa ô nhập truy vấn và các nút xóa. Bạn có thể chỉnh sửa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
@@ -6364,6 +6385,26 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         private void btnTKGenerate_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void btnDongQuery_Click(object sender, EventArgs e)
+        {
+            btnDelete.Visible = false;
+            btnXoaXeRa.Visible = false;
+            btnXoaXeVao.Visible = false;
+            btnDelete_XV_KHAC.Visible = false;
+            btnDelete_XR_KHAC.Visible = false;
+
+            btnDelete.Enabled = false;
+            btnXoaXeRa.Enabled = false;
+            btnXoaXeVao.Enabled = false;
+            btnDelete_XV_KHAC.Enabled = false;
+            btnDelete_XR_KHAC.Enabled = false;
+
+            txtQuerry_CaiDat.Text = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE';";
+            txtQuerry_CaiDat.ReadOnly = true;
+            txtQuerry_CaiDat.Enabled = false;
+            MessageBox.Show("Đã đóng khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
