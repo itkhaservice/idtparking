@@ -117,6 +117,18 @@
     <Compile Include="InputPromptForm.Designer.cs">
       <DependentUpon>InputPromptForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="CustomerActionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomerActionDialog.Designer.cs">
+      <DependentUpon>CustomerActionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CustomMessageBoxForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CustomMessageBoxForm.Designer.cs">
+      <DependentUpon>CustomMessageBoxForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ImageViewerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -145,6 +157,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="InputPromptForm.resx">
       <DependentUpon>InputPromptForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomerActionDialog.resx">
+      <DependentUpon>CustomerActionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CustomMessageBoxForm.resx">
+      <DependentUpon>CustomMessageBoxForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -239,7 +239,7 @@ namespace IDT_PARKING
         {
             if (cbbTKReportType.SelectedValue == null)
             {
-                MessageBox.Show("Vui lòng chọn loại báo cáo.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn loại báo cáo.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -252,7 +252,7 @@ namespace IDT_PARKING
 
             if (startDate.AddSeconds(startTimeInSeconds) >= endDate.AddSeconds(endTimeInSeconds))
             {
-                MessageBox.Show("Ngày/giờ bắt đầu phải sớm hơn ngày/giờ kết thúc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Ngày/giờ bắt đầu phải sớm hơn ngày/giờ kết thúc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
             
@@ -562,13 +562,13 @@ namespace IDT_PARKING
                         break;
 
                     default:
-                        MessageBox.Show("Loại báo cáo này chưa được hỗ trợ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Loại báo cáo này chưa được hỗ trợ.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         break;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Đã xảy ra lỗi khi tạo báo cáo: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Đã xảy ra lỗi khi tạo báo cáo: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -726,7 +726,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể kết nối đến cơ sở dữ liệu: {ex.Message}\nVui lòng kiểm tra lại cài đặt kết nối.", "Lỗi kết nối cơ sở dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Không thể kết nối đến cơ sở dữ liệu: {ex.Message}\nVui lòng kiểm tra lại cài đặt kết nối.", "Lỗi kết nối cơ sở dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 // Optionally, disable UI elements that require a database connection
             }
         }
@@ -777,7 +777,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath))
             {
-                MessageBox.Show("Không tìm thấy hình ảnh để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không tìm thấy hình ảnh để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -1014,7 +1014,7 @@ namespace IDT_PARKING
             }
             else
             {
-                MessageBox.Show("Không tìm thấy hình ảnh nào để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không tìm thấy hình ảnh nào để hiển thị.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -1120,7 +1120,7 @@ namespace IDT_PARKING
             Properties.Settings.Default.SharedFolder = txtFolder_Main.Text;
             Properties.Settings.Default.Password = txtPassword_Main.Text;
             Properties.Settings.Default.Save();
-            MessageBox.Show("Thông tin kết nối đã được lưu thành công!", "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CustomMessageBox.Show("Thông tin kết nối đã được lưu thành công!", "Lưu thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private async void btnConnect_Main_Click(object sender, EventArgs e)
@@ -1135,7 +1135,7 @@ namespace IDT_PARKING
             // KIỂM TRA XEM CÁC TRƯỜNG BẮT BUỘC CÓ BỊ TRỐNG KHÔNG
             if (string.IsNullOrWhiteSpace(serverAddress) || string.IsNullOrWhiteSpace(databaseName))
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin Máy chủ và Cơ sở dữ liệu.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng nhập đầy đủ thông tin Máy chủ và Cơ sở dữ liệu.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return; // Dừng thực hiện nếu thiếu thông tin
             }
 
@@ -1155,7 +1155,7 @@ namespace IDT_PARKING
             {
                 connection = new SqlConnection(connectionString);
                 connection.Open();
-                //MessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //CustomMessageBox.Show("Kết nối dữ liệu thành công!", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // LƯU LẠI CÁC THÔNG TIN KẾT NỐI ĐẾN CƠ SỞ DỮ LIỆU
                 Properties.Settings.Default.ServerAddress = txtServer_Main.Text;
@@ -1194,7 +1194,7 @@ namespace IDT_PARKING
             txtFolder_Main.Text = "";
             Properties.Settings.Default.Reset();
             Properties.Settings.Default.Save();
-            MessageBox.Show("Tất cả cài đặt đã được xóa về mặc định.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CustomMessageBox.Show("Tất cả cài đặt đã được xóa về mặc định.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void EnsureItKhaTableClear()
@@ -1223,7 +1223,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xóa bảng ITKHA: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa bảng ITKHA: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1243,7 +1243,7 @@ namespace IDT_PARKING
                     {
                         if (connection == null || connection.State != ConnectionState.Open)
                         {
-                            MessageBox.Show("Vui lòng kết nối cơ sở dữ liệu trước khi thực hiện truy vấn.", "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            CustomMessageBox.Show("Vui lòng kết nối cơ sở dữ liệu trước khi thực hiện truy vấn.", "Lỗi Kết Nối", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
 
@@ -1259,11 +1259,11 @@ namespace IDT_PARKING
                     }
                     catch (SqlException ex)
                     {
-                        MessageBox.Show("Lỗi truy vấn SQL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show("Lỗi truy vấn SQL: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show("Đã xảy ra lỗi: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
                     e.SuppressKeyPress = true; // Chỉ chặn Enter khi có truy vấn được thực thi
@@ -1299,23 +1299,23 @@ namespace IDT_PARKING
                         btnXoaXeVao.Enabled = true;
                         btnDelete_XV_KHAC.Enabled = true;
                         btnDelete_XR_KHAC.Enabled = true;
-                        MessageBox.Show("Đã mở khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Đã mở khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Hủy thao tác mở khóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Hủy thao tác mở khóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
 
         private void guna2Button2_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng đang được viết...", "Lỗi Kết Nối", MessageBoxButtons.OK);
+            CustomMessageBox.Show("Chức năng đang được viết...", "Lỗi Kết Nối", MessageBoxButtons.OK);
         }
 
         #endregion
@@ -1335,7 +1335,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(maLoaiThe))
             {
-                MessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1380,12 +1380,12 @@ namespace IDT_PARKING
 
                 if (recordCount == 0)
                 {
-                    MessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtSumGD_XR_KHAC.Text = "0";
                 btnDelete_XR_KHAC.Enabled = false;
             }
@@ -1404,13 +1404,13 @@ namespace IDT_PARKING
                 {
                     if (passwordForm.ShowDialog() != DialogResult.OK)
                     {
-                        MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
 
                     if (passwordForm.EnteredPassword != DynamicPassword)
                     {
-                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
@@ -1455,7 +1455,7 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
-                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XR_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XR_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (confirm != DialogResult.Yes)
                 {
                     return;
@@ -1467,7 +1467,7 @@ namespace IDT_PARKING
                     rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
                 }
 
-                MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Reset UI
                 txtSumGD_XR_KHAC.Text = "0";
@@ -1476,7 +1476,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1497,7 +1497,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(maLoaiThe))
             {
-                MessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một loại thẻ.", "Thiếu thông tin", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1542,12 +1542,12 @@ namespace IDT_PARKING
 
                 if (recordCount == 0)
                 {
-                    MessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Không có dữ liệu nào phù hợp với điều kiện.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtSumGD_XV_KHAC.Text = "0";
                 btnDelete_XV_KHAC.Enabled = false;
             }
@@ -1565,13 +1565,13 @@ namespace IDT_PARKING
                 {
                     if (passwordForm.ShowDialog() != DialogResult.OK)
                     {
-                        MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         return;
                     }
 
                     if (passwordForm.EnteredPassword != DynamicPassword)
                     {
-                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         return;
                     }
                 }
@@ -1616,7 +1616,7 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
-                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XV_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa {txtSumGD_XV_KHAC.Text} dòng dữ liệu phù hợp không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (confirm != DialogResult.Yes)
                 {
                     return;
@@ -1628,7 +1628,7 @@ namespace IDT_PARKING
                     rowsAffected = await deleteCommand.ExecuteNonQueryAsync();
                 }
 
-                MessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show($"Đã xóa thành công {rowsAffected} dòng dữ liệu.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // Reset UI
                 txtSumGD_XV_KHAC.Text = "0";
@@ -1637,7 +1637,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1726,7 +1726,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi tải dữ liệu khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1788,11 +1788,11 @@ namespace IDT_PARKING
             // Kiểm tra xem có dòng nào đang được chọn không
             if (dgvKhachHang_KH.SelectedRows.Count > 0)
             {
-                DialogResult result = MessageBox.Show("Bạn muốn CẬP NHẬT dòng dữ liệu khách hàng cũ đang chọn hay THÊM MỚI dòng dữ liệu khách hàng mới?\n\n" +
-                    "- Yes: Cập nhật khách hàng cũ\n" +
-                    "- No: Thêm khách hàng mới\n" +
-                    "- Cancel: Hủy bỏ",
-                    "Xác nhận thao tác", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                DialogResult result;
+                using (var dialog = new CustomerActionDialog())
+                {
+                    result = dialog.ShowDialog(this);
+                }
 
                 if (result == DialogResult.Yes)
                 {
@@ -1828,7 +1828,7 @@ namespace IDT_PARKING
                         int duplicateCount = (int)await checkCmd.ExecuteScalarAsync();
                         if (duplicateCount > 0)
                         {
-                            MessageBox.Show("Biển số này đã tồn tại. Vui lòng kiểm tra lại.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            CustomMessageBox.Show("Biển số này đã tồn tại. Vui lòng kiểm tra lại.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                     }
@@ -1852,7 +1852,7 @@ namespace IDT_PARKING
 
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadKhachHangData();
                         foreach (DataGridViewRow row in dgvKhachHang_KH.Rows)
                         {
@@ -1866,13 +1866,13 @@ namespace IDT_PARKING
                     }
                     else
                     {
-                        MessageBox.Show("Không thể thêm khách hàng mới.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show("Không thể thêm khách hàng mới.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi thêm khách hàng mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi thêm khách hàng mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1900,7 +1900,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi lấy Mã khách hàng mới nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi lấy Mã khách hàng mới nhất: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null; // Indicate failure
             }
 
@@ -1932,13 +1932,13 @@ namespace IDT_PARKING
                 }
                 else
                 {
-                    MessageBox.Show("Mã KH hiện tại không đúng định dạng. Không thể tự động tăng. Mã KH cuối: " + maxMaKH, "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show("Mã KH hiện tại không đúng định dạng. Không thể tự động tăng. Mã KH cuối: " + maxMaKH, "Lỗi định dạng Mã KH", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return null;
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xử lý tạo Mã KH mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xử lý tạo Mã KH mới: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
         }
@@ -1947,7 +1947,7 @@ namespace IDT_PARKING
         {
             if (string.IsNullOrWhiteSpace(_selectedMaKH))
             {
-                MessageBox.Show("Vui lòng chọn một khách hàng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một khách hàng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -1966,7 +1966,7 @@ namespace IDT_PARKING
                 int duplicateCount = (int)await checkCmd.ExecuteScalarAsync();
                 if (duplicateCount > 0)
                 {
-                    MessageBox.Show("Biển số này đã tồn tại cho một khách hàng khác. Vui lòng nhập biển số khác.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show("Biển số này đã tồn tại cho một khách hàng khác. Vui lòng nhập biển số khác.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -1993,18 +1993,18 @@ namespace IDT_PARKING
 
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("Cập nhật thông tin khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Cập nhật thông tin khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadKhachHangData(); // Refresh the DataGridView
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy khách hàng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy khách hàng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi cập nhật khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2012,11 +2012,11 @@ namespace IDT_PARKING
         {
             if (string.IsNullOrWhiteSpace(_selectedMaKH))
             {
-                MessageBox.Show("Vui lòng chọn một khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa khách hàng có Mã KH: {_selectedMaKH} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa khách hàng có Mã KH: {_selectedMaKH} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.Yes)
             {
@@ -2039,7 +2039,7 @@ namespace IDT_PARKING
 
                         if (cardCount > 0)
                         {
-                            MessageBox.Show("Không thể xóa khách hàng này vì họ có thẻ tháng liên quan. Vui lòng xóa tất cả thẻ tháng của khách hàng trước.", "Lỗi xóa", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            CustomMessageBox.Show("Không thể xóa khách hàng này vì họ có thẻ tháng liên quan. Vui lòng xóa tất cả thẻ tháng của khách hàng trước.", "Lỗi xóa", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return; // Prevent deletion
                         }
                     }
@@ -2054,7 +2054,7 @@ namespace IDT_PARKING
 
                         if (rowsAffected > 0)
                         {
-                            MessageBox.Show("Xóa khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CustomMessageBox.Show("Xóa khách hàng thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             // Clear textboxes after deletion
                             _selectedMaKH = string.Empty; // Clear selected MaKH
                             txtHoTen_KH.Clear();
@@ -2068,13 +2068,13 @@ namespace IDT_PARKING
                         }
                         else
                         {
-                            MessageBox.Show("Không tìm thấy khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            CustomMessageBox.Show("Không tìm thấy khách hàng để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Lỗi khi xóa khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show($"Lỗi khi xóa khách hàng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -2180,7 +2180,7 @@ namespace IDT_PARKING
         {
             if (dgvKhachHang_KH.DataSource == null || !(dgvKhachHang_KH.DataSource is DataTable) || ((DataTable)dgvKhachHang_KH.DataSource).Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu khách hàng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu khách hàng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -2196,14 +2196,14 @@ namespace IDT_PARKING
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     kh_export_path = Path.GetDirectoryName(exportedFilePath);
-                    MessageBox.Show(this, "Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show(this, "Xuất dữ liệu khách hàng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 // If exportedFilePath is null, it means the user cancelled the SaveFileDialog. Do nothing.
             }
             catch (Exception ex)
             {
                 HideLoading(); // Ensure loading is hidden on error
-                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show(this, $"Lỗi khi xuất dữ liệu khách hàng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2219,17 +2219,17 @@ namespace IDT_PARKING
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK); 
+                CustomMessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK); 
             }
         }
 
@@ -2396,7 +2396,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi đếm thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi đếm thẻ tháng: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -2426,7 +2426,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng (nội bộ): {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi tải dữ liệu thẻ tháng (nội bộ): {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return dataTable;
         }
@@ -2483,7 +2483,7 @@ namespace IDT_PARKING
         {
             if (dgvTheThang_KH.CurrentRow == null || dgvTheThang_KH.CurrentRow.Index < 0)
             {
-                MessageBox.Show("Vui lòng chọn một thẻ tháng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một thẻ tháng để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return null;
             }
             return dgvTheThang_KH.CurrentRow;
@@ -2500,7 +2500,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2521,18 +2521,18 @@ namespace IDT_PARKING
                     int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Cập nhật biển số thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật biển số: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi cập nhật biển số: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2547,7 +2547,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(newMaLoaiThe))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng hoặc loại thẻ mới để cập nhật. Vui lòng chọn một thẻ hợp lệ và loại thẻ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng hoặc loại thẻ mới để cập nhật. Vui lòng chọn một thẻ hợp lệ và loại thẻ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2568,18 +2568,18 @@ namespace IDT_PARKING
                     int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Cập nhật loại thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi cập nhật loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2595,13 +2595,13 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng để cập nhật. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (newNgayBD > newNgayKT)
             {
-                MessageBox.Show("Ngày bắt đầu không thể lớn hơn ngày kết thúc.", "Lỗi ngày", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Ngày bắt đầu không thể lớn hơn ngày kết thúc.", "Lỗi ngày", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -2623,18 +2623,18 @@ namespace IDT_PARKING
                     int rowsAffected = await command.ExecuteNonQueryAsync();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Cập nhật ngày hiệu lực thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy thẻ tháng để cập nhật hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật ngày hiệu lực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi cập nhật ngày hiệu lực: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -2642,14 +2642,14 @@ namespace IDT_PARKING
         {
             if (dgvTheThang_KH.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một thẻ để gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn ít nhất một thẻ để gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             DateTime newNgayKT = dtDen_TT.Value;
             int selectedCount = dgvTheThang_KH.SelectedRows.Count;
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn gia hạn {selectedCount} thẻ đã chọn đến ngày {newNgayKT:dd/MM/yyyy} không?", "Xác nhận gia hạn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn gia hạn {selectedCount} thẻ đã chọn đến ngày {newNgayKT:dd/MM/yyyy} không?", "Xác nhận gia hạn", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No)
             {
                 return;
@@ -2667,7 +2667,7 @@ namespace IDT_PARKING
 
             if (soTTList.Count == 0)
             {
-                MessageBox.Show("Không có thẻ hợp lệ nào được chọn để gia hạn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không có thẻ hợp lệ nào được chọn để gia hạn.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -2707,17 +2707,17 @@ namespace IDT_PARKING
 
                 if (totalRowsAffected > 0)
                 {
-                    MessageBox.Show($"Gia hạn thành công cho {totalRowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show($"Gia hạn thành công cho {totalRowsAffected} thẻ!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     await PerformTheThangSearch(); // Refresh data
                 }
                 else
                 {
-                    MessageBox.Show("Không có thẻ nào được gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show("Không có thẻ nào được gia hạn.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi gia hạn thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi gia hạn thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -2735,11 +2735,11 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng để khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng để khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn khóa thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn khóa thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -2772,13 +2772,13 @@ namespace IDT_PARKING
                 //}
 
                 transaction.Commit();
-                MessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
             }
             catch (Exception ex)
             {
                 if(transaction != null) transaction.Rollback();
-                MessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -2799,11 +2799,11 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng để thu hồi. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng để thu hồi. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn thu hồi thẻ có Số: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn thu hồi thẻ có Số: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -2837,14 +2837,14 @@ namespace IDT_PARKING
                 }
 
                 transaction.Commit();
-                MessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });               
                     await LoadTheTrongData();
             }
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi thu hồi thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi thu hồi thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -2866,11 +2866,11 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ tháng để báo mất. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ tháng để báo mất. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -2904,14 +2904,14 @@ namespace IDT_PARKING
                 }
 
                 transaction.Commit();
-                MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH }); // Refresh data
                 await LoadTheTrongData();
             }
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3066,7 +3066,7 @@ namespace IDT_PARKING
         {
             if (dgvTheThang_KH.DataSource == null || !(dgvTheThang_KH.DataSource is DataTable) || ((DataTable)dgvTheThang_KH.DataSource).Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu thẻ tháng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu thẻ tháng để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -3081,13 +3081,13 @@ namespace IDT_PARKING
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     tt_export_path = Path.GetDirectoryName(exportedFilePath);
-                    MessageBox.Show(this, "Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show(this, "Xuất dữ liệu thẻ tháng ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
                 HideLoading();
-                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show(this, $"Lỗi khi xuất dữ liệu thẻ tháng ra Excel: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3103,17 +3103,17 @@ namespace IDT_PARKING
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -3125,7 +3125,7 @@ namespace IDT_PARKING
             string soTT = selectedRow.Cells["Số thẻ"].Value?.ToString();
             if (string.IsNullOrEmpty(soTT))
             {
-                MessageBox.Show("Không thể xác định thẻ để mở khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thẻ để mở khóa. Vui lòng chọn một thẻ hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -3152,11 +3152,11 @@ namespace IDT_PARKING
 
                 if (currentTTrang != 5)
                 {
-                    MessageBox.Show("Thẻ này không bị khóa. Không cần thực hiện hành động.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Thẻ này không bị khóa. Không cần thực hiện hành động.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     return;
                 }
 
-                DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn mở khóa thẻ có Số thẻ: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn mở khóa thẻ có Số thẻ: {soTT} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (confirm == DialogResult.No) return;
 
                 string updateQuery = "UPDATE TheThang SET TTrang = 1 WHERE SoTT = @soTT";
@@ -3167,18 +3167,18 @@ namespace IDT_PARKING
                     int rowsAffected = command.ExecuteNonQuery();
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show("Mở khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Mở khóa thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await PerformTheThangSearch(); // Refresh data to show the change
                     }
                     else
                     {
-                        MessageBox.Show("Không tìm thấy thẻ để mở khóa hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy thẻ để mở khóa hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi mở khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi mở khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3246,7 +3246,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi tải dữ liệu thẻ trống: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3298,7 +3298,7 @@ namespace IDT_PARKING
             if (string.IsNullOrEmpty(maKH) || string.IsNullOrEmpty(soTT) ||
                 string.IsNullOrEmpty(cardID) || string.IsNullOrEmpty(maLoaiThe))
             {
-                MessageBox.Show(
+                CustomMessageBox.Show(
                     $"Không thể lấy đủ thông tin cần thiết để cấp thẻ.\n\n" +
                     "Vui lòng chọn Khách hàng và Số thẻ muốn cấp!:\n",
                     "Lỗi dữ liệu",
@@ -3330,7 +3330,7 @@ namespace IDT_PARKING
                 int existingMaKHCount = (int)checkMaKHCmd.ExecuteScalar();
                 if (existingMaKHCount > 0)
                 {
-                    MessageBox.Show($"Mã khách hàng '{maKH}' này đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show($"Mã khách hàng '{maKH}' này đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
             }
@@ -3350,7 +3350,7 @@ namespace IDT_PARKING
                     int existingCount = (int)checkUniqueCmd.ExecuteScalar();
                     if (existingCount > 0)
                     {
-                        MessageBox.Show("Số thẻ hoặc Mã thẻ đã tồn tại trong bảng Thẻ Tháng. Vui lòng kiểm tra lại.", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show("Số thẻ hoặc Mã thẻ đã tồn tại trong bảng Thẻ Tháng. Vui lòng kiểm tra lại.", "Lỗi trùng lặp", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return; // Exit the method if not unique
                     }
                 }
@@ -3389,7 +3389,7 @@ namespace IDT_PARKING
 
                 transaction.Commit();
 
-                MessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Cấp thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // 5. Load lại dữ liệu
                 await LoadTheThangData("", true, false, false, null);
@@ -3402,7 +3402,7 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi cấp thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi cấp thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3467,7 +3467,7 @@ namespace IDT_PARKING
             }
             catch (Exception)
             {
-                //MessageBox.Show($"Lỗi khi tải dữ liệu thẻ Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                //CustomMessageBox.Show($"Lỗi khi tải dữ liệu thẻ Active: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -3487,7 +3487,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soThe))
             {
-                MessageBox.Show("Vui lòng nhập Số thẻ để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng nhập Số thẻ để tìm kiếm.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 LoadActiveDataGrid(); // Load all cards if search is cleared
                 return;
             }
@@ -3585,12 +3585,12 @@ namespace IDT_PARKING
                 {
                     txtTinhTrang_TTT1.Text = "Không tìm thấy thẻ";
                     txtTinhTrang_TTT2.Text = "Không áp dụng";
-                    MessageBox.Show("Không tìm thấy thông tin cho số thẻ này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Không tìm thấy thông tin cho số thẻ này.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi truy vấn dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3607,7 +3607,7 @@ namespace IDT_PARKING
             InitializeDatabaseConnection();
             if (connection.State != ConnectionState.Open)
             {
-                MessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể kết nối đến cơ sở dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return (string.Empty, string.Empty);
             }
 
@@ -3646,7 +3646,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi lấy thông tin thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi lấy thông tin thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return (soTT, cardID);
         }
@@ -3660,7 +3660,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soTheInput) && string.IsNullOrEmpty(maTheInput))
             {
-                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để báo mất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để báo mất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -3668,11 +3668,11 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(cardID))
             {
-                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Số thẻ: {soTT} - Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn báo mất thẻ có Số thẻ: {soTT} - Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -3707,7 +3707,7 @@ namespace IDT_PARKING
                 }
 
                 transaction.Commit();
-                MessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Báo mất thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 // Optionally refresh related data or clear fields
                 txtTinhTrang_TTT1.Text = "Thẻ mất";
                 txtTinhTrang_TTT2.Text = "Trạng thái không xác định"; // TheThang.TTrang = 9 is not directly mapped to a display string here
@@ -3715,7 +3715,7 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi báo mất thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3736,7 +3736,7 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soTheInput) && string.IsNullOrEmpty(maTheInput))
             {
-                MessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để khôi phục.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng nhập Số thẻ hoặc Mã thẻ để khôi phục.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -3744,11 +3744,11 @@ namespace IDT_PARKING
 
             if (string.IsNullOrEmpty(soTT) || string.IsNullOrEmpty(cardID))
             {
-                MessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập trong bảng Active.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không tìm thấy thẻ với thông tin đã nhập trong bảng Active.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn khôi phục thẻ có Số thẻ: {soTT} -  Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn khôi phục thẻ có Số thẻ: {soTT} -  Mã thẻ: {cardID} không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm == DialogResult.No) return;
 
             SqlTransaction transaction = null;
@@ -3800,7 +3800,7 @@ namespace IDT_PARKING
                             cmdTheThang.Parameters.AddWithValue("@cardID", cardID);
                             cmdTheThang.ExecuteNonQuery();
                         }
-                        MessageBox.Show("Khôi phục thẻ thành công! Trạng thái thẻ tháng đã được cập nhật.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Khôi phục thẻ thành công! Trạng thái thẻ tháng đã được cập nhật.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         txtTinhTrang_TTT1.Text = "Thẻ tháng"; // Assuming 2 means "Thẻ tháng"
                         txtTinhTrang_TTT2.Text = "Đang sử dụng"; // Assuming 1 means "Đang sử dụng"
                     }
@@ -3809,7 +3809,7 @@ namespace IDT_PARKING
                         // Card exists in TheThang but Active.trangthai is not 2.
                         // This is an edge case not explicitly covered by user's request.
                         // For now, I will just inform the user.
-                        MessageBox.Show($"Thẻ tồn tại trong bảng Thẻ Tháng nhưng trạng thái trong Active không phải là 'Thẻ tháng' (trạng thái hiện tại: {activeTrangThai}). Không thực hiện thay đổi nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show($"Thẻ tồn tại trong bảng Thẻ Tháng nhưng trạng thái trong Active không phải là 'Thẻ tháng' (trạng thái hiện tại: {activeTrangThai}). Không thực hiện thay đổi nào.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
@@ -3823,7 +3823,7 @@ namespace IDT_PARKING
                         cmdActive.Parameters.AddWithValue("@cardID", cardID);
                         cmdActive.ExecuteNonQuery();
                     }
-                    MessageBox.Show("Khôi phục thẻ thành công! Thẻ đã sẵn sàng để được cấp lại.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Khôi phục thẻ thành công! Thẻ đã sẵn sàng để được cấp lại.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtTinhTrang_TTT1.Text = "Thẻ lượt";
                     txtTinhTrang_TTT2.Text = "Không có dữ liệu"; // Since it's not in TheThang
                 }
@@ -3833,7 +3833,7 @@ namespace IDT_PARKING
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi khôi phục thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi khôi phục thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -3925,14 +3925,14 @@ namespace IDT_PARKING
                     if (sfd.ShowDialog() == DialogResult.OK)
                     {
                         workbook.SaveAs(sfd.FileName);
-                        MessageBox.Show("Xuất dữ liệu Active ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Xuất dữ liệu Active ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         active_export_path = sfd.FileName;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu Active ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xuất dữ liệu Active ra Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 if (workbook != null) workbook.Saved = true;
             }
             finally
@@ -3974,7 +3974,7 @@ namespace IDT_PARKING
         {
             if (guna2DataGridView3.Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu 'Active' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu 'Active' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -3986,12 +3986,12 @@ namespace IDT_PARKING
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     active_export_path = exportedFilePath; // Store the path
-                    MessageBox.Show("Xuất dữ liệu 'Active' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Xuất dữ liệu 'Active' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -4134,7 +4134,7 @@ namespace IDT_PARKING
 
                         if (dataTable.Rows.Count == 0)
                         {
-                            MessageBox.Show("Bảng 'LoaiThe' không có dữ liệu. Vui lòng kiểm tra cơ sở dữ liệu.", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            CustomMessageBox.Show("Bảng 'LoaiThe' không có dữ liệu. Vui lòng kiểm tra cơ sở dữ liệu.", "Lỗi dữ liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             return; // Exit if no data
                         }
 
@@ -4187,7 +4187,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi tải dữ liệu loại thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -4307,7 +4307,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             }
                             else
                             {
-                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                CustomMessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
 
                             txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
@@ -4318,7 +4318,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -4349,12 +4349,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                     else
                     {
-                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Cancel.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Cancel.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -4365,18 +4365,18 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
-                MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (dgvResults.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một dòng để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn ít nhất một dòng để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int selectedCount = dgvResults.SelectedRows.Count;
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)
                 return;
 
@@ -4391,14 +4391,14 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             if (rowsToDelete.Count == 0)
             {
-                MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
             // Check if required columns exist (to prevent crashes on aggregate views like Monthly/Yearly revenue)
             if (!dgvResults.Columns.Contains("Mã thẻ") || !dgvResults.Columns.Contains("IDXe") || !dgvResults.Columns.Contains("Mã mặt"))
             {
-                MessageBox.Show("Bảng dữ liệu hiện tại không hỗ trợ xóa (thiếu cột thông tin chi tiết).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Bảng dữ liệu hiện tại không hỗ trợ xóa (thiếu cột thông tin chi tiết).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -4501,13 +4501,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 transaction.Commit();
 
-                MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 btnRevenue_Click(this, EventArgs.Empty); // Refresh the DataGridView
             }
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -4639,7 +4639,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             }
                             else
                             {
-                                MessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                CustomMessageBox.Show("Column 'Tiền thu' not found in query results. Cannot calculate sum.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                             }
 
                             txtSum.Text = totalGiaTien.ToString("N0") + " VNĐ";
@@ -4650,7 +4650,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show($"Query error: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             finally
@@ -4724,7 +4724,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi truy vấn dữ liệu doanh thu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi truy vấn dữ liệu doanh thu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return dataTable;
         }
@@ -4735,13 +4735,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (connection == null)
             {
-                MessageBox.Show("Chưa khởi tạo kết nối. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Chưa khởi tạo kết nối. Vui lòng kết nối trước.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (dgvResults.SelectedRows.Count != 1)
             {
-                MessageBox.Show("Vui lòng chọn đúng một dòng để cập nhật.", "Lỗi chọn dòng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn đúng một dòng để cập nhật.", "Lỗi chọn dòng", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -4754,7 +4754,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
             {
-                MessageBox.Show("Không thể xác định dòng cần cập nhật.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Không thể xác định dòng cần cập nhật.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -4807,7 +4807,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                         if (updateFields.Count == 0)
                         {
-                            MessageBox.Show("Không có dữ liệu nào để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CustomMessageBox.Show("Không có dữ liệu nào để cập nhật.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             trans.Rollback();
                             return;
                         }
@@ -4824,12 +4824,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                         if (rowsAffected > 0)
                         {
                             trans.Commit();
-                            MessageBox.Show("Cập nhật thành công.", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            CustomMessageBox.Show("Cập nhật thành công.", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                         else
                         {
                             trans.Rollback();
-                            MessageBox.Show("Không có dòng nào được cập nhật.", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            CustomMessageBox.Show("Không có dòng nào được cập nhật.", "Kết quả", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                         }
                     }
                 }
@@ -4838,7 +4838,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             catch (Exception ex)
             {
                 try { connection?.Close(); } catch { }
-                MessageBox.Show($"Lỗi cập nhật: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi cập nhật: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -4967,7 +4967,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (dgvResults.DataSource == null || !(dgvResults.DataSource is DataTable) || ((DataTable)dgvResults.DataSource).Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu để xuất ra Excel.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -5014,13 +5014,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     dt_export_path = Path.GetDirectoryName(exportedFilePath);
-                    MessageBox.Show(this, "Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show(this, "Xuất dữ liệu ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
                 HideLoading();
-                MessageBox.Show(this, $"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show(this, $"Lỗi khi xuất dữ liệu hoặc truy vấn: {ex.InnerException?.Message ?? ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -5036,17 +5036,17 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Không thể mở thư mục: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show("Thư mục không tồn tại. Vui lòng kiểm tra lại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                MessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -5092,7 +5092,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (dgvXeVao.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn một xe vào để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn một xe vào để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -5104,11 +5104,11 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             if (string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(cardID))
             {
-                MessageBox.Show("Không thể xác định thông tin xe vào để xóa. Vui lòng kiểm tra lại dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định thông tin xe vào để xóa. Vui lòng kiểm tra lại dữ liệu.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa xe vào có IDXe: {idXe} và Mã thẻ: {cardID} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa xe vào có IDXe: {idXe} và Mã thẻ: {cardID} không?", "Xác nhận xóa", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (confirm == DialogResult.No)
             {
@@ -5141,20 +5141,20 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     if (rowsAffected > 0)
                     {
                         transaction.Commit();
-                        MessageBox.Show("Xóa xe vào thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        CustomMessageBox.Show("Xóa xe vào thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         await LoadXeVaoData(); // Refresh the DataGridView
                     }
                     else
                     {
                         transaction.Rollback();
-                        MessageBox.Show("Không tìm thấy xe vào để xóa hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Không tìm thấy xe vào để xóa hoặc không có thay đổi.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
             }
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi xóa xe vào: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa xe vào: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -5289,7 +5289,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi truy vấn dữ liệu xe vào: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi truy vấn dữ liệu xe vào: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -5565,7 +5565,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi tải dữ liệu xe ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi tải dữ liệu xe ra: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -5694,7 +5694,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             if (string.IsNullOrWhiteSpace(folderPath))
             {
-                // Thay vì MessageBox.Show, đặt hình ảnh là màu đen
+                // Thay vì CustomMessageBox.Show, đặt hình ảnh là màu đen
                 ptHinhMatRa.Image = GetBlackImage(ptHinhMatRa.Width, ptHinhMatRa.Height);
                 ptHinhXeRa.Image = GetBlackImage(ptHinhXeRa.Width, ptHinhXeRa.Height);
                 toolTip1.SetToolTip(ptHinhMatRa, "Đường dẫn thư mục hình ảnh không được để trống.");
@@ -5760,12 +5760,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                     else
                     {
-                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CustomMessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Cancel.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Cancel.", "Notification", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
         }
@@ -5774,18 +5774,18 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (connection == null || connection.State != ConnectionState.Open)
             {
-                MessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Chưa kết nối với cơ sở dữ liệu.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (dgvXeRa.SelectedRows.Count == 0)
             {
-                MessageBox.Show("Vui lòng chọn ít nhất một dòng để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                CustomMessageBox.Show("Vui lòng chọn ít nhất một dòng để xóa.", "Cảnh báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             int selectedCount = dgvXeRa.SelectedRows.Count;
-            DialogResult confirm = MessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            DialogResult confirm = CustomMessageBox.Show($"Bạn có chắc chắn muốn xóa {selectedCount} dòng dữ liệu đã chọn không?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes)
                 return;
 
@@ -5800,7 +5800,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             if (rowsToDelete.Count == 0)
             {
-                MessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dòng hợp lệ nào được chọn để xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -5904,13 +5904,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                 transaction.Commit();
 
-                MessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show($"Đã xóa thành công {totalRowsAffected} dòng dữ liệu!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 await LoadXeRaData(); // Refresh the DataGridView
             }
             catch (Exception ex)
             {
                 transaction?.Rollback();
-                MessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xóa dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -5936,7 +5936,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             System.Globalization.CultureInfo.InvariantCulture,
                             System.Globalization.DateTimeStyles.None, out DateTime monthYear))
                         {
-                            MessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
+                            CustomMessageBox.Show("Định dạng không hợp lệ. Vui lòng nhập theo MM/YYYY.",
                                             "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
@@ -6025,7 +6025,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                         if (!int.TryParse(input, out int year) || year < 1900 || year > 2100)
                         {
-                            MessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
+                            CustomMessageBox.Show("Năm không hợp lệ. Vui lòng nhập theo YYYY (ví dụ: 2025).",
                                             "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
@@ -6108,7 +6108,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             string databaseName = Properties.Settings.Default.DatabaseName;
             if (string.IsNullOrWhiteSpace(databaseName))
             {
-                MessageBox.Show("Không thể xác định tên cơ sở dữ liệu từ cài đặt.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show("Không thể xác định tên cơ sở dữ liệu từ cài đặt.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -6167,7 +6167,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                             }
                         }
 
-                                                    MessageBox.Show(
+                                                    CustomMessageBox.Show(
                                                         $"Đã sao lưu cơ sở dữ liệu '{databaseName}' thành công đến:\n{destBackupFile}",
                                                         "Sao lưu thành công",
                                                         MessageBoxButtons.OK,
@@ -6175,7 +6175,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                                                     _lastBackupFolderPath = Path.GetDirectoryName(destBackupFile);                    }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Lỗi trong quá trình sao lưu: {ex.Message}", "Lỗi sao lưu", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Lỗi trong quá trình sao lưu: {ex.Message}", "Lỗi sao lưu", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally
                     {
@@ -6232,17 +6232,17 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Không thể mở thư mục '{_lastBackupFolderPath}': {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Không thể mở thư mục '{_lastBackupFolderPath}': {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"Thư mục '{_lastBackupFolderPath}' không tồn tại. Vui lòng kiểm tra lại.", "Thư mục không tồn tại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show($"Thư mục '{_lastBackupFolderPath}' không tồn tại. Vui lòng kiểm tra lại.", "Thư mục không tồn tại", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                MessageBox.Show("Chưa có đường dẫn sao lưu nào được ghi nhận. Vui lòng thực hiện sao lưu trước.", "Không có đường dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Chưa có đường dẫn sao lưu nào được ghi nhận. Vui lòng thực hiện sao lưu trước.", "Không có đường dẫn", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -6261,17 +6261,17 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show($"Không thể mở thư mục. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        CustomMessageBox.Show($"Không thể mở thư mục. Lỗi: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
                 else
                 {
-                    MessageBox.Show("File không tồn tại. Vui lòng xuất file trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    CustomMessageBox.Show("File không tồn tại. Vui lòng xuất file trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
             else
             {
-                MessageBox.Show("Chưa có file nào được xuất. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Chưa có file nào được xuất. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -6352,7 +6352,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xuất Excel: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
             finally
@@ -6377,7 +6377,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (dgvXeRa.Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu 'Xe Ra' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu 'Xe Ra' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -6389,12 +6389,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     lastXeRaExportPath = exportedFilePath;
-                    MessageBox.Show("Xuất dữ liệu 'Xe Ra' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Xuất dữ liệu 'Xe Ra' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -6411,7 +6411,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         {
             if (dgvXeVao.Rows.Count == 0)
             {
-                MessageBox.Show("Không có dữ liệu 'Xe Vào' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CustomMessageBox.Show("Không có dữ liệu 'Xe Vào' để xuất.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
@@ -6423,12 +6423,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 if (!string.IsNullOrEmpty(exportedFilePath))
                 {
                     lastXeVaoExportPath = exportedFilePath;
-                    MessageBox.Show("Xuất dữ liệu 'Xe Vào' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Xuất dữ liệu 'Xe Vào' ra Excel thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                CustomMessageBox.Show($"Lỗi khi xuất dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -6478,7 +6478,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
             txtQuerry_CaiDat.ReadOnly = true;
             txtQuerry_CaiDat.Enabled = false;
-            MessageBox.Show("Đã đóng khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            CustomMessageBox.Show("Đã đóng khóa ô nhập truy vấn và các nút xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

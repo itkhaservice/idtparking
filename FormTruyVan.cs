@@ -57,11 +57,11 @@ namespace IDT_PARKING
 
                     // Gán dữ liệu vào DataGridView
                     dgvResult.DataSource = dataTable;
-                    MessageBox.Show("Truy vấn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    CustomMessageBox.Show("Truy vấn thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Có lỗi xảy ra: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    CustomMessageBox.Show("Có lỗi xảy ra: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
