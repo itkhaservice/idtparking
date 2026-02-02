@@ -115,6 +115,7 @@ namespace IDT_PARKING
             txtBienSoXeVao.KeyDown += txtBienSoXeVao_KeyDown;
 
             toolTip1.Active = true;
+            ToolTipManager.InitializeToolTips(this, toolTip1);
             this.tabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
 
             // Sự kiện cho Tab Khách hàng
@@ -1784,14 +1785,31 @@ namespace IDT_PARKING
 
         private async void btnThem_KH_Click(object sender, EventArgs e)
         {
+            // Kiểm tra xem có dòng nào đang được chọn không
+            if (dgvKhachHang_KH.SelectedRows.Count > 0)
+            {
+                DialogResult result = MessageBox.Show("Bạn muốn CẬP NHẬT dòng dữ liệu khách hàng cũ đang chọn hay THÊM MỚI dòng dữ liệu khách hàng mới?\n\n" +
+                    "- Yes: Cập nhật khách hàng cũ\n" +
+                    "- No: Thêm khách hàng mới\n" +
+                    "- Cancel: Hủy bỏ",
+                    "Xác nhận thao tác", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+
+                if (result == DialogResult.Yes)
+                {
+                    btnUpdate_KH_Click(sender, e);
+                    return;
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    return;
+                }
+            }
+
+            // Logic Thêm Mới (Khi không chọn dòng nào hoặc chọn No)
             string newMaKH = await GenerateNextMaKH();
-            if (newMaKH == null) return; // Error occurred during generation
+            if (newMaKH == null) return;
 
             InitializeDatabaseConnection();
-
-            string query = @"
-                INSERT INTO KhachHang (MaKH, hoten, DonVi, DiaChi, dienthoai, hopdong, chungloai, hinhanh)
-                VALUES (@makh, '', '', '', '', '', '', NULL)"; // Insert with empty strings and NULL for image
 
             try
             {
@@ -1800,17 +1818,42 @@ namespace IDT_PARKING
                     await connection.OpenAsync();
                 }
 
+                // Kiểm tra trùng lặp biển số nếu có nhập
+                if (!string.IsNullOrWhiteSpace(txtBienSo_KH.Text))
+                {
+                    string checkDuplicateBienSoQuery = "SELECT COUNT(*) FROM KhachHang WHERE hopdong = @hopdong";
+                    using (SqlCommand checkCmd = new SqlCommand(checkDuplicateBienSoQuery, connection))
+                    {
+                        checkCmd.Parameters.AddWithValue("@hopdong", txtBienSo_KH.Text.Trim());
+                        int duplicateCount = (int)await checkCmd.ExecuteScalarAsync();
+                        if (duplicateCount > 0)
+                        {
+                            MessageBox.Show("Biển số này đã tồn tại. Vui lòng kiểm tra lại.", "Lỗi trùng lặp biển số", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            return;
+                        }
+                    }
+                }
+
+                string query = @"
+                    INSERT INTO KhachHang (MaKH, hoten, DonVi, DiaChi, dienthoai, hopdong, chungloai, hinhanh)
+                    VALUES (@makh, @hoten, @donvi, @diachi, @dienthoai, @hopdong, @chungloai, NULL)";
+
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@makh", newMaKH);
+                    command.Parameters.AddWithValue("@hoten", txtHoTen_KH.Text);
+                    command.Parameters.AddWithValue("@donvi", txtDonVi_KH.Text);
+                    command.Parameters.AddWithValue("@diachi", txtDiaChi_KH.Text);
+                    command.Parameters.AddWithValue("@dienthoai", txtDienThoai_KH.Text);
+                    command.Parameters.AddWithValue("@hopdong", txtBienSo_KH.Text);
+                    command.Parameters.AddWithValue("@chungloai", txtHieuXe_KH.Text);
 
                     int rowsAffected = await command.ExecuteNonQueryAsync();
 
                     if (rowsAffected > 0)
                     {
-                        MessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}. Vui lòng chọn dòng này và nhấn Cập nhật để điền thông tin chi tiết.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                        await LoadKhachHangData(); // Refresh the DataGridView
-                        // Optionally, select the newly added row
+                        MessageBox.Show($"Đã thêm khách hàng mới với Mã KH: {newMaKH}.", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        await LoadKhachHangData();
                         foreach (DataGridViewRow row in dgvKhachHang_KH.Rows)
                         {
                             if (row.Cells["Mã KH"].Value?.ToString() == newMaKH)
@@ -4352,6 +4395,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 return;
             }
 
+            // Check if required columns exist (to prevent crashes on aggregate views like Monthly/Yearly revenue)
+            if (!dgvResults.Columns.Contains("Mã thẻ") || !dgvResults.Columns.Contains("IDXe") || !dgvResults.Columns.Contains("Mã mặt"))
+            {
+                MessageBox.Show("Bảng dữ liệu hiện tại không hỗ trợ xóa (thiếu cột thông tin chi tiết).", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             int batchSize = 1000; // Optimized batch size for inserting into temp table
             int totalRowsAffected = 0; // To store the count from the final DELETE statement
             SqlTransaction transaction = null;
@@ -4398,7 +4448,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     {
                         string cardId = row.Cells["Mã thẻ"].Value?.ToString();
                         string idXe = row.Cells["IDXe"].Value?.ToString();
-                        string idMat = row.Cells["IDMat"].Value?.ToString();
+                        string idMat = row.Cells["Mã mặt"].Value?.ToString();
 
                         if (string.IsNullOrEmpty(cardId) || string.IsNullOrEmpty(idXe) || string.IsNullOrEmpty(idMat))
                         {
