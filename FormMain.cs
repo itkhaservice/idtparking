@@ -57,6 +57,7 @@ namespace IDT_PARKING
         private string lastXeRaExportPath;
         private string active_export_path;
         private bool isDragging = false;
+        private bool isQueryUnlocked = false;
         private Point lastCursorPos;
 
 
@@ -1282,6 +1283,7 @@ namespace IDT_PARKING
 
                     if (enteredPassword == DynamicPassword)
                     {
+                        isQueryUnlocked = true;
                         txtQuerry_CaiDat.ReadOnly = false;
                         txtQuerry_CaiDat.Enabled = true;
 
@@ -1395,18 +1397,21 @@ namespace IDT_PARKING
 
         private async void btnDelete_XR_KHAC_Click(object sender, EventArgs e)
         {
-            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            if (!isQueryUnlocked)
             {
-                if (passwordForm.ShowDialog() != DialogResult.OK)
+                using (PasswordPromptForm passwordForm = new PasswordPromptForm())
                 {
-                    MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                    if (passwordForm.ShowDialog() != DialogResult.OK)
+                    {
+                        MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
 
-                if (passwordForm.EnteredPassword != DynamicPassword)
-                {
-                    MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    if (passwordForm.EnteredPassword != DynamicPassword)
+                    {
+                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
             }
 
@@ -1553,18 +1558,21 @@ namespace IDT_PARKING
 
         private async void btnDelete_XV_KHAC_Click(object sender, EventArgs e)
         {
-            using (PasswordPromptForm passwordForm = new PasswordPromptForm())
+            if (!isQueryUnlocked)
             {
-                if (passwordForm.ShowDialog() != DialogResult.OK)
+                using (PasswordPromptForm passwordForm = new PasswordPromptForm())
                 {
-                    MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-                }
+                    if (passwordForm.ShowDialog() != DialogResult.OK)
+                    {
+                        MessageBox.Show("Hủy thao tác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        return;
+                    }
 
-                if (passwordForm.EnteredPassword != DynamicPassword)
-                {
-                    MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
+                    if (passwordForm.EnteredPassword != DynamicPassword)
+                    {
+                        MessageBox.Show("Sai mật khẩu. Vui lòng thử lại", "Xác thực không thành công!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
                 }
             }
 
@@ -4278,6 +4286,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
         
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            if (isQueryUnlocked)
+            {
+                EvenDelete();
+                return;
+            }
+
             using (PasswordPromptForm passwordForm = new PasswordPromptForm())
             {
                 DialogResult result = passwordForm.ShowDialog();
@@ -5676,6 +5690,12 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private void btnXoaXeRa_Click(object sender, EventArgs e)
         {
+            if (isQueryUnlocked)
+            {
+                EvenDeleteXeRa();
+                return;
+            }
+
             using (PasswordPromptForm passwordForm = new PasswordPromptForm())
             {
                 DialogResult result = passwordForm.ShowDialog();
@@ -6393,6 +6413,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
         private void btnDongQuery_Click(object sender, EventArgs e)
         {
+            isQueryUnlocked = false;
             btnDelete.Visible = false;
             btnXoaXeRa.Visible = false;
             btnXoaXeVao.Visible = false;
