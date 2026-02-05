@@ -34,7 +34,7 @@ namespace IDT_PARKING
         public string txtPassword = Properties.Settings.Default.Password;
 
         // KHAI BÁO HẰNG SỐ CỦA TAB DOANH THU
-                private string DynamicPassword => GenerateDynamicPassword();
+        private string DynamicPassword => GenerateDynamicPassword();
 
         private string GenerateDynamicPassword()
         {
@@ -90,7 +90,7 @@ namespace IDT_PARKING
             txtQuerry_CaiDat.ReadOnly = true;
             txtQuerry_CaiDat.Enabled = false;
             //this.tabControl.SelectedTab = tabCaiDat;
-            
+
 
             dgvXeRa.KeyDown += dgvXeRa_KeyDown;
 
@@ -234,7 +234,7 @@ namespace IDT_PARKING
             cbbTKReportType.DisplayMember = "Value";
             cbbTKReportType.ValueMember = "Key";
         }
-        
+
         private async void btnThongKeGenerate_Click(object sender, EventArgs e)
         {
             if (cbbTKReportType.SelectedValue == null)
@@ -244,7 +244,7 @@ namespace IDT_PARKING
             }
 
             string reportType = cbbTKReportType.SelectedValue.ToString();
-            
+
             DateTime startDate = dtpTKStartDate.Value.Date;
             DateTime endDate = dtpTKEndDate.Value.Date;
             int startTimeInSeconds = (int)dtpTKStartTime.Value.TimeOfDay.TotalSeconds;
@@ -255,7 +255,7 @@ namespace IDT_PARKING
                 CustomMessageBox.Show("Ngày/giờ bắt đầu phải sớm hơn ngày/giờ kết thúc.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             ShowLoading();
             var originalCulture = Thread.CurrentThread.CurrentCulture;
             try
@@ -263,9 +263,9 @@ namespace IDT_PARKING
                 Thread.CurrentThread.CurrentCulture = new CultureInfo("vi-VN");
                 if (connection == null || connection.State != ConnectionState.Open)
                 {
-                   InitializeDatabaseConnection();
-                   if (connection == null) { return; }
-                   if (connection.State != ConnectionState.Open) { await connection.OpenAsync(); }
+                    InitializeDatabaseConnection();
+                    if (connection == null) { return; }
+                    if (connection.State != ConnectionState.Open) { await connection.OpenAsync(); }
                 }
 
                 DataTable dt = new DataTable();
@@ -294,7 +294,7 @@ namespace IDT_PARKING
                             WHERE ((NgayRa > @startDate AND NgayRa < @endDate) OR (NgayRa = @startDate AND THoiGianRa >= @startTime) OR (NgayRa = @endDate AND THoiGianRa <= @endTime))
                             GROUP BY CAST(NgayRa AS DATE)
                             ORDER BY CAST(NgayRa AS DATE);";
-                        
+
                         using (SqlCommand cmd = new SqlCommand(query, connection))
                         {
                             cmd.Parameters.AddRange(parameters.ToArray());
@@ -312,14 +312,14 @@ namespace IDT_PARKING
 
                         lblTKTotalRevenue.Text = $"Tổng Doanh Thu: {totalRevenue:N0} VNĐ";
                         lblTKTotalVehicles.Text = $"Tổng Lượt Xe: {totalVehicles}";
-                        
+
                         dgvRevenueReport.DataSource = dt;
                         if (dgvRevenueReport.Columns.Contains("Doanh thu"))
                         {
                             dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Format = "N0";
                             dgvRevenueReport.Columns["Doanh thu"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                         }
-                        
+
                         chartRevenueReport.Series.Clear();
                         var series = new Series("Doanh thu") { ChartType = SeriesChartType.Column };
                         chartRevenueReport.Series.Add(series);
@@ -333,7 +333,7 @@ namespace IDT_PARKING
                         chartRevenueReport.ChartAreas[0].AxisY.LabelStyle.Format = "N0";
                         chartRevenueReport.Invalidate();
                         break;
-                    
+
                     case "revenue_by_card":
                         lblTKTotalRevenue.Visible = true;
                         lblTKTotalVehicles.Visible = true;
@@ -1093,9 +1093,9 @@ namespace IDT_PARKING
                     txtUsername_Main.Text = Properties.Settings.Default.Username;
                     txtPassword_Main.Text = Properties.Settings.Default.Password;
                     SetTabStates(true);
-                                    DoanhThu_Load();
-                                    await LoadKhachHangData();
-                                    await LoadTheThangData("", true, false, false, null);                    await LoadTheTrongData();
+                    DoanhThu_Load();
+                    await LoadKhachHangData();
+                    await LoadTheThangData("", true, false, false, null); await LoadTheTrongData();
                     dtTu_TTr.Value = DateTime.Now;
                     dtDen_TTr.Value = DateTime.Now;
                     //tabControl_SelectedIndexChanged(tabControl, EventArgs.Empty);
@@ -1774,7 +1774,7 @@ namespace IDT_PARKING
             if (e.KeyCode == Keys.Enter)
             {
                 await LoadKhachHangData();
-                e.SuppressKeyPress = true; 
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -2229,7 +2229,7 @@ namespace IDT_PARKING
             }
             else
             {
-                CustomMessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK); 
+                CustomMessageBox.Show("Chưa có đường dẫn thư mục nào được lưu. Vui lòng xuất file Excel trước.", "Thông báo", MessageBoxButtons.OK);
             }
         }
 
@@ -2308,7 +2308,7 @@ namespace IDT_PARKING
                 for (int i = 0; i < maKHFilters.Count; i += maxParametersPerBatch)
                 {
                     List<string> currentBatch = maKHFilters.Skip(i).Take(maxParametersPerBatch).ToList();
-                    
+
                     // Create batch-specific parameters and where clause
                     var batchParameters = new List<SqlParameter>();
                     var batchMaKHParamNames = currentBatch.Select((makh, idx) => $"@maKHFilter{idx}").ToList();
@@ -2376,7 +2376,7 @@ namespace IDT_PARKING
             string countQuery = "SELECT COUNT(*) FROM TheThang WHERE TTrang = 1";
             try
             {
-                 if (connection.State != ConnectionState.Open)
+                if (connection.State != ConnectionState.Open)
                 {
                     await connection.OpenAsync();
                 }
@@ -2777,7 +2777,7 @@ namespace IDT_PARKING
             }
             catch (Exception ex)
             {
-                if(transaction != null) transaction.Rollback();
+                if (transaction != null) transaction.Rollback();
                 CustomMessageBox.Show($"Lỗi khi khóa thẻ: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
@@ -2838,8 +2838,8 @@ namespace IDT_PARKING
 
                 transaction.Commit();
                 CustomMessageBox.Show("Thu hồi thẻ thành công!", "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });               
-                    await LoadTheTrongData();
+                await LoadTheThangData(maKHFilters: new List<string> { _selectedMaKH });
+                await LoadTheTrongData();
             }
             catch (Exception ex)
             {
@@ -3316,24 +3316,24 @@ namespace IDT_PARKING
             {
                 InitializeDatabaseConnection(); // Đảm bảo connection được khởi tạo
 
-            if (connection.State != ConnectionState.Open)
-            {
-                connection.Open();
-                connectionOpenedHere = true;
-            }
-
-            // Check if MaKH already has a card in TheThang
-            string checkMaKHQuery = "SELECT COUNT(*) FROM TheThang WHERE MaKH = @MaKH AND TTrang = 1";
-            using (SqlCommand checkMaKHCmd = new SqlCommand(checkMaKHQuery, connection))
-            {
-                checkMaKHCmd.Parameters.AddWithValue("@MaKH", maKH);
-                int existingMaKHCount = (int)checkMaKHCmd.ExecuteScalar();
-                if (existingMaKHCount > 0)
+                if (connection.State != ConnectionState.Open)
                 {
-                    CustomMessageBox.Show($"Mã khách hàng '{maKH}' này đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
+                    connection.Open();
+                    connectionOpenedHere = true;
                 }
-            }
+
+                // Check if MaKH already has a card in TheThang
+                string checkMaKHQuery = "SELECT COUNT(*) FROM TheThang WHERE MaKH = @MaKH AND TTrang = 1";
+                using (SqlCommand checkMaKHCmd = new SqlCommand(checkMaKHQuery, connection))
+                {
+                    checkMaKHCmd.Parameters.AddWithValue("@MaKH", maKH);
+                    int existingMaKHCount = (int)checkMaKHCmd.ExecuteScalar();
+                    if (existingMaKHCount > 0)
+                    {
+                        CustomMessageBox.Show($"Mã khách hàng '{maKH}' này đã có thẻ tháng. Mỗi khách hàng chỉ được có một thẻ tháng.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                }
 
                 if (connection.State != ConnectionState.Open)
                 {
@@ -3853,7 +3853,7 @@ namespace IDT_PARKING
             }
         }
 
-        private void txtMaThe_TTT_KeyDown(object sender, KeyEventArgs e) 
+        private void txtMaThe_TTT_KeyDown(object sender, KeyEventArgs e)
         {
             //if (e.KeyCode == Keys.Enter)
             //{
@@ -4326,7 +4326,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 HideLoading();
             }
         }
-        
+
         private void btnDelete_Click(object sender, EventArgs e)
         {
             if (isQueryUnlocked)
@@ -4834,7 +4834,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     }
                 }
             }
-                        
+
             catch (Exception ex)
             {
                 try { connection?.Close(); } catch { }
@@ -4855,8 +4855,8 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
             Excel.Application excelApp = null;
             Excel.Workbook workbook = null;
             Excel.Worksheet worksheet = null;
-            Excel.Range headerRange = null; 
-            Excel.Range dataRange = null;   
+            Excel.Range headerRange = null;
+            Excel.Range dataRange = null;
 
             try
             {
@@ -4878,7 +4878,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 headerRange.Font.Bold = true;
                 headerRange.Interior.Color = System.Drawing.ColorTranslator.ToOle(System.Drawing.Color.LightGray);
                 headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                Marshal.ReleaseComObject(headerRange); 
+                Marshal.ReleaseComObject(headerRange);
 
                 object[,] data = new object[rowCount, columnCount];
                 for (int row = 0; row < rowCount; row++)
@@ -4890,7 +4890,7 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 }
                 dataRange = worksheet.Range[worksheet.Cells[2, 1], worksheet.Cells[rowCount + 1, columnCount]];
                 dataRange.Value = data;
-                Marshal.ReleaseComObject(dataRange); 
+                Marshal.ReleaseComObject(dataRange);
 
                 worksheet.Columns.AutoFit();
 
@@ -5479,7 +5479,7 @@ SELECT
 FROM
 [dbo].[Ra]
 INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
-                WHERE 1=1 "; 
+                WHERE 1=1 ";
 
             query += @" AND (
                 CAST(NgayRa AS DATETIME) +
@@ -6112,18 +6112,39 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                 return;
             }
 
+            // Cảnh báo người dùng về việc sao lưu trong mạng LAN
+            string serverAddress = Properties.Settings.Default.ServerAddress;
+            string serverName = serverAddress.Contains("\\") ? serverAddress.Split('\\')[0] : serverAddress;
+            bool isLocal = serverName == "." || serverName.ToLower() == "(local)" || serverName.ToLower() == "localhost" || serverName == "127.0.0.1" || serverName.ToLower() == Environment.MachineName.ToLower();
+
+            string warningMsg = "LƯU Ý SAO LƯU:\n\n" +
+                               "1. Tệp sao lưu (.bak) được tạo trực tiếp bởi SQL Server.\n" +
+                               (isLocal ? "2. Bạn đang kết nối máy cục bộ (Localhost).\n" : "2. CẢNH BÁO MẠNG LAN: Tệp sẽ lưu vào ổ đĩa CỦA MÁY CHỦ, không phải máy này.\n") +
+                               "3. Sau khi xong, hệ thống sẽ cố gắng di chuyển tệp về vị trí bạn chọn.\n\n" +
+                               "Tiếp tục?";
+
+            if (CustomMessageBox.Show(warningMsg, "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
             string backupFileName = $"{databaseName}_{DateTime.Now:yyyyMMdd_HHmmss}.bak";
 
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
                 sfd.Filter = "Backup Files (*.bak)|*.bak|All files (*.*)|*.*";
-                sfd.Title = "Chọn vị trí để sao lưu cơ sở dữ liệu";
+                sfd.Title = "Chọn nơi lưu tệp sao lưu";
                 sfd.FileName = backupFileName;
+                sfd.RestoreDirectory = true;
 
                 string sharedFolderPath = Properties.Settings.Default.SharedFolder;
-                if (Directory.Exists(sharedFolderPath))
+                if (!string.IsNullOrWhiteSpace(sharedFolderPath) && Directory.Exists(sharedFolderPath))
                 {
                     sfd.InitialDirectory = sharedFolderPath;
+                }
+                else
+                {
+                    sfd.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
                 }
 
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -6132,15 +6153,13 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
                     ShowLoading();
                     try
                     {
-                        string serverAddress = Properties.Settings.Default.ServerAddress;
                         string uid = Properties.Settings.Default.Username;
                         string password = Properties.Settings.Default.Password;
 
-                        // It's best practice to connect to the 'master' database to perform a backup.
                         var builder = new SqlConnectionStringBuilder
                         {
                             DataSource = serverAddress,
-                            InitialCatalog = "master", // Connect to master DB for backup operation
+                            InitialCatalog = "master",
                             IntegratedSecurity = string.IsNullOrWhiteSpace(uid),
                             TrustServerCertificate = true
                         };
@@ -6153,26 +6172,112 @@ INNER JOIN [dbo].[Vao] ON Ra.IDXe = Vao.IDXe
 
                         using (SqlConnection conn = new SqlConnection(builder.ConnectionString))
                         {
+                            conn.FireInfoMessageEventOnUserErrors = true;
+                            conn.InfoMessage += Connection_InfoMessage_Backup;
                             await conn.OpenAsync();
 
-                            string backupCmd = $@"
-                                BACKUP DATABASE [{databaseName}]
-                                TO DISK = N'{destBackupFile}'
-                                WITH INIT, STATS = 10";
+                            string tempBackupPathOnServer = string.Empty;
+                            
+                            // 1. Get a safe local path ON THE SERVER
+                            try
+                            {
+                                string defaultBackupDir = string.Empty;
+                                using (SqlCommand cmdPath = new SqlCommand("SELECT CAST(SERVERPROPERTY('InstanceDefaultBackupPath') AS NVARCHAR(4000))", conn))
+                                {
+                                    object result = await cmdPath.ExecuteScalarAsync();
+                                    if (result != null && result != DBNull.Value)
+                                        defaultBackupDir = result.ToString();
+                                }
 
+                                if (string.IsNullOrEmpty(defaultBackupDir))
+                                {
+                                    using (SqlCommand cmdPath = new SqlCommand("EXEC master.dbo.xp_instance_regread N'HKEY_LOCAL_MACHINE', N'Software\\Microsoft\\MSSQLServer\\MSSQLServer', N'BackupDirectory'", conn))
+                                    {
+                                        using (SqlDataReader reader = await cmdPath.ExecuteReaderAsync())
+                                        {
+                                            if (reader.Read() && reader.FieldCount >= 2)
+                                                defaultBackupDir = reader.GetValue(1).ToString();
+                                        }
+                                    }
+                                }
+
+                                if (string.IsNullOrEmpty(defaultBackupDir) || !Directory.Exists(defaultBackupDir)) defaultBackupDir = @"C:\Users\Public";
+                                tempBackupPathOnServer = Path.Combine(defaultBackupDir, backupFileName);
+                            }
+                            catch
+                            {
+                                tempBackupPathOnServer = $@"C:\{backupFileName}";
+                            }
+
+                            // 2. Perform BACKUP to the SERVER'S LOCAL DISK
+                            string backupCmd = $@"BACKUP DATABASE [{databaseName}] TO DISK = N'{tempBackupPathOnServer}' WITH INIT, STATS = 10";
                             using (SqlCommand cmd = new SqlCommand(backupCmd, conn))
                             {
-                                cmd.CommandTimeout = 7200; // 2 hours timeout for large databases
+                                cmd.CommandTimeout = 7200;
                                 await cmd.ExecuteNonQueryAsync();
+                            }
+
+                            // 3. PULL the file from Server to Client
+                            if (isLocal)
+                            {
+                                if (File.Exists(tempBackupPathOnServer))
+                                {
+                                    try
+                                    {
+                                        if (File.Exists(destBackupFile)) File.Delete(destBackupFile);
+                                        File.Move(tempBackupPathOnServer, destBackupFile);
+                                    }
+                                    catch (Exception moveEx)
+                                    {
+                                        CustomMessageBox.Show($"Đã tạo file thành công nhưng không thể di chuyển về vị trí bạn chọn: {moveEx.Message}\n\nFile hiện nằm tại: {tempBackupPathOnServer}", "Lưu ý di chuyển file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                                        _lastBackupFolderPath = Path.GetDirectoryName(tempBackupPathOnServer);
+                                        return;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    string downloadSql = $@"SELECT BulkColumn FROM OPENROWSET(BULK N'{tempBackupPathOnServer}', SINGLE_BLOB) AS x";
+                                    using (SqlCommand downloadCmd = new SqlCommand(downloadSql, conn))
+                                    {
+                                        downloadCmd.CommandTimeout = 3600;
+                                        var fileContent = await downloadCmd.ExecuteScalarAsync();
+                                        if (fileContent != null && fileContent != DBNull.Value)
+                                        {
+                                            byte[] data = (byte[])fileContent;
+                                            File.WriteAllBytes(destBackupFile, data);
+                                            
+                                            try { 
+                                                using (SqlCommand delCmd = new SqlCommand($"EXEC master..xp_cmdshell 'del \"{tempBackupPathOnServer}\"'", conn)) 
+                                                await delCmd.ExecuteNonQueryAsync(); 
+                                            } catch { }
+                                        }
+                                    }
+                                }
+                                catch (Exception downloadEx)
+                                {
+                                    CustomMessageBox.Show($"Đã sao lưu thành công TRÊN MÁY CHỦ, nhưng không thể tải về máy này tự động.\n\nLỗi: {downloadEx.Message}\n\nFile hiện nằm tại MÁY CHỦ tại: {tempBackupPathOnServer}", "Thông báo sao lưu LAN", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    return;
+                                }
                             }
                         }
 
-                                                    CustomMessageBox.Show(
-                                                        $"Đã sao lưu cơ sở dữ liệu '{databaseName}' thành công đến:\n{destBackupFile}",
-                                                        "Sao lưu thành công",
-                                                        MessageBoxButtons.OK,
-                                                        MessageBoxIcon.Information);
-                                                    _lastBackupFolderPath = Path.GetDirectoryName(destBackupFile);                    }
+                        // Final check
+                        if (File.Exists(destBackupFile))
+                        {
+                            if (CustomMessageBox.Show($"Sao lưu thành công!\n\nFile đã có tại: {destBackupFile}\n\nBạn có muốn mở thư mục không?", "Thành công", MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                            {
+                                System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{destBackupFile}\"");
+                            }
+                            _lastBackupFolderPath = Path.GetDirectoryName(destBackupFile);
+                        }
+                        else
+                        {
+                            CustomMessageBox.Show($"CẢNH BÁO: SQL Server báo thành công nhưng không tìm thấy file tại vị trí mong muốn.\n\nVị trí dự kiến: {destBackupFile}", "Không tìm thấy file", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
                     catch (Exception ex)
                     {
                         CustomMessageBox.Show($"Lỗi trong quá trình sao lưu: {ex.Message}", "Lỗi sao lưu", MessageBoxButtons.OK, MessageBoxIcon.Error);

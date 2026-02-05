@@ -70,11 +70,13 @@ namespace IDT_PARKING
             // 
             // lblMessage
             // 
+            this.lblMessage.AutoSize = true;
             this.lblMessage.Font = new System.Drawing.Font("Segoe UI", 11F);
             this.lblMessage.Location = new System.Drawing.Point(22, 61);
             this.lblMessage.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.lblMessage.MaximumSize = new System.Drawing.Size(550, 0);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(368, 69);
+            this.lblMessage.Size = new System.Drawing.Size(188, 20);
             this.lblMessage.TabIndex = 3;
             this.lblMessage.Text = "Nội dung thông báo ở đây...";
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -127,7 +129,7 @@ namespace IDT_PARKING
             this.btnClose.FillColor = System.Drawing.Color.White;
             this.btnClose.Font = new System.Drawing.Font("Segoe UI", 15F, System.Drawing.FontStyle.Bold);
             this.btnClose.ForeColor = System.Drawing.Color.Black;
-            this.btnClose.Location = new System.Drawing.Point(364, 3);
+            this.btnClose.Location = new System.Drawing.Point(550, 3);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(45, 41);
             this.btnClose.TabIndex = 6;
@@ -139,7 +141,7 @@ namespace IDT_PARKING
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(412, 203);
+            this.ClientSize = new System.Drawing.Size(600, 203);
             this.Controls.Add(this.guna2Panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Margin = new System.Windows.Forms.Padding(2);

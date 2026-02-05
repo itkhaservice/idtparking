@@ -11,6 +11,17 @@ namespace IDT_PARKING
             InitializeComponent();
             lblMessage.Text = message;
             lblTitle.Text = title;
+            
+            // Adjust form height based on label content
+            int padding = 20;
+            int buttonHeight = 50;
+            int requiredHeight = lblMessage.Bottom + padding + buttonHeight;
+            
+            if (requiredHeight > this.Height)
+            {
+                this.Height = requiredHeight;
+            }
+
             SetupButtons(buttons);
             SetupIcon(icon);
         }
@@ -22,24 +33,33 @@ namespace IDT_PARKING
             btn2.Visible = false;
             btn3.Visible = false;
 
+            int btnY = this.Height - 45; // Position buttons at the bottom of the resized form
+
             switch (buttons)
             {
                 case MessageBoxButtons.OK:
                     SetupButton(btn1, "OK", DialogResult.OK);
-                    btn1.Location = new Point(410, 185);
+                    btn1.Location = new Point(this.Width - btn1.Width - 15, btnY);
                     break;
                 case MessageBoxButtons.OKCancel:
                     SetupButton(btn1, "OK", DialogResult.OK);
                     SetupButton(btn2, "Hủy", DialogResult.Cancel);
+                    btn1.Location = new Point(this.Width - btn1.Width - 15, btnY);
+                    btn2.Location = new Point(btn1.Left - btn2.Width - 10, btnY);
                     break;
                 case MessageBoxButtons.YesNo:
                     SetupButton(btn1, "Có", DialogResult.Yes);
                     SetupButton(btn2, "Không", DialogResult.No);
+                    btn1.Location = new Point(this.Width - btn1.Width - 15, btnY);
+                    btn2.Location = new Point(btn1.Left - btn2.Width - 10, btnY);
                     break;
                 case MessageBoxButtons.YesNoCancel:
                     SetupButton(btn1, "Có", DialogResult.Yes);
                     SetupButton(btn2, "Không", DialogResult.No);
                     SetupButton(btn3, "Hủy", DialogResult.Cancel);
+                    btn1.Location = new Point(this.Width - btn1.Width - 15, btnY);
+                    btn2.Location = new Point(btn1.Left - btn2.Width - 10, btnY);
+                    btn3.Location = new Point(btn2.Left - btn3.Width - 10, btnY);
                     break;
             }
         }
