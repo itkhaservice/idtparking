@@ -75,12 +75,11 @@ namespace IDTSERVER
             this.tlpMain.RowCount = 1;
             this.tlpMain.Size = new System.Drawing.Size(900, 300);
 
-            // pnlLeft
+            // ================= LEFT SIDE =================
             this.pnlLeft.Controls.Add(this.tlpLeftContent);
             this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlLeft.Padding = new System.Windows.Forms.Padding(2);
 
-            // tlpLeftContent
             this.tlpLeftContent.ColumnCount = 1;
             this.tlpLeftContent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpLeftContent.Controls.Add(this.tlpSnapshots, 0, 0);
@@ -90,7 +89,6 @@ namespace IDTSERVER
             this.tlpLeftContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 45F));
             this.tlpLeftContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 55F));
 
-            // Snapshots AI (Midnight Style)
             this.tlpSnapshots.ColumnCount = 2;
             this.tlpSnapshots.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpSnapshots.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -104,7 +102,7 @@ namespace IDTSERVER
             this.pbEntryPlate.BackColor = System.Drawing.Color.FromArgb(25, 35, 45);
             this.pbEntryPlate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbEntryPlate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbEntryPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbEntryPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.lblEntryTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblEntryTitle.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.lblEntryTitle.Text = "ẢNH VÀO (AI)";
@@ -117,14 +115,13 @@ namespace IDTSERVER
             this.pbExitPlate.BackColor = System.Drawing.Color.FromArgb(25, 35, 45);
             this.pbExitPlate.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbExitPlate.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbExitPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.pbExitPlate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.lblExitTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblExitTitle.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
             this.lblExitTitle.Text = "ẢNH RA (AI)";
             this.lblExitTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblExitTitle.Height = 15;
 
-            // AI Text Results
             this.tlpAIResults.ColumnCount = 2;
             this.tlpAIResults.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tlpAIResults.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -151,10 +148,10 @@ namespace IDTSERVER
 
             this.pnlStatus.Controls.Add(this.chipStatus);
             this.pnlStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlStatus.Padding = new System.Windows.Forms.Padding(10, 5, 10, 5);
+            this.pnlStatus.Padding = new System.Windows.Forms.Padding(10, 2, 10, 2);
             this.chipStatus.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chipStatus.FillColor = System.Drawing.Color.FromArgb(180, 180, 180);
-            this.chipStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.chipStatus.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             this.chipStatus.Text = "CHỜ XE...";
 
             // ================= RIGHT SIDE =================
@@ -162,7 +159,7 @@ namespace IDTSERVER
             this.pnlRight.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlRight.BorderColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.pnlRight.BorderThickness = 1;
-            this.pnlRight.Padding = new System.Windows.Forms.Padding(5);
+            this.pnlRight.Padding = new System.Windows.Forms.Padding(5, 5, 5, 2); // Giảm padding dưới
 
             this.tlpRightContent.ColumnCount = 1;
             this.tlpRightContent.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -170,8 +167,8 @@ namespace IDTSERVER
             this.tlpRightContent.Controls.Add(this.pnlPayment, 0, 1);
             this.tlpRightContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tlpRightContent.RowCount = 2;
-            this.tlpRightContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.tlpRightContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tlpRightContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F)); // Giảm % của Info
+            this.tlpRightContent.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F)); // Tăng % của Payment
 
             this.tlpInfo.ColumnCount = 1;
             this.tlpInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -194,26 +191,16 @@ namespace IDTSERVER
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
 
-            this.lblCardID.Text = "SỐ THẺ: ---";
-            this.lblVehicleType.Text = "LOẠI XE: ---";
-            this.lblOwner.Text = "CHỦ XE: ---";
-            this.lblPlate.Text = "BIỂN SỐ: ---";
-            this.lblAddress.Text = "ĐỊA CHỈ: ---";
-            this.lblDuration.Text = "THỜI GIAN: ---";
-            this.lblTimeEntry.Text = "VÀO: ---";
-            this.lblTimeExit.Text = "RA: ---";
-
             this.lblCardID.Dock = this.lblVehicleType.Dock = this.lblOwner.Dock = this.lblPlate.Dock = this.lblAddress.Dock = this.lblDuration.Dock = this.lblTimeEntry.Dock = this.lblTimeExit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCardID.TextAlign = this.lblVehicleType.TextAlign = this.lblOwner.TextAlign = this.lblPlate.TextAlign = this.lblAddress.TextAlign = this.lblDuration.TextAlign = this.lblTimeEntry.TextAlign = this.lblTimeExit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             
             this.lblCardID.Font = this.lblVehicleType.Font = this.lblDuration.Font = this.lblTimeEntry.Font = this.lblTimeExit.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblOwner.Font = this.lblPlate.Font = this.lblAddress.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            
+            this.lblOwner.Font = this.lblPlate.Font = this.lblAddress.Font = new System.Drawing.Font("Segoe UI", 10.5F, System.Drawing.FontStyle.Bold);
             this.lblOwner.ForeColor = System.Drawing.Color.FromArgb(21, 101, 192);
             this.lblPlate.ForeColor = System.Drawing.Color.FromArgb(0, 121, 107);
             this.lblAddress.ForeColor = System.Drawing.Color.FromArgb(123, 31, 162);
 
-            // Payment
+            // pnlPayment
             this.pnlPayment.Controls.Add(this.lblAmount);
             this.pnlPayment.Controls.Add(this.lblPayTitle);
             this.pnlPayment.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -221,16 +208,21 @@ namespace IDTSERVER
             this.pnlPayment.BorderRadius = 8;
             this.pnlPayment.BorderThickness = 2;
             this.pnlPayment.FillColor = System.Drawing.Color.FromArgb(255, 243, 224);
+            this.pnlPayment.Margin = new System.Windows.Forms.Padding(0, 2, 0, 0); // Sát mép trên tiếp xuống
+
             this.lblAmount.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 28F, System.Drawing.FontStyle.Bold);
+            this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold); // Giảm nhẹ font
             this.lblAmount.ForeColor = System.Drawing.Color.FromArgb(245, 124, 0);
             this.lblAmount.Text = "0 VNĐ";
             this.lblAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblAmount.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
+
             this.lblPayTitle.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblPayTitle.Height = 25;
+            this.lblPayTitle.Height = 22;
             this.lblPayTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.lblPayTitle.Text = "THANH TOÁN";
             this.lblPayTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.lblPayTitle.Padding = new System.Windows.Forms.Padding(0, 2, 5, 0);
 
             // Finalize
             this.Controls.Add(this.tlpMain);
