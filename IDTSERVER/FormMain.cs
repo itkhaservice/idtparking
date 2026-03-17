@@ -11,18 +11,77 @@ namespace IDTSERVER
         private string _currentUser = "CHƯA ĐĂNG NHẬP";
         private string _currentShift = "N/A";
 
+        public enum GateStatus
+        {
+            Ready,
+            NeedLogin,
+            NoEntryData,
+            NoExitData,
+            CardLocked,
+            CardExpired,
+            WelcomeIn,
+            Goodbye
+        }
+
         public FormMain()
         {
             InitializeComponent();
             SetupKeyboardShortcuts();
-            
+
             // 1. Luôn hiển thị hình ảnh mặc định
             LoadPlaceholderImages();
-            
+
             // 2. Luôn hiển thị dữ liệu ảo để mô phỏng giao diện
             LoadDummyData();
-            
+
             this.Text = "IDT PARKING - HỆ THỐNG CHỜ ĐĂNG NHẬP (F1)";
+        }
+
+        public void UpdateGateStatus(bool isLeft, GateStatus status)
+        {
+            Label lbl = isLeft ? lblStatusLeft : lblStatusRight;
+            string message = "";
+            Color backColor = Color.FromArgb(30, 30, 30);
+            Color foreColor = Color.White;
+
+            switch (status)
+            {
+                case GateStatus.Ready:
+                    message = "HỆ THỐNG SẴN SÀNG";
+                    break;
+                case GateStatus.NeedLogin:
+                    message = "Vui lòng Đăng nhập phần mềm để sử dụng !";
+                    backColor = Color.FromArgb(198, 40, 40); // Red
+                    break;
+                case GateStatus.NoEntryData:
+                    message = "Thẻ chưa có dữ liệu vào. Vui lòng RA bãi !";
+                    backColor = Color.FromArgb(255, 143, 0); // Orange
+                    break;
+                case GateStatus.NoExitData:
+                    message = "Thẻ chưa có dữ liệu ra. Vui lòng VÀO bãi !";
+                    backColor = Color.FromArgb(255, 143, 0); // Orange
+                    break;
+                case GateStatus.CardLocked:
+                    message = "Thẻ bị khóa. Liên hệ BQL để MỞ thẻ !";
+                    backColor = Color.DarkRed;
+                    break;
+                case GateStatus.CardExpired:
+                    message = "Thẻ hết hạn. Liên hệ BQL để GIA HẠN !";
+                    backColor = Color.DarkRed;
+                    break;
+                case GateStatus.WelcomeIn:
+                    message = "XIN MỜI VÀO !";
+                    backColor = Color.FromArgb(46, 125, 50); // Green
+                    break;
+                case GateStatus.Goodbye:
+                    message = "HẸN GẶP LẠI !";
+                    backColor = Color.FromArgb(46, 125, 50); // Green
+                    break;
+            }
+
+            lbl.Text = message;
+            lbl.BackColor = backColor;
+            lbl.ForeColor = foreColor;
         }
 
         private void LoadPlaceholderImages()
@@ -41,12 +100,14 @@ namespace IDTSERVER
             gateLeft.SetTimes("02:15:00", "10:15:20 - 17/03", "12:30:20 - 17/03");
             gateLeft.SetMatchResult(true);
             gateLeft.SetAIPlates("51-G1\n77777", "51-G1\n77777");
+            UpdateGateStatus(true, GateStatus.WelcomeIn);
 
             // Làn Phải
             gateRight.UpdateInfo("UID-99999", "Xe Máy - Vãng lai", "KHÁCH VÃNG LAI", "59-K1-88888", "N/A", "5.000");
             gateRight.SetTimes("00:45:00", "11:00:00 - 17/03", "11:45:00 - 17/03");
             gateRight.SetMatchResult(false);
             gateRight.SetAIPlates("59-K1\n88888", "59-K1\n00000");
+            UpdateGateStatus(false, GateStatus.NoEntryData);
         }
 
         private void SetupKeyboardShortcuts()
