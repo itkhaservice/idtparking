@@ -67,6 +67,7 @@ namespace IDTSERVER
         public bool AutoReconnect { get; set; } = true;
         public bool AutoPrint { get; set; } = false;
         public bool OnlineImage { get; set; } = true;
+        public bool ShowCamerasOnMain { get; set; } = false; // Mặc định tắt để giữ dữ liệu mẫu
         public bool ShowRevenue { get; set; } = true;
         public bool VoiceMoney { get; set; } = true;
         public bool VoiceWarning { get; set; } = true;

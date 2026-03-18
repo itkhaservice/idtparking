@@ -1,185 +1,192 @@
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
 using System.Windows.Forms;
+using System.IO;
+using Vlc.DotNet.Forms;
 
 namespace IDTSERVER
 {
     public partial class FormMain : Form
     {
         private bool _isSystemActive = false;
-        private string _currentUser = "CHƯA ĐĂNG NHẬP";
-        private string _currentShift = "N/A";
+        private string _currentUser = "Chưa đăng nhập";
+        private string _currentShift = "Chưa xác định";
+        private AppSettings _settings;
 
-        public enum GateStatus
-        {
-            Ready,
-            NeedLogin,
-            NoEntryData,
-            NoExitData,
-            CardLocked,
-            CardExpired,
-            WelcomeIn,
-            Goodbye
-        }
+        private VlcControl _vlc1, _vlc2, _vlc3, _vlc4;
 
         public FormMain()
         {
             InitializeComponent();
-            SetupKeyboardShortcuts();
-
-            // 1. Luôn hiển thị hình ảnh mặc định
-            LoadPlaceholderImages();
-
-            // 2. Luôn hiển thị dữ liệu ảo để mô phỏng giao diện
-            LoadDummyData();
-
-            this.Text = "IDT PARKING - HỆ THỐNG CHỜ ĐĂNG NHẬP (F1)";
-        }
-
-        public void UpdateGateStatus(bool isLeft, GateStatus status)
-        {
-            Label lbl = isLeft ? lblStatusLeft : lblStatusRight;
-            string message = "";
-            Color backColor = Color.FromArgb(30, 30, 30);
-            Color foreColor = Color.White;
-
-            switch (status)
-            {
-                case GateStatus.Ready:
-                    message = "HỆ THỐNG SẴN SÀNG";
-                    break;
-                case GateStatus.NeedLogin:
-                    message = "Vui lòng Đăng nhập phần mềm để sử dụng !";
-                    backColor = Color.FromArgb(198, 40, 40); // Red
-                    break;
-                case GateStatus.NoEntryData:
-                    message = "Thẻ chưa có dữ liệu vào. Vui lòng RA bãi !";
-                    backColor = Color.FromArgb(255, 143, 0); // Orange
-                    break;
-                case GateStatus.NoExitData:
-                    message = "Thẻ chưa có dữ liệu ra. Vui lòng VÀO bãi !";
-                    backColor = Color.FromArgb(255, 143, 0); // Orange
-                    break;
-                case GateStatus.CardLocked:
-                    message = "Thẻ bị khóa. Liên hệ BQL để MỞ thẻ !";
-                    backColor = Color.DarkRed;
-                    break;
-                case GateStatus.CardExpired:
-                    message = "Thẻ hết hạn. Liên hệ BQL để GIA HẠN !";
-                    backColor = Color.DarkRed;
-                    break;
-                case GateStatus.WelcomeIn:
-                    message = "XIN MỜI VÀO !";
-                    backColor = Color.FromArgb(46, 125, 50); // Green
-                    break;
-                case GateStatus.Goodbye:
-                    message = "HẸN GẶP LẠI !";
-                    backColor = Color.FromArgb(46, 125, 50); // Green
-                    break;
-            }
-
-            lbl.Text = message;
-            lbl.BackColor = backColor;
-            lbl.ForeColor = foreColor;
-        }
-
-        private void LoadPlaceholderImages()
-        {
-            Bitmap camIcon = CreateCameraPlaceholder(320, 240, "CAMERA - STANDBY", Color.FromArgb(0, 120, 215));
-            Bitmap snapIcon = CreateCameraPlaceholder(320, 240, "HISTORY - READY", Color.Gray);
-
-            pbCam1.Image = pbCam2.Image = pbCam3.Image = pbCam4.Image = camIcon;
-            pbSnap1.Image = pbSnap2.Image = pbSnap3.Image = pbSnap4.Image = snapIcon;
-        }
-
-        private void LoadDummyData()
-        {
-            // Làn Trái
-            gateLeft.UpdateInfo("UID-40291", "Xe Máy - Tháng", "NGUYỄN TRƯỜNG HOÀNG MINH", "51-G1-77777", "Chung cư IDT, Tân Bình", "0");
-            gateLeft.SetTimes("02:15:00", "10:15:20 - 17/03", "12:30:20 - 17/03");
-            gateLeft.SetMatchResult(true);
-            gateLeft.SetAIPlates("51-G1\n77777", "51-G1\n77777");
-            UpdateGateStatus(true, GateStatus.WelcomeIn);
-
-            // Làn Phải
-            gateRight.UpdateInfo("UID-99999", "Xe Máy - Vãng lai", "KHÁCH VÃNG LAI", "59-K1-88888", "N/A", "5.000");
-            gateRight.SetTimes("00:45:00", "11:00:00 - 17/03", "11:45:00 - 17/03");
-            gateRight.SetMatchResult(false);
-            gateRight.SetAIPlates("59-K1\n88888", "59-K1\n00000");
-            UpdateGateStatus(false, GateStatus.NoEntryData);
-        }
-
-        private void SetupKeyboardShortcuts()
-        {
+            _settings = AppSettings.Load();
+            this.Load += FormMain_Load;
             this.KeyPreview = true;
-            this.KeyDown += (s, e) =>
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Escape:
-                        if (MessageBox.Show("Thoát chương trình?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes) Application.Exit();
-                        break;
-
-                    case Keys.F1:
-                        using (LoginForm login = new LoginForm())
-                        {
-                            if (login.ShowDialog() == DialogResult.OK)
-                            {
-                                _isSystemActive = true;
-                                _currentUser = login.CurrentUser;
-                                _currentShift = login.CurrentShift;
-                                this.Text = $"IDT PARKING - ĐANG HOẠT ĐỘNG | NV: {_currentUser} | {_currentShift}";
-                                MessageBox.Show($"Chào mừng {_currentUser} vào ca trực!");
-                            }
-                        }
-                        break;
-
-                    case Keys.F3:
-                        using (FrmSettings settings = new FrmSettings())
-                        {
-                            settings.ShowDialog();
-                        }
-                        break;
-
-                    case Keys.F2:
-                        if (!_isSystemActive) { MessageBox.Show("Vui lòng nhấn F1 để đăng nhập trước!"); break; }
-                        using (ShiftHandoverForm handover = new ShiftHandoverForm())
-                        {
-                            if (handover.ShowDialog() == DialogResult.OK)
-                            {
-                                _isSystemActive = false;
-                                this.Text = "IDT PARKING - HỆ THỐNG CHỜ ĐĂNG NHẬP (F1)";
-                                MessageBox.Show("Bàn giao ca thành công.");
-                            }
-                        }
-                        break;
-
-                    case Keys.F11: Application.Restart(); break;
-                }
-            };
         }
 
-        private Bitmap CreateCameraPlaceholder(int width, int height, string text, Color accentColor)
+        private void FormMain_Load(object sender, EventArgs e)
         {
-            Bitmap bmp = new Bitmap(width, height);
-            using (Graphics g = Graphics.FromImage(bmp))
+            UpdateStatusInfo();
+            if (_settings.ShowCamerasOnMain)
             {
-                g.SmoothingMode = SmoothingMode.AntiAlias;
-                g.Clear(Color.FromArgb(20, 20, 20));
-                Pen pen = new Pen(accentColor, 2);
-                int s = 20;
-                g.DrawLine(pen, 10, 10, 10 + s, 10); g.DrawLine(pen, 10, 10, 10, 10 + s);
-                g.DrawLine(pen, width - 10, 10, width - 10 - s, 10); g.DrawLine(pen, width - 10, 10, width - 10, 10 + s);
-                g.DrawLine(pen, 10, height - 10, 10 + s, height - 10); g.DrawLine(pen, 10, height - 10, 10, height - 10 - s);
-                g.DrawLine(pen, width - 10, height - 10, width - 10 - s, height - 10); g.DrawLine(pen, width - 10, height - 10, width - 10, height - 10 - s);
-                g.FillRectangle(new SolidBrush(accentColor), width / 2 - 20, height / 2 - 15, 40, 25);
-                g.FillEllipse(new SolidBrush(Color.FromArgb(20, 20, 20)), width / 2 - 8, height / 2 - 8, 16, 16);
-                Font font = new Font("Segoe UI", 9, FontStyle.Bold);
-                SizeF textSize = g.MeasureString(text, font);
-                g.DrawString(text, font, new SolidBrush(accentColor), (width - textSize.Width) / 2, height / 2 + 20);
+                LoadCamerasFromSettings();
             }
-            return bmp;
+        }
+
+        private void UpdateStatusInfo()
+        {
+            lblStatusLeft.Text = "LÀN 1: " + GetDirName(_settings.Lane1Direction);
+            lblStatusRight.Text = "LÀN 2: " + GetDirName(_settings.Lane2Direction);
+            
+            gateLeft.SetGateStatus("SẴN SÀNG");
+            gateRight.SetGateStatus("SẴN SÀNG");
+            
+            // DỮ LIỆU MẪU LÀN 1
+            gateLeft.SetCardInfo(
+                "0012345678", 
+                "Ô TÔ 4 CHỖ", 
+                "NGUYỄN VĂN A", 
+                "51A-123.45", 
+                "02 Giờ 15 Phút", 
+                "18/03/2026 08:30:00", 
+                "18/03/2026 10:45:00", 
+                "25.000 VNĐ"
+            );
+            gateLeft.SetAIPlates("51A12345", "51A12345");
+
+            // DỮ LIỆU MẪU LÀN 2
+            gateRight.SetCardInfo(
+                "0098765432", 
+                "XE MÁY", 
+                "TRẦN THỊ B", 
+                "60B-111.22", 
+                "05 Giờ 30 Phút", 
+                "18/03/2026 07:00:00", 
+                "18/03/2026 12:30:00", 
+                "5.000 VNĐ"
+            );
+            gateRight.SetAIPlates("60B11122", "60B11122");
+        }
+
+        private string GetDirName(int dir)
+        {
+            switch (dir) {
+                case 0: return "VÀO";
+                case 1: return "RA";
+                case 2: return "ĐẢO CHIỀU";
+                default: return "KHÔNG XÁC ĐỊNH";
+            }
+        }
+
+        private void LoadCamerasFromSettings()
+        {
+            StopAllCameras();
+            try
+            {
+                string vlcPath = GetVlcPath();
+                if (string.IsNullOrEmpty(vlcPath)) return;
+
+                string url1, url2, url3, url4;
+                if (_settings.CameraType == 0) // Analog
+                {
+                    string h = _settings.DvrHost; string u = _settings.DvrUser; string p = _settings.DvrPass;
+                    url1 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane1Plate}&subtype=1";
+                    url2 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane1Front}&subtype=1";
+                    url3 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Plate}&subtype=1";
+                    url4 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Front}&subtype=1";
+                }
+                else // IP
+                {
+                    url1 = GetIpCamUrl(_settings.IpCamL1PlateHost, _settings.IpCamL1PlateUser, _settings.IpCamL1PlatePass, _settings.IpCamL1PlateRTSP);
+                    url2 = GetIpCamUrl(_settings.IpCamL1FrontHost, _settings.IpCamL1FrontUser, _settings.IpCamL1FrontPass, _settings.IpCamL1FrontRTSP);
+                    url3 = GetIpCamUrl(_settings.IpCamL2PlateHost, _settings.IpCamL2PlateUser, _settings.IpCamL2PlatePass, _settings.IpCamL2PlateRTSP);
+                    url4 = GetIpCamUrl(_settings.IpCamL2FrontHost, _settings.IpCamL2FrontUser, _settings.IpCamL2FrontPass, _settings.IpCamL2FrontRTSP);
+                }
+
+                _vlc1 = CreateVlc(vlcPath, url1, pbCam1);
+                _vlc2 = CreateVlc(vlcPath, url2, pbCam2);
+                _vlc3 = CreateVlc(vlcPath, url3, pbCam3);
+                _vlc4 = CreateVlc(vlcPath, url4, pbCam4);
+            }
+            catch { }
+        }
+
+        private VlcControl CreateVlc(string vlcPath, string url, PictureBox host)
+        {
+            if (string.IsNullOrEmpty(url)) return null;
+            var vlc = new VlcControl();
+            vlc.BeginInit();
+            vlc.VlcLibDirectory = new DirectoryInfo(vlcPath);
+            vlc.VlcMediaplayerOptions = new string[] { ":rtsp-tcp", ":network-caching=300", ":no-stats", ":no-video-title-show" };
+            vlc.EndInit();
+            vlc.Dock = DockStyle.Fill;
+            host.Controls.Clear();
+            host.Controls.Add(vlc);
+            vlc.Play(new Uri(url));
+            return vlc;
+        }
+
+        private void StopAllCameras()
+        {
+            try {
+                if (_vlc1 != null) { _vlc1.Stop(); _vlc1.Dispose(); _vlc1 = null; pbCam1.Controls.Clear(); }
+                if (_vlc2 != null) { _vlc2.Stop(); _vlc2.Dispose(); _vlc2 = null; pbCam2.Controls.Clear(); }
+                if (_vlc3 != null) { _vlc3.Stop(); _vlc3.Dispose(); _vlc3 = null; pbCam3.Controls.Clear(); }
+                if (_vlc4 != null) { _vlc4.Stop(); _vlc4.Dispose(); _vlc4 = null; pbCam4.Controls.Clear(); }
+            } catch { }
+        }
+
+        private string GetVlcPath()
+        {
+            string programFiles = Environment.Is64BitProcess ? "ProgramFiles" : "ProgramFiles(x86)";
+            string path = Path.Combine(Environment.GetEnvironmentVariable(programFiles), "VideoLAN", "VLC");
+            return Directory.Exists(path) ? path : "";
+        }
+
+        private string GetIpCamUrl(string host, string user, string pass, string path)
+        {
+            if (string.IsNullOrEmpty(host)) return "";
+            if (path.StartsWith("rtsp://")) return path;
+            string sep = path.Contains("?") ? "&" : "?";
+            return $"rtsp://{user}:{pass}@{host}:554{path}{sep}subtype=1";
+        }
+
+        public void FormMain_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.F1:
+                    using (LoginForm login = new LoginForm()) {
+                        if (login.ShowDialog() == DialogResult.OK) {
+                            _isSystemActive = true; _currentUser = login.CurrentUser; _currentShift = login.CurrentShift;
+                            this.Text = $"IDT PARKING - ĐANG HOẠT ĐỘNG | NV: {_currentUser} | {_currentShift}";
+                        }
+                    }
+                    break;
+                case Keys.F3:
+                    using (FrmSettings settings = new FrmSettings()) {
+                        if (settings.ShowDialog() == DialogResult.OK) {
+                            _settings = AppSettings.Load();
+                            UpdateStatusInfo();
+                            if (_settings.ShowCamerasOnMain) LoadCamerasFromSettings();
+                            else StopAllCameras();
+                        }
+                    }
+                    break;
+                case Keys.F11:
+                    _settings = AppSettings.Load();
+                    if (_settings.ShowCamerasOnMain) {
+                        LoadCamerasFromSettings();
+                        MessageBox.Show("Đã tải lại luồng Camera!", "Thông báo");
+                    } else {
+                        UpdateStatusInfo();
+                        MessageBox.Show("Đã làm mới dữ liệu mẫu!", "Thông báo");
+                    }
+                    break;
+                case Keys.Escape:
+                    if (MessageBox.Show("Thoát chương trình?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        Application.Exit();
+                    break;
+            }
         }
     }
 }

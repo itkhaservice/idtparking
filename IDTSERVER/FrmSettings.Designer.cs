@@ -30,6 +30,7 @@ namespace IDTSERVER
             this.chkAutoReconnect = new Guna.UI2.WinForms.Guna2CheckBox();
             this.chkAutoPrint = new Guna.UI2.WinForms.Guna2CheckBox();
             this.chkOnlineImage = new Guna.UI2.WinForms.Guna2CheckBox();
+            this.chkShowCamerasOnMain = new Guna.UI2.WinForms.Guna2CheckBox();
             this.chkShowRevenue = new Guna.UI2.WinForms.Guna2CheckBox();
             this.chkVoiceMoney = new Guna.UI2.WinForms.Guna2CheckBox();
             this.chkVoiceWarning = new Guna.UI2.WinForms.Guna2CheckBox();
@@ -109,6 +110,8 @@ namespace IDTSERVER
             this.grpCameraType = new Guna.UI2.WinForms.Guna2GroupBox();
             this.rdoAnalogCamera = new Guna.UI2.WinForms.Guna2RadioButton();
             this.rdoIPCamera = new Guna.UI2.WinForms.Guna2RadioButton();
+            this.grpDisplayOptions = new Guna.UI2.WinForms.Guna2GroupBox();
+            this.chkShowCamerasOnMain = new Guna.UI2.WinForms.Guna2CheckBox();
             this.pnlThietBiBottom = new System.Windows.Forms.Panel();
             this.btnGuideDevice = new Guna.UI2.WinForms.Guna2Button();
             this.btnSaveDevice = new Guna.UI2.WinForms.Guna2Button();
@@ -239,6 +242,7 @@ namespace IDTSERVER
             this.flowLayoutPanel1.Controls.Add(this.chkAutoReconnect);
             this.flowLayoutPanel1.Controls.Add(this.chkAutoPrint);
             this.flowLayoutPanel1.Controls.Add(this.chkOnlineImage);
+            this.flowLayoutPanel1.Controls.Add(this.chkShowCamerasOnMain);
             this.flowLayoutPanel1.Controls.Add(this.chkShowRevenue);
             this.flowLayoutPanel1.Controls.Add(this.chkVoiceMoney);
             this.flowLayoutPanel1.Controls.Add(this.chkVoiceWarning);
@@ -1298,8 +1302,41 @@ namespace IDTSERVER
             this.lblL1.TabIndex = 0;
             this.lblL1.Text = "Cấu hình Làn 1:";
             // 
+            // grpDisplayOptions
+            // 
+            this.grpDisplayOptions.BorderRadius = 5;
+            this.grpDisplayOptions.Controls.Add(this.chkShowCamerasOnMain);
+            this.grpDisplayOptions.CustomBorderThickness = new System.Windows.Forms.Padding(0, 25, 0, 0);
+            this.grpDisplayOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.grpDisplayOptions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            this.grpDisplayOptions.Location = new System.Drawing.Point(310, 3);
+            this.grpDisplayOptions.Name = "grpDisplayOptions";
+            this.grpDisplayOptions.Size = new System.Drawing.Size(250, 60);
+            this.grpDisplayOptions.TabIndex = 2;
+            this.grpDisplayOptions.Text = "TÙY CHỌN HIỂN THỊ";
+            // 
+            // chkShowCamerasOnMain
+            // 
+            this.chkShowCamerasOnMain.AutoSize = true;
+            this.chkShowCamerasOnMain.CheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            this.chkShowCamerasOnMain.CheckedState.BorderRadius = 2;
+            this.chkShowCamerasOnMain.CheckedState.BorderThickness = 0;
+            this.chkShowCamerasOnMain.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            this.chkShowCamerasOnMain.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.chkShowCamerasOnMain.ForeColor = System.Drawing.Color.Black;
+            this.chkShowCamerasOnMain.Location = new System.Drawing.Point(10, 33);
+            this.chkShowCamerasOnMain.Name = "chkShowCamerasOnMain";
+            this.chkShowCamerasOnMain.Size = new System.Drawing.Size(185, 17);
+            this.chkShowCamerasOnMain.TabIndex = 0;
+            this.chkShowCamerasOnMain.Text = "Hiện Camera ra màn hình chính";
+            this.chkShowCamerasOnMain.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            this.chkShowCamerasOnMain.UncheckedState.BorderRadius = 2;
+            this.chkShowCamerasOnMain.UncheckedState.BorderThickness = 0;
+            this.chkShowCamerasOnMain.UncheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
+            // 
             // pnlThietBiTop
             // 
+            this.pnlThietBiTop.Controls.Add(this.grpDisplayOptions);
             this.pnlThietBiTop.Controls.Add(this.grpCameraType);
             this.pnlThietBiTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlThietBiTop.Location = new System.Drawing.Point(15, 15);
@@ -1671,6 +1708,7 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2CheckBox chkAutoReconnect;
         private Guna.UI2.WinForms.Guna2CheckBox chkAutoPrint;
         private Guna.UI2.WinForms.Guna2CheckBox chkOnlineImage;
+        private Guna.UI2.WinForms.Guna2CheckBox chkShowCamerasOnMain;
         private Guna.UI2.WinForms.Guna2CheckBox chkShowRevenue;
         private Guna.UI2.WinForms.Guna2CheckBox chkVoiceMoney;
         private Guna.UI2.WinForms.Guna2CheckBox chkVoiceWarning;
@@ -1681,6 +1719,7 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2GroupBox grpCameraType;
         private Guna.UI2.WinForms.Guna2RadioButton rdoAnalogCamera;
         private Guna.UI2.WinForms.Guna2RadioButton rdoIPCamera;
+        private Guna.UI2.WinForms.Guna2GroupBox grpDisplayOptions;
         private System.Windows.Forms.Panel pnlThietBiContent;
         private Guna.UI2.WinForms.Guna2GroupBox grpLaneConfig;
         private System.Windows.Forms.Label lblL1;

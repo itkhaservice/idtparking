@@ -78,12 +78,13 @@ namespace IDTSERVER
 
             UpdateCameraUI();
 
-            // Tab 1 - Options
+            // Options & Công tắc Camera
             chkFastScan.Checked = _settings.FastScan;
             chkSyncData.Checked = _settings.SyncData;
             chkAutoReconnect.Checked = _settings.AutoReconnect;
             chkAutoPrint.Checked = _settings.AutoPrint;
             chkOnlineImage.Checked = _settings.OnlineImage;
+            chkShowCamerasOnMain.Checked = _settings.ShowCamerasOnMain; // ĐÃ THÊM
             chkShowRevenue.Checked = _settings.ShowRevenue;
             chkVoiceMoney.Checked = _settings.VoiceMoney;
             chkVoiceWarning.Checked = _settings.VoiceWarning;
@@ -91,6 +92,7 @@ namespace IDTSERVER
 
         private void SaveUIToSettings()
         {
+            // Tab 1 & 2
             _settings.PrimaryServer = txtServerName.Text;
             _settings.BackupServer = txtServerLocal.Text;
             _settings.Port = txtPort.Text;
@@ -129,11 +131,14 @@ namespace IDTSERVER
             _settings.IpCamL2FrontUser = txtIpL2F_User.Text;
             _settings.IpCamL2FrontPass = txtIpL2F_Pass.Text;
             _settings.IpCamL2FrontRTSP = txtIpL2F_Rtsp.Text;
+
+            // Options & Công tắc Camera
             _settings.FastScan = chkFastScan.Checked;
             _settings.SyncData = chkSyncData.Checked;
             _settings.AutoReconnect = chkAutoReconnect.Checked;
             _settings.AutoPrint = chkAutoPrint.Checked;
             _settings.OnlineImage = chkOnlineImage.Checked;
+            _settings.ShowCamerasOnMain = chkShowCamerasOnMain.Checked; // ĐÃ THÊM
             _settings.ShowRevenue = chkShowRevenue.Checked;
             _settings.VoiceMoney = chkVoiceMoney.Checked;
             _settings.VoiceWarning = chkVoiceWarning.Checked;
@@ -207,6 +212,7 @@ namespace IDTSERVER
         {
             SaveUIToSettings();
             _settings.Save();
+            this.DialogResult = DialogResult.OK; // QUAN TRỌNG: Để FormMain biết mà reload
             MessageBox.Show("Cấu hình thiết bị đã được lưu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -221,9 +227,7 @@ namespace IDTSERVER
                 rtspUrl = "rtsp://admin:idt123321@192.168.100.99:554/cam/realmonitor?channel=3&subtype=1";
             }
             else if (rdoAnalogCamera.Checked) {
-                string host = txtDvrHost.Text;
-                string user = txtDvrUser.Text;
-                string pass = txtDvrPass.Text;
+                string host = txtDvrHost.Text; string user = txtDvrUser.Text; string pass = txtDvrPass.Text;
                 int channel = 1;
                 if (btn == btnPreviewAnL1P) { cameraName = "Làn 1 - Biển số (Sau)"; channel = (int)numChL1P.Value; }
                 else if (btn == btnPreviewAnL1F) { cameraName = "Làn 1 - Toàn cảnh (Trước)"; channel = (int)numChL1F.Value; }
