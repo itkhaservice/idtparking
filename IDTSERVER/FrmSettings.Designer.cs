@@ -56,27 +56,35 @@ namespace IDTSERVER
             this.pnlThietBiContent = new System.Windows.Forms.Panel();
             this.pnlIPConfig = new System.Windows.Forms.FlowLayoutPanel();
             this.grpIpL1P = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.txtIpL1P_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL1P_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL1P_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnPreviewIpL1P = new Guna.UI2.WinForms.Guna2Button();
             this.txtIpL1P_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1P_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1P_User = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1P_Host = new Guna.UI2.WinForms.Guna2TextBox();
             this.grpIpL1F = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.txtIpL1F_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL1F_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL1F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnPreviewIpL1F = new Guna.UI2.WinForms.Guna2Button();
             this.txtIpL1F_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1F_User = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL1F_Host = new Guna.UI2.WinForms.Guna2TextBox();
             this.grpIpL2P = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.txtIpL2P_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL2P_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL2P_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnPreviewIpL2P = new Guna.UI2.WinForms.Guna2Button();
             this.txtIpL2P_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2P_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2P_User = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2P_Host = new Guna.UI2.WinForms.Guna2TextBox();
             this.grpIpL2F = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.txtIpL2F_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL2F_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL2F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.btnPreviewIpL2F = new Guna.UI2.WinForms.Guna2Button();
             this.txtIpL2F_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2F_User = new Guna.UI2.WinForms.Guna2TextBox();
+            this.txtIpL2F_Host = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlAnalogConfig = new System.Windows.Forms.Panel();
             this.grpAnalogChannels = new Guna.UI2.WinForms.Guna2GroupBox();
+            this.btnPreviewAnL2F = new Guna.UI2.WinForms.Guna2Button();
+            this.btnPreviewAnL2P = new Guna.UI2.WinForms.Guna2Button();
+            this.btnPreviewAnL1F = new Guna.UI2.WinForms.Guna2Button();
+            this.btnPreviewAnL1P = new Guna.UI2.WinForms.Guna2Button();
             this.numChL2F = new Guna.UI2.WinForms.Guna2NumericUpDown();
             this.numChL2P = new Guna.UI2.WinForms.Guna2NumericUpDown();
             this.numChL1F = new Guna.UI2.WinForms.Guna2NumericUpDown();
@@ -691,6 +699,7 @@ namespace IDTSERVER
             // grpIpL1P
             // 
             this.grpIpL1P.BorderRadius = 5;
+            this.grpIpL1P.Controls.Add(this.btnPreviewIpL1P);
             this.grpIpL1P.Controls.Add(this.txtIpL1P_Rtsp);
             this.grpIpL1P.Controls.Add(this.txtIpL1P_Pass);
             this.grpIpL1P.Controls.Add(this.txtIpL1P_User);
@@ -703,6 +712,19 @@ namespace IDTSERVER
             this.grpIpL1P.Size = new System.Drawing.Size(350, 215);
             this.grpIpL1P.TabIndex = 0;
             this.grpIpL1P.Text = "LÀN 1 - BIỂN SỐ (SAU)";
+            // 
+            // btnPreviewIpL1P
+            // 
+            this.btnPreviewIpL1P.BorderRadius = 5;
+            this.btnPreviewIpL1P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewIpL1P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewIpL1P.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewIpL1P.Location = new System.Drawing.Point(260, 55);
+            this.btnPreviewIpL1P.Name = "btnPreviewIpL1P";
+            this.btnPreviewIpL1P.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewIpL1P.TabIndex = 4;
+            this.btnPreviewIpL1P.Text = "XEM THỬ";
+            this.btnPreviewIpL1P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
             // 
             // txtIpL1P_Rtsp
             // 
@@ -737,13 +759,14 @@ namespace IDTSERVER
             this.txtIpL1P_Host.BorderRadius = 5;
             this.txtIpL1P_Host.Location = new System.Drawing.Point(10, 55);
             this.txtIpL1P_Host.Name = "txtIpL1P_Host";
-            this.txtIpL1P_Host.PlaceholderText = "IP Camera (192.168...)";
-            this.txtIpL1P_Host.Size = new System.Drawing.Size(330, 36);
+            this.txtIpL1P_Host.PlaceholderText = "IP Camera";
+            this.txtIpL1P_Host.Size = new System.Drawing.Size(245, 36);
             this.txtIpL1P_Host.TabIndex = 0;
             // 
             // grpIpL1F
             // 
             this.grpIpL1F.BorderRadius = 5;
+            this.grpIpL1F.Controls.Add(this.btnPreviewIpL1F);
             this.grpIpL1F.Controls.Add(this.txtIpL1F_Rtsp);
             this.grpIpL1F.Controls.Add(this.txtIpL1F_Pass);
             this.grpIpL1F.Controls.Add(this.txtIpL1F_User);
@@ -756,6 +779,19 @@ namespace IDTSERVER
             this.grpIpL1F.Size = new System.Drawing.Size(350, 215);
             this.grpIpL1F.TabIndex = 1;
             this.grpIpL1F.Text = "LÀN 1 - TOÀN CẢNH (TRƯỚC)";
+            // 
+            // btnPreviewIpL1F
+            // 
+            this.btnPreviewIpL1F.BorderRadius = 5;
+            this.btnPreviewIpL1F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewIpL1F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewIpL1F.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewIpL1F.Location = new System.Drawing.Point(260, 55);
+            this.btnPreviewIpL1F.Name = "btnPreviewIpL1F";
+            this.btnPreviewIpL1F.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewIpL1F.TabIndex = 4;
+            this.btnPreviewIpL1F.Text = "XEM THỬ";
+            this.btnPreviewIpL1F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
             // 
             // txtIpL1F_Rtsp
             // 
@@ -790,13 +826,14 @@ namespace IDTSERVER
             this.txtIpL1F_Host.BorderRadius = 5;
             this.txtIpL1F_Host.Location = new System.Drawing.Point(10, 55);
             this.txtIpL1F_Host.Name = "txtIpL1F_Host";
-            this.txtIpL1F_Host.PlaceholderText = "IP Camera (192.168...)";
-            this.txtIpL1F_Host.Size = new System.Drawing.Size(330, 36);
+            this.txtIpL1F_Host.PlaceholderText = "IP Camera";
+            this.txtIpL1F_Host.Size = new System.Drawing.Size(245, 36);
             this.txtIpL1F_Host.TabIndex = 0;
             // 
             // grpIpL2P
             // 
             this.grpIpL2P.BorderRadius = 5;
+            this.grpIpL2P.Controls.Add(this.btnPreviewIpL2P);
             this.grpIpL2P.Controls.Add(this.txtIpL2P_Rtsp);
             this.grpIpL2P.Controls.Add(this.txtIpL2P_Pass);
             this.grpIpL2P.Controls.Add(this.txtIpL2P_User);
@@ -809,6 +846,19 @@ namespace IDTSERVER
             this.grpIpL2P.Size = new System.Drawing.Size(350, 215);
             this.grpIpL2P.TabIndex = 2;
             this.grpIpL2P.Text = "LÀN 2 - BIỂN SỐ (SAU)";
+            // 
+            // btnPreviewIpL2P
+            // 
+            this.btnPreviewIpL2P.BorderRadius = 5;
+            this.btnPreviewIpL2P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewIpL2P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewIpL2P.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewIpL2P.Location = new System.Drawing.Point(260, 55);
+            this.btnPreviewIpL2P.Name = "btnPreviewIpL2P";
+            this.btnPreviewIpL2P.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewIpL2P.TabIndex = 4;
+            this.btnPreviewIpL2P.Text = "XEM THỬ";
+            this.btnPreviewIpL2P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
             // 
             // txtIpL2P_Rtsp
             // 
@@ -843,13 +893,14 @@ namespace IDTSERVER
             this.txtIpL2P_Host.BorderRadius = 5;
             this.txtIpL2P_Host.Location = new System.Drawing.Point(10, 55);
             this.txtIpL2P_Host.Name = "txtIpL2P_Host";
-            this.txtIpL2P_Host.PlaceholderText = "IP Camera (192.168...)";
-            this.txtIpL2P_Host.Size = new System.Drawing.Size(330, 36);
+            this.txtIpL2P_Host.PlaceholderText = "IP Camera";
+            this.txtIpL2P_Host.Size = new System.Drawing.Size(245, 36);
             this.txtIpL2P_Host.TabIndex = 0;
             // 
             // grpIpL2F
             // 
             this.grpIpL2F.BorderRadius = 5;
+            this.grpIpL2F.Controls.Add(this.btnPreviewIpL2F);
             this.grpIpL2F.Controls.Add(this.txtIpL2F_Rtsp);
             this.grpIpL2F.Controls.Add(this.txtIpL2F_Pass);
             this.grpIpL2F.Controls.Add(this.txtIpL2F_User);
@@ -862,6 +913,19 @@ namespace IDTSERVER
             this.grpIpL2F.Size = new System.Drawing.Size(350, 215);
             this.grpIpL2F.TabIndex = 3;
             this.grpIpL2F.Text = "LÀN 2 - TOÀN CẢNH (TRƯỚC)";
+            // 
+            // btnPreviewIpL2F
+            // 
+            this.btnPreviewIpL2F.BorderRadius = 5;
+            this.btnPreviewIpL2F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewIpL2F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewIpL2F.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewIpL2F.Location = new System.Drawing.Point(260, 55);
+            this.btnPreviewIpL2F.Name = "btnPreviewIpL2F";
+            this.btnPreviewIpL2F.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewIpL2F.TabIndex = 4;
+            this.btnPreviewIpL2F.Text = "XEM THỬ";
+            this.btnPreviewIpL2F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
             // 
             // txtIpL2F_Rtsp
             // 
@@ -896,8 +960,8 @@ namespace IDTSERVER
             this.txtIpL2F_Host.BorderRadius = 5;
             this.txtIpL2F_Host.Location = new System.Drawing.Point(10, 55);
             this.txtIpL2F_Host.Name = "txtIpL2F_Host";
-            this.txtIpL2F_Host.PlaceholderText = "IP Camera (192.168...)";
-            this.txtIpL2F_Host.Size = new System.Drawing.Size(330, 36);
+            this.txtIpL2F_Host.PlaceholderText = "IP Camera";
+            this.txtIpL2F_Host.Size = new System.Drawing.Size(245, 36);
             this.txtIpL2F_Host.TabIndex = 0;
             // 
             // pnlAnalogConfig
@@ -913,6 +977,10 @@ namespace IDTSERVER
             // grpAnalogChannels
             // 
             this.grpAnalogChannels.BorderRadius = 5;
+            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL2F);
+            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL2P);
+            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL1F);
+            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL1P);
             this.grpAnalogChannels.Controls.Add(this.numChL2F);
             this.grpAnalogChannels.Controls.Add(this.numChL2P);
             this.grpAnalogChannels.Controls.Add(this.numChL1F);
@@ -930,6 +998,58 @@ namespace IDTSERVER
             this.grpAnalogChannels.Size = new System.Drawing.Size(732, 200);
             this.grpAnalogChannels.TabIndex = 1;
             this.grpAnalogChannels.Text = "PHÂN KÊNH CAMERA THEO LÀN";
+            // 
+            // btnPreviewAnL2F
+            // 
+            this.btnPreviewAnL2F.BorderRadius = 5;
+            this.btnPreviewAnL2F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewAnL2F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewAnL2F.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewAnL2F.Location = new System.Drawing.Point(570, 115);
+            this.btnPreviewAnL2F.Name = "btnPreviewAnL2F";
+            this.btnPreviewAnL2F.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewAnL2F.TabIndex = 11;
+            this.btnPreviewAnL2F.Text = "XEM THỬ";
+            this.btnPreviewAnL2F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
+            // 
+            // btnPreviewAnL2P
+            // 
+            this.btnPreviewAnL2P.BorderRadius = 5;
+            this.btnPreviewAnL2P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewAnL2P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewAnL2P.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewAnL2P.Location = new System.Drawing.Point(250, 115);
+            this.btnPreviewAnL2P.Name = "btnPreviewAnL2P";
+            this.btnPreviewAnL2P.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewAnL2P.TabIndex = 10;
+            this.btnPreviewAnL2P.Text = "XEM THỬ";
+            this.btnPreviewAnL2P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
+            // 
+            // btnPreviewAnL1F
+            // 
+            this.btnPreviewAnL1F.BorderRadius = 5;
+            this.btnPreviewAnL1F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewAnL1F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewAnL1F.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewAnL1F.Location = new System.Drawing.Point(570, 55);
+            this.btnPreviewAnL1F.Name = "btnPreviewAnL1F";
+            this.btnPreviewAnL1F.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewAnL1F.TabIndex = 9;
+            this.btnPreviewAnL1F.Text = "XEM THỬ";
+            this.btnPreviewAnL1F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
+            // 
+            // btnPreviewAnL1P
+            // 
+            this.btnPreviewAnL1P.BorderRadius = 5;
+            this.btnPreviewAnL1P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
+            this.btnPreviewAnL1P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnPreviewAnL1P.ForeColor = System.Drawing.Color.White;
+            this.btnPreviewAnL1P.Location = new System.Drawing.Point(250, 55);
+            this.btnPreviewAnL1P.Name = "btnPreviewAnL1P";
+            this.btnPreviewAnL1P.Size = new System.Drawing.Size(80, 36);
+            this.btnPreviewAnL1P.TabIndex = 8;
+            this.btnPreviewAnL1P.Text = "XEM THỬ";
+            this.btnPreviewAnL1P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
             // 
             // numChL2F
             // 
@@ -1421,7 +1541,8 @@ namespace IDTSERVER
             // 
             this.tabGiaTien.Controls.Add(this.lblGiaTienDev);
             this.tabGiaTien.Location = new System.Drawing.Point(184, 4);
-            this.tabHeThong.Padding = new System.Windows.Forms.Padding(15);
+            this.tabGiaTien.Name = "tabGiaTien";
+            this.tabGiaTien.Padding = new System.Windows.Forms.Padding(15);
             this.tabGiaTien.Size = new System.Drawing.Size(762, 642);
             this.tabGiaTien.TabIndex = 3;
             this.tabGiaTien.Text = "GIÁ TIỀN";
@@ -1443,6 +1564,7 @@ namespace IDTSERVER
             this.tabNangCao.Controls.Add(this.lblNangCaoDev);
             this.tabNangCao.Location = new System.Drawing.Point(184, 4);
             this.tabNangCao.Name = "tabNangCao";
+            this.tabHeThong.Padding = new System.Windows.Forms.Padding(15);
             this.tabNangCao.Size = new System.Drawing.Size(762, 642);
             this.tabNangCao.TabIndex = 4;
             this.tabNangCao.Text = "NÂNG CAO";
@@ -1582,27 +1704,35 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2NumericUpDown numChL1F;
         private Guna.UI2.WinForms.Guna2NumericUpDown numChL2P;
         private Guna.UI2.WinForms.Guna2NumericUpDown numChL2F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL1P;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL1F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL2P;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL2F;
         private System.Windows.Forms.FlowLayoutPanel pnlIPConfig;
         private Guna.UI2.WinForms.Guna2GroupBox grpIpL1P;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Host;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_User;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Pass;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL1P;
         private Guna.UI2.WinForms.Guna2GroupBox grpIpL1F;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Host;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_User;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Pass;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL1F;
         private Guna.UI2.WinForms.Guna2GroupBox grpIpL2P;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Host;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_User;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Pass;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL2P;
         private Guna.UI2.WinForms.Guna2GroupBox grpIpL2F;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Host;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_User;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Pass;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL2F;
         private Guna.UI2.WinForms.Guna2DataGridView dgvCardType;
         private System.Windows.Forms.Panel pnlCardTypeTools;
         private Guna.UI2.WinForms.Guna2Button btnDelete;

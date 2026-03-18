@@ -27,10 +27,10 @@ namespace IDTSERVER
         public int CameraType { get; set; } = 0; // 0: Analog, 1: IP
 
         // Analog Settings (Kênh trên đầu ghi)
-        public string DvrHost { get; set; } = "192.168.1.100";
-        public int DvrPort { get; set; } = 8000;
+        public string DvrHost { get; set; } = "192.168.100.99";
+        public int DvrPort { get; set; } = 8888;
         public string DvrUser { get; set; } = "admin";
-        public string DvrPass { get; set; } = "admin123";
+        public string DvrPass { get; set; } = "idt123321";
         public int ChLane1Plate { get; set; } = 1; // Làn 1 - Sau (Biển số)
         public int ChLane1Front { get; set; } = 2; // Làn 1 - Trước (Toàn cảnh)
         public int ChLane2Plate { get; set; } = 3; // Làn 2 - Sau (Biển số)
