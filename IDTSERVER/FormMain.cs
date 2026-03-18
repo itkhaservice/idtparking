@@ -135,6 +135,13 @@ namespace IDTSERVER
                         }
                         break;
 
+                    case Keys.F3:
+                        using (FrmSettings settings = new FrmSettings())
+                        {
+                            settings.ShowDialog();
+                        }
+                        break;
+
                     case Keys.F2:
                         if (!_isSystemActive) { MessageBox.Show("Vui lòng nhấn F1 để đăng nhập trước!"); break; }
                         using (ShiftHandoverForm handover = new ShiftHandoverForm())
