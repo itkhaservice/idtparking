@@ -191,6 +191,14 @@ namespace IDTSERVER
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
             this.tlpInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 12.5F));
 
+            this.lblCardID.Text = "SỐ THẺ: 0012345678";
+            this.lblVehicleType.Text = "LOẠI XE: Ô TÔ 4 CHỖ";
+            this.lblOwner.Text = "CHỦ XE: NGUYỄN VĂN A";
+            this.lblPlate.Text = "BIỂN SỐ: 51A-123.45";
+            this.lblDuration.Text = "THỜI GIAN: 02 Giờ 15 Phút";
+            this.lblTimeEntry.Text = "THỜI ĐIỂM VÀO: 18/03/2026 08:30:00";
+            this.lblTimeExit.Text = "THỜI ĐIỂM RA: 18/03/2026 10:45:00";
+            
             this.lblCardID.Dock = this.lblVehicleType.Dock = this.lblOwner.Dock = this.lblPlate.Dock = this.lblAddress.Dock = this.lblDuration.Dock = this.lblTimeEntry.Dock = this.lblTimeExit.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCardID.TextAlign = this.lblVehicleType.TextAlign = this.lblOwner.TextAlign = this.lblPlate.TextAlign = this.lblAddress.TextAlign = this.lblDuration.TextAlign = this.lblTimeEntry.TextAlign = this.lblTimeExit.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             
@@ -213,14 +221,14 @@ namespace IDTSERVER
             this.lblAmount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblAmount.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold); // Giảm nhẹ font
             this.lblAmount.ForeColor = System.Drawing.Color.FromArgb(245, 124, 0);
-            this.lblAmount.Text = "0 VNĐ";
+            this.lblAmount.Text = "25.000 VNĐ";
             this.lblAmount.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblAmount.Padding = new System.Windows.Forms.Padding(0, 0, 5, 0);
 
             this.lblPayTitle.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblPayTitle.Height = 22;
             this.lblPayTitle.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblPayTitle.Text = "THANH TOÁN";
+            this.lblPayTitle.Text = "THANH TOÁN (PHÍ LƯỢT):";
             this.lblPayTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblPayTitle.Padding = new System.Windows.Forms.Padding(0, 2, 5, 0);
 
