@@ -38,7 +38,7 @@ Thông tin màn hình chính
 Hàng 2 (Thông tin xe): 40% 
 Ảnh vào - Ảnh ra: Là ảnh nhận diện biển số và đọc bằng AI, tỉ lệ chiều ngang - dọc theo hình camera live và camera chụp lại snapshots
 
-Thông tin thẻ xe
+Thông tin thẻ xe mẫu phải có tiêu đề và giá trị mẫu
 SỐ THẺ:
 LOẠI XE:
 CHỦ XE:
@@ -155,16 +155,28 @@ NÂNG CAO
 Chưa có ý tưởng, để trống Form - Đang thu thập thông tin	
 
 
+Tôi đang test với máy chủ  192.168.100.81 và cơ sở dữ liệu GIUXE với tài khoản sa mật khẩu là 123ABC thành công
 
+Khi tôi bấm kiểm tra ở phần Cài đặt Server thông báo Không phản hồi (Timeout/Wrong Port)!
+Với các dữ liệu tôi nhập lần lượt là
+192.168.100.81
+192.168.100.81
+1433
+Tôi nghĩ có 2 chỗ nhập Server Name và Server Local là để khi dữ liệu kết nối đến Server chính và Server Local để sao lưu dữ liệu đồng bộ với nhau, mỗi khi có sự cố thì có thể hoán đổi nhanh để trở thành máy chủ
+Nhưng nếu không nhập Server Local vẫn hoạt động được
 
+Cấu hình Thiết bị Camera
+Chọn loại camera Analog: OK
+Chọn loại camera IP: Phải đủ 4 camera ( Ra (Trước - Sau) và Vào (Trước - Sau)
+Chưa thấy chọn cấu hình Làn cho hệ thống
+Chưa thấy chọn cấu hình các Cổng COM
 
-
-
-
-
-
-
-
+Tôi sẽ cung cấp thông tin Đầu ghi
+Địa chỉ IP: 192.168.100.99
+Port: 8888
+Username: admin
+Password: idt123321
+Có các kênh 0 1 2 3 đúng như thực tế mà bấm xem không được hình ảnh Xem thử
 
 
 
