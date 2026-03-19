@@ -33,7 +33,7 @@ namespace IDTSERVER
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            this.Close();
         }
 
         private void chkShowPass_CheckedChanged(object sender, EventArgs e)

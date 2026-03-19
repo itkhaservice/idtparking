@@ -28,9 +28,9 @@ namespace IDTSERVER
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.tabHeThong = new System.Windows.Forms.TabPage();
             this.pnlHeThongContent = new System.Windows.Forms.Panel();
@@ -163,6 +163,7 @@ namespace IDTSERVER
             this.lblGiaTienDev = new System.Windows.Forms.Label();
             this.tabNangCao = new System.Windows.Forms.TabPage();
             this.lblNangCaoDev = new System.Windows.Forms.Label();
+            this.btnExitDevice = new Guna.UI2.WinForms.Guna2Button();
             this.guna2TabControl1.SuspendLayout();
             this.tabHeThong.SuspendLayout();
             this.pnlHeThongContent.SuspendLayout();
@@ -697,6 +698,7 @@ namespace IDTSERVER
             this.btnExitSystem.Size = new System.Drawing.Size(120, 36);
             this.btnExitSystem.TabIndex = 2;
             this.btnExitSystem.Text = "ĐÓNG";
+            this.btnExitSystem.Click += new System.EventHandler(this.btnExitSystem_Click_1);
             // 
             // btnGuideSystem
             // 
@@ -1876,6 +1878,7 @@ namespace IDTSERVER
             // pnlThietBiBottom
             // 
             this.pnlThietBiBottom.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.pnlThietBiBottom.Controls.Add(this.btnExitDevice);
             this.pnlThietBiBottom.Controls.Add(this.btnGuideDevice);
             this.pnlThietBiBottom.Controls.Add(this.btnSaveDevice);
             this.pnlThietBiBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -1926,26 +1929,26 @@ namespace IDTSERVER
             // dgvCardType
             // 
             this.dgvCardType.AllowUserToAddRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.White;
-            this.dgvCardType.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCardType.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
+            this.dgvCardType.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCardType.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
             this.dgvCardType.ColumnHeadersHeight = 35;
             this.dgvCardType.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCardType.DefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCardType.DefaultCellStyle = dataGridViewCellStyle6;
             this.dgvCardType.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvCardType.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvCardType.Location = new System.Drawing.Point(15, 65);
@@ -2102,6 +2105,20 @@ namespace IDTSERVER
             this.lblNangCaoDev.Text = "Cấu hình AI nhận diện biển số và các tùy chọn nâng cao khác...";
             this.lblNangCaoDev.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnExitDevice
+            // 
+            this.btnExitDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExitDevice.BorderRadius = 5;
+            this.btnExitDevice.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            this.btnExitDevice.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExitDevice.ForeColor = System.Drawing.Color.White;
+            this.btnExitDevice.Location = new System.Drawing.Point(306, 7);
+            this.btnExitDevice.Name = "btnExitDevice";
+            this.btnExitDevice.Size = new System.Drawing.Size(120, 36);
+            this.btnExitDevice.TabIndex = 2;
+            this.btnExitDevice.Text = "ĐÓNG";
+            this.btnExitDevice.Click += new System.EventHandler(this.btnExitDevice_Click);
+            // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2144,7 +2161,6 @@ namespace IDTSERVER
             ((System.ComponentModel.ISupportInitialize)(this.numChL1F)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL1P)).EndInit();
             this.grpDvrInfo.ResumeLayout(false);
-            this.grpDvrInfo.PerformLayout();
             this.grpLaneConfig.ResumeLayout(false);
             this.grpLaneConfig.PerformLayout();
             this.pnlThietBiTop.ResumeLayout(false);
@@ -2162,6 +2178,7 @@ namespace IDTSERVER
             this.tabGiaTien.ResumeLayout(false);
             this.tabNangCao.ResumeLayout(false);
             this.ResumeLayout(false);
+
             }
             #endregion
             private Guna.UI2.WinForms.Guna2TabControl guna2TabControl1;
@@ -2296,5 +2313,6 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Pass;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_User;
         private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Host;
+        private Guna.UI2.WinForms.Guna2Button btnExitDevice;
     }
 }

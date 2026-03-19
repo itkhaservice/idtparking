@@ -22,6 +22,30 @@ namespace IDTSERVER
             this.Load += FormMain_Load;
             this.KeyDown += FormMain_KeyDown;
             this.KeyPreview = true;
+
+            // Gán sự kiện Paint để đánh số Camera
+            pbCam1.Paint += (s, e) => DrawCamLabel(e, "CAM 1", "LÀN 1 - BIỂN SỐ");
+            pbCam2.Paint += (s, e) => DrawCamLabel(e, "CAM 2", "LÀN 1 - TOÀN CẢNH");
+            pbCam3.Paint += (s, e) => DrawCamLabel(e, "CAM 3", "LÀN 2 - BIỂN SỐ");
+            pbCam4.Paint += (s, e) => DrawCamLabel(e, "CAM 4", "LÀN 2 - TOÀN CẢNH");
+            pbCam5.Paint += (s, e) => DrawCamLabel(e, "CAM 5", "LÀN 3 - BIỂN SỐ");
+            pbCam6.Paint += (s, e) => DrawCamLabel(e, "CAM 6", "LÀN 3 - TOÀN CẢNH");
+        }
+
+        private void DrawCamLabel(PaintEventArgs e, string camId, string desc)
+        {
+            using (Font fontId = new Font("Segoe UI", 12, FontStyle.Bold))
+            using (Font fontDesc = new Font("Segoe UI", 8, FontStyle.Regular))
+            {
+                // Vẽ nền mờ cho nhãn
+                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), 5, 5, 160, 45);
+                
+                // Vẽ số Camera
+                e.Graphics.DrawString(camId, fontId, Brushes.Yellow, 10, 8);
+                
+                // Vẽ mô tả
+                e.Graphics.DrawString(desc, fontDesc, Brushes.White, 10, 28);
+            }
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -234,6 +258,18 @@ namespace IDTSERVER
         {
             switch (e.KeyCode)
             {
+                case Keys.F1:
+                    using (LoginForm login = new LoginForm())
+                    {
+                        if (login.ShowDialog() == DialogResult.OK)
+                        {
+                            _isSystemActive = true;
+                            _currentUser = login.CurrentUser;
+                            _currentShift = login.CurrentShift;
+                            this.Text = $"IDT PARKING - ĐANG HOẠT ĐỘNG | NV: {_currentUser} | {_currentShift}";
+                        }
+                    }
+                    break;
                 case Keys.F3:
                     using (FrmSettings settings = new FrmSettings())
                     {

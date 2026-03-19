@@ -340,5 +340,15 @@ namespace IDTSERVER
                 }
             } else { MessageBox.Show("Vui lòng chọn cả dòng cần xóa.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         }
+
+        private void btnExitSystem_Click_1(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void btnExitDevice_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
