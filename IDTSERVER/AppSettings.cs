@@ -17,11 +17,16 @@ namespace IDTSERVER
         public string URLServer { get; set; } = "http://192.168.100.81:8080";
         public string BackupPath { get; set; } = @"D:\IDTParking\Backup";
 
+        // Cấu hình số làn
+        public int LaneCount { get; set; } = 2; // Mặc định 2 làn
+
         // Tab 2 - Cấu hình Làn & COM
         public int Lane1Direction { get; set; } = 0; // 0: Vào, 1: Ra, 2: Đảo chiều
         public int Lane2Direction { get; set; } = 1; // 0: Vào, 1: Ra, 2: Đảo chiều
+        public int Lane3Direction { get; set; } = 0; // Thêm Làn 3
         public string Lane1ComPort { get; set; } = "COM1";
         public string Lane2ComPort { get; set; } = "COM2";
+        public string Lane3ComPort { get; set; } = "COM3"; // Thêm COM Làn 3
 
         // Tab 2 - Camera General
         public int CameraType { get; set; } = 0; // 0: Analog, 1: IP
@@ -35,31 +40,42 @@ namespace IDTSERVER
         public int ChLane1Front { get; set; } = 2; // Làn 1 - Trước (Toàn cảnh)
         public int ChLane2Plate { get; set; } = 3; // Làn 2 - Sau (Biển số)
         public int ChLane2Front { get; set; } = 4; // Làn 2 - Trước (Toàn cảnh)
+        public int ChLane3Plate { get; set; } = 5; // Thêm Làn 3
+        public int ChLane3Front { get; set; } = 6; // Thêm Làn 3
 
-        // IP Camera Settings (RTSP) - Đủ 4 Camera
-        // Làn 1 - Biển số (Sau)
+        // IP Camera Settings (RTSP)
+        // Làn 1
         public string IpCamL1PlateHost { get; set; } = "192.168.1.101";
         public string IpCamL1PlateUser { get; set; } = "admin";
         public string IpCamL1PlatePass { get; set; } = "admin123";
         public string IpCamL1PlateRTSP { get; set; } = "/Streaming/Channels/101";
 
-        // Làn 1 - Toàn cảnh (Trước)
         public string IpCamL1FrontHost { get; set; } = "192.168.1.102";
         public string IpCamL1FrontUser { get; set; } = "admin";
         public string IpCamL1FrontPass { get; set; } = "admin123";
         public string IpCamL1FrontRTSP { get; set; } = "/Streaming/Channels/101";
 
-        // Làn 2 - Biển số (Sau)
+        // Làn 2
         public string IpCamL2PlateHost { get; set; } = "192.168.1.103";
         public string IpCamL2PlateUser { get; set; } = "admin";
         public string IpCamL2PlatePass { get; set; } = "admin123";
         public string IpCamL2PlateRTSP { get; set; } = "/Streaming/Channels/101";
 
-        // Làn 2 - Toàn cảnh (Trước)
         public string IpCamL2FrontHost { get; set; } = "192.168.1.104";
         public string IpCamL2FrontUser { get; set; } = "admin";
         public string IpCamL2FrontPass { get; set; } = "admin123";
         public string IpCamL2FrontRTSP { get; set; } = "/Streaming/Channels/101";
+
+        // Làn 3
+        public string IpCamL3PlateHost { get; set; } = "192.168.1.105";
+        public string IpCamL3PlateUser { get; set; } = "admin";
+        public string IpCamL3PlatePass { get; set; } = "admin123";
+        public string IpCamL3PlateRTSP { get; set; } = "/Streaming/Channels/101";
+
+        public string IpCamL3FrontHost { get; set; } = "192.168.1.106";
+        public string IpCamL3FrontUser { get; set; } = "admin";
+        public string IpCamL3FrontPass { get; set; } = "admin123";
+        public string IpCamL3FrontRTSP { get; set; } = "/Streaming/Channels/101";
 
         // Tab 1 - Options
         public bool FastScan { get; set; } = true;
@@ -67,7 +83,7 @@ namespace IDTSERVER
         public bool AutoReconnect { get; set; } = true;
         public bool AutoPrint { get; set; } = false;
         public bool OnlineImage { get; set; } = true;
-        public bool ShowCamerasOnMain { get; set; } = false; // Mặc định tắt để giữ dữ liệu mẫu
+        public bool ShowCamerasOnMain { get; set; } = false;
         public bool ShowRevenue { get; set; } = true;
         public bool VoiceMoney { get; set; } = true;
         public bool VoiceWarning { get; set; } = true;

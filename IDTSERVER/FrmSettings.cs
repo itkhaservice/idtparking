@@ -36,11 +36,16 @@ namespace IDTSERVER
             txtURLServer.Text = _settings.URLServer;
             txtBackupPath.Text = _settings.BackupPath;
 
-            // Tab 2 - Cấu hình Làn & COM
+            // Cấu hình Làn & COM
+            if (_settings.LaneCount == 3) rdo3lane.Checked = true;
+            else rdo2lane.Checked = true;
+
             cboLane1Dir.SelectedIndex = Math.Min(_settings.Lane1Direction, 2);
             cboLane2Dir.SelectedIndex = Math.Min(_settings.Lane2Direction, 2);
+            cboLane3Dir.SelectedIndex = Math.Min(_settings.Lane3Direction, 2);
             txtLane1Com.Text = _settings.Lane1ComPort;
             txtLane2Com.Text = _settings.Lane2ComPort;
+            txtLane3Com.Text = _settings.Lane3ComPort;
 
             // Tab 2 - Camera Type
             if (_settings.CameraType == 0)
@@ -57,8 +62,10 @@ namespace IDTSERVER
             numChL1F.Value = _settings.ChLane1Front;
             numChL2P.Value = _settings.ChLane2Plate;
             numChL2F.Value = _settings.ChLane2Front;
+            numChL3P.Value = _settings.ChLane3Plate;
+            numChL3F.Value = _settings.ChLane3Front;
 
-            // Tab 2 - IP Camera Config (4 Camera)
+            // Tab 2 - IP Camera Config (6 Camera)
             txtIpL1P_Host.Text = _settings.IpCamL1PlateHost;
             txtIpL1P_User.Text = _settings.IpCamL1PlateUser;
             txtIpL1P_Pass.Text = _settings.IpCamL1PlatePass;
@@ -75,6 +82,14 @@ namespace IDTSERVER
             txtIpL2F_User.Text = _settings.IpCamL2FrontUser;
             txtIpL2F_Pass.Text = _settings.IpCamL2FrontPass;
             txtIpL2F_Rtsp.Text = _settings.IpCamL2FrontRTSP;
+            txtIpL3P_Host.Text = _settings.IpCamL3PlateHost;
+            txtIpL3P_User.Text = _settings.IpCamL3PlateUser;
+            txtIpL3P_Pass.Text = _settings.IpCamL3PlatePass;
+            txtIpL3P_Rtsp.Text = _settings.IpCamL3PlateRTSP;
+            txtIpL3F_Host.Text = _settings.IpCamL3FrontHost;
+            txtIpL3F_User.Text = _settings.IpCamL3FrontUser;
+            txtIpL3F_Pass.Text = _settings.IpCamL3FrontPass;
+            txtIpL3F_Rtsp.Text = _settings.IpCamL3FrontRTSP;
 
             UpdateCameraUI();
 
@@ -102,10 +117,15 @@ namespace IDTSERVER
             _settings.LocalPath = txtLocalPath.Text;
             _settings.URLServer = txtURLServer.Text;
             _settings.BackupPath = txtBackupPath.Text;
+
+            _settings.LaneCount = rdo3lane.Checked ? 3 : 2;
             _settings.Lane1Direction = cboLane1Dir.SelectedIndex;
             _settings.Lane2Direction = cboLane2Dir.SelectedIndex;
+            _settings.Lane3Direction = cboLane3Dir.SelectedIndex;
             _settings.Lane1ComPort = txtLane1Com.Text;
             _settings.Lane2ComPort = txtLane2Com.Text;
+            _settings.Lane3ComPort = txtLane3Com.Text;
+
             _settings.CameraType = rdoAnalogCamera.Checked ? 0 : 1;
             _settings.DvrHost = txtDvrHost.Text;
             _settings.DvrPort = int.TryParse(txtDvrPort.Text, out int port) ? port : 8888;
@@ -115,6 +135,9 @@ namespace IDTSERVER
             _settings.ChLane1Front = (int)numChL1F.Value;
             _settings.ChLane2Plate = (int)numChL2P.Value;
             _settings.ChLane2Front = (int)numChL2F.Value;
+            _settings.ChLane3Plate = (int)numChL3P.Value;
+            _settings.ChLane3Front = (int)numChL3F.Value;
+
             _settings.IpCamL1PlateHost = txtIpL1P_Host.Text;
             _settings.IpCamL1PlateUser = txtIpL1P_User.Text;
             _settings.IpCamL1PlatePass = txtIpL1P_Pass.Text;
@@ -131,6 +154,14 @@ namespace IDTSERVER
             _settings.IpCamL2FrontUser = txtIpL2F_User.Text;
             _settings.IpCamL2FrontPass = txtIpL2F_Pass.Text;
             _settings.IpCamL2FrontRTSP = txtIpL2F_Rtsp.Text;
+            _settings.IpCamL3PlateHost = txtIpL3P_Host.Text;
+            _settings.IpCamL3PlateUser = txtIpL3P_User.Text;
+            _settings.IpCamL3PlatePass = txtIpL3P_Pass.Text;
+            _settings.IpCamL3PlateRTSP = txtIpL3P_Rtsp.Text;
+            _settings.IpCamL3FrontHost = txtIpL3F_Host.Text;
+            _settings.IpCamL3FrontUser = txtIpL3F_User.Text;
+            _settings.IpCamL3FrontPass = txtIpL3F_Pass.Text;
+            _settings.IpCamL3FrontRTSP = txtIpL3F_Rtsp.Text;
 
             // Options & Công tắc Camera
             _settings.FastScan = chkFastScan.Checked;
@@ -148,7 +179,13 @@ namespace IDTSERVER
         {
             SaveUIToSettings();
             _settings.Save();
+            this.DialogResult = DialogResult.OK; // Để FormMain tự động load lại giao diện
             MessageBox.Show("Cấu hình hệ thống đã được lưu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnExitSystem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private async void btnTestServer_Click(object sender, EventArgs e)
@@ -233,6 +270,9 @@ namespace IDTSERVER
                 else if (btn == btnPreviewAnL1F) { cameraName = "Làn 1 - Toàn cảnh (Trước)"; channel = (int)numChL1F.Value; }
                 else if (btn == btnPreviewAnL2P) { cameraName = "Làn 2 - Biển số (Sau)"; channel = (int)numChL2P.Value; }
                 else if (btn == btnPreviewAnL2F) { cameraName = "Làn 2 - Toàn cảnh (Trước)"; channel = (int)numChL2F.Value; }
+                else if (btn == btnPreviewAnL3P) { cameraName = "Làn 3 - Biển số (Sau)"; channel = (int)numChL3P.Value; }
+                else if (btn == btnPreviewAnL3F) { cameraName = "Làn 3 - Toàn cảnh (Trước)"; channel = (int)numChL3F.Value; }
+                
                 if (channel < 1) channel = 1;
                 rtspUrl = $"rtsp://{user}:{pass}@{host}:554/cam/realmonitor?channel={channel}&subtype=1";
             }
@@ -242,6 +282,9 @@ namespace IDTSERVER
                 else if (btn == btnPreviewIpL1F) { cameraName = "IP Làn 1 - Toàn cảnh"; host = txtIpL1F_Host.Text; user = txtIpL1F_User.Text; pass = txtIpL1F_Pass.Text; path = txtIpL1F_Rtsp.Text; }
                 else if (btn == btnPreviewIpL2P) { cameraName = "IP Làn 2 - Biển số"; host = txtIpL2P_Host.Text; user = txtIpL2P_User.Text; pass = txtIpL2P_Pass.Text; path = txtIpL2P_Rtsp.Text; }
                 else if (btn == btnPreviewIpL2F) { cameraName = "IP Làn 2 - Toàn cảnh"; host = txtIpL2F_Host.Text; user = txtIpL2F_User.Text; pass = txtIpL2F_Pass.Text; path = txtIpL2F_Rtsp.Text; }
+                else if (btn == btnPreviewIpL3P) { cameraName = "IP Làn 3 - Biển số"; host = txtIpL3P_Host.Text; user = txtIpL3P_User.Text; pass = txtIpL3P_Pass.Text; path = txtIpL3P_Rtsp.Text; }
+                else if (btn == btnPreviewIpL3F) { cameraName = "IP Làn 3 - Toàn cảnh"; host = txtIpL3F_Host.Text; user = txtIpL3F_User.Text; pass = txtIpL3F_Pass.Text; path = txtIpL3F_Rtsp.Text; }
+                
                 if (path.StartsWith("rtsp://")) rtspUrl = path;
                 else {
                     string separator = path.Contains("?") ? "&" : "?";

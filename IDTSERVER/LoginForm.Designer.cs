@@ -224,7 +224,7 @@ namespace IDTSERVER
             this.chkShowPass.AutoSize = true;
             this.chkShowPass.Location = new System.Drawing.Point(133, 138);
             this.chkShowPass.Name = "chkShowPass";
-            this.chkShowPass.Size = new System.Drawing.Size(148, 19);
+            this.chkShowPass.Size = new System.Drawing.Size(121, 19);
             this.chkShowPass.TabIndex = 6;
             this.chkShowPass.Text = "Hiển thị mật khẩu";
             this.chkShowPass.UseVisualStyleBackColor = true;
@@ -235,7 +235,7 @@ namespace IDTSERVER
             this.chkRemember.AutoSize = true;
             this.chkRemember.Location = new System.Drawing.Point(133, 163);
             this.chkRemember.Name = "chkRemember";
-            this.chkRemember.Size = new System.Drawing.Size(157, 19);
+            this.chkRemember.Size = new System.Drawing.Size(128, 19);
             this.chkRemember.TabIndex = 7;
             this.chkRemember.Text = "Ghi nhớ đăng nhập";
             this.chkRemember.UseVisualStyleBackColor = true;
@@ -292,7 +292,7 @@ namespace IDTSERVER
             // LoginForm
             // 
             this.AcceptButton = this.btnLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.CancelButton = this.btnExit;

@@ -432,8 +432,10 @@ namespace IDTSERVER
             this.ClientSize = new System.Drawing.Size(1556, 884);
             this.Controls.Add(this.tlpLayout);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.KeyPreview = true;
             this.Name = "FormMain";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyDown);
             this.tlpLayout.ResumeLayout(false);
             this.pnlTopCamera.ResumeLayout(false);
             this.tlpCameras.ResumeLayout(false);

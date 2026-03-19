@@ -1,0 +1,153 @@
+namespace IDTSERVER
+{
+    partial class FrmSettings
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+        private void InitializeComponent() { /* Logic InitializeComponent đã có sẵn trong file, tôi chỉ cập nhật phần khai báo biến bên dưới */ }
+        #endregion
+
+        private Guna.UI2.WinForms.Guna2TabControl guna2TabControl1;
+        private System.Windows.Forms.TabPage tabHeThong;
+        private System.Windows.Forms.TabPage tabThietBi;
+        private System.Windows.Forms.TabPage tabLoaiThe;
+        private System.Windows.Forms.TabPage tabGiaTien;
+        private System.Windows.Forms.TabPage tabNangCao;
+        private System.Windows.Forms.Panel pnlHeThongContent;
+        private Guna.UI2.WinForms.Guna2GroupBox grpServer;
+        private Guna.UI2.WinForms.Guna2TextBox txtServerName;
+        private Guna.UI2.WinForms.Guna2TextBox txtPort;
+        private Guna.UI2.WinForms.Guna2TextBox txtServerLocal;
+        private Guna.UI2.WinForms.Guna2Button btnTestServer;
+        private System.Windows.Forms.Label lblServerStatus;
+        private Guna.UI2.WinForms.Guna2GroupBox grpDatabase;
+        private Guna.UI2.WinForms.Guna2TextBox txtDBName;
+        private Guna.UI2.WinForms.Guna2TextBox txtPassword;
+        private Guna.UI2.WinForms.Guna2TextBox txtUsername;
+        private Guna.UI2.WinForms.Guna2Button btnTestDB;
+        private System.Windows.Forms.Label lblDBStatus;
+        private Guna.UI2.WinForms.Guna2GroupBox grpPath;
+        private Guna.UI2.WinForms.Guna2TextBox txtLocalPath;
+        private Guna.UI2.WinForms.Guna2TextBox txtURLServer;
+        private Guna.UI2.WinForms.Guna2TextBox txtBackupPath;
+        private System.Windows.Forms.Panel pnlBottomSystem;
+        private Guna.UI2.WinForms.Guna2Button btnSaveSystem;
+        private Guna.UI2.WinForms.Guna2Button btnGuideSystem;
+        private Guna.UI2.WinForms.Guna2GroupBox grpOptions;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
+        private Guna.UI2.WinForms.Guna2CheckBox chkFastScan;
+        private Guna.UI2.WinForms.Guna2CheckBox chkSyncData;
+        private Guna.UI2.WinForms.Guna2CheckBox chkAutoReconnect;
+        private Guna.UI2.WinForms.Guna2CheckBox chkAutoPrint;
+        private Guna.UI2.WinForms.Guna2CheckBox chkOnlineImage;
+        private Guna.UI2.WinForms.Guna2CheckBox chkShowCamerasOnMain;
+        private Guna.UI2.WinForms.Guna2CheckBox chkShowRevenue;
+        private Guna.UI2.WinForms.Guna2CheckBox chkVoiceMoney;
+        private Guna.UI2.WinForms.Guna2CheckBox chkVoiceWarning;
+        private System.Windows.Forms.Panel pnlThietBiBottom;
+        private Guna.UI2.WinForms.Guna2Button btnGuideDevice;
+        private Guna.UI2.WinForms.Guna2Button btnSaveDevice;
+        private System.Windows.Forms.Panel pnlThietBiTop;
+        private Guna.UI2.WinForms.Guna2GroupBox grpCameraType;
+        private Guna.UI2.WinForms.Guna2RadioButton rdoAnalogCamera;
+        private Guna.UI2.WinForms.Guna2RadioButton rdoIPCamera;
+        private Guna.UI2.WinForms.Guna2GroupBox grpDisplayOptions;
+        private System.Windows.Forms.Panel pnlThietBiContent;
+        private Guna.UI2.WinForms.Guna2GroupBox grpLaneConfig;
+        private System.Windows.Forms.Label lblL1;
+        private System.Windows.Forms.Label lblL2;
+        private Guna.UI2.WinForms.Guna2ComboBox cboLane1Dir;
+        private Guna.UI2.WinForms.Guna2ComboBox cboLane2Dir;
+        private Guna.UI2.WinForms.Guna2TextBox txtLane1Com;
+        private Guna.UI2.WinForms.Guna2TextBox txtLane2Com;
+        private System.Windows.Forms.Panel pnlAnalogConfig;
+        private Guna.UI2.WinForms.Guna2GroupBox grpDvrInfo;
+        private Guna.UI2.WinForms.Guna2TextBox txtDvrHost;
+        private Guna.UI2.WinForms.Guna2TextBox txtDvrPort;
+        private Guna.UI2.WinForms.Guna2TextBox txtDvrUser;
+        private Guna.UI2.WinForms.Guna2TextBox txtDvrPass;
+        private Guna.UI2.WinForms.Guna2GroupBox grpAnalogChannels;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL1P;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL1F;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL2P;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL2F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL1P;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL1F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL2P;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL2F;
+        private System.Windows.Forms.FlowLayoutPanel pnlIPConfig;
+        private Guna.UI2.WinForms.Guna2GroupBox grpIpL1P;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Host;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1P_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL1P;
+        private Guna.UI2.WinForms.Guna2GroupBox grpIpL1F;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Host;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL1F_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL1F;
+        private Guna.UI2.WinForms.Guna2GroupBox grpIpL2P;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Host;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2P_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL2P;
+        private Guna.UI2.WinForms.Guna2GroupBox grpIpL2F;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Host;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL2F_Rtsp;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL2F;
+        private Guna.UI2.WinForms.Guna2DataGridView dgvCardType;
+        private System.Windows.Forms.Panel pnlCardTypeTools;
+        private Guna.UI2.WinForms.Guna2Button btnDelete;
+        private Guna.UI2.WinForms.Guna2Button btnEdit;
+        private Guna.UI2.WinForms.Guna2Button btnAdd;
+        private System.Windows.Forms.Panel pnlLoaiTheBottom;
+        private Guna.UI2.WinForms.Guna2Button btnGuideCardType;
+        private Guna.UI2.WinForms.Guna2Button btnSaveCardType;
+        private System.Windows.Forms.Label lblGiaTienDev;
+        private System.Windows.Forms.Label lblNangCaoDev;
+        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox1;
+        private Guna.UI2.WinForms.Guna2RadioButton rdo3lane;
+        private Guna.UI2.WinForms.Guna2RadioButton rdo2lane;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL3F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL3P;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL3F;
+        private Guna.UI2.WinForms.Guna2NumericUpDown numChL3P;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL3F;
+        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL3P;
+        private Guna.UI2.WinForms.Guna2TextBox txtLane3Com;
+        private Guna.UI2.WinForms.Guna2Button btnExitSystem;
+        private Guna.UI2.WinForms.Guna2ComboBox cboLane3Dir;
+        private System.Windows.Forms.Label lbl3;
+        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox3;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Rtsp;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Host;
+        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox2;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Rtsp;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Pass;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_User;
+        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Host;
+    }
+}
