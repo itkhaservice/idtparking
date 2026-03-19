@@ -20,12 +20,6 @@ namespace IDTSERVER
             this.tlpLayout = new System.Windows.Forms.TableLayoutPanel();
             this.pnlTopCamera = new Guna.UI2.WinForms.Guna2Panel();
             this.tlpCameras = new System.Windows.Forms.TableLayoutPanel();
-            this.pbCam1 = new System.Windows.Forms.PictureBox();
-            this.pbCam2 = new System.Windows.Forms.PictureBox();
-            this.pbCam3 = new System.Windows.Forms.PictureBox();
-            this.pbCam4 = new System.Windows.Forms.PictureBox();
-            this.pbCam5 = new System.Windows.Forms.PictureBox();
-            this.pbCam6 = new System.Windows.Forms.PictureBox();
             this.pnlMiddleInfo = new Guna.UI2.WinForms.Guna2Panel();
             this.tlpGates = new System.Windows.Forms.TableLayoutPanel();
             this.gateLeft = new IDTSERVER.ParkingGateSection();
@@ -38,6 +32,12 @@ namespace IDTSERVER
             this.lblStatusRight = new System.Windows.Forms.Label();
             this.pnlBottomSnapshots = new Guna.UI2.WinForms.Guna2Panel();
             this.tlpSnapshots = new System.Windows.Forms.TableLayoutPanel();
+            this.pbCam1 = new System.Windows.Forms.PictureBox();
+            this.pbCam2 = new System.Windows.Forms.PictureBox();
+            this.pbCam3 = new System.Windows.Forms.PictureBox();
+            this.pbCam4 = new System.Windows.Forms.PictureBox();
+            this.pbCam5 = new System.Windows.Forms.PictureBox();
+            this.pbCam6 = new System.Windows.Forms.PictureBox();
             this.pbSnap1 = new System.Windows.Forms.PictureBox();
             this.pbSnap2 = new System.Windows.Forms.PictureBox();
             this.pbSnap3 = new System.Windows.Forms.PictureBox();
@@ -47,18 +47,18 @@ namespace IDTSERVER
             this.tlpLayout.SuspendLayout();
             this.pnlTopCamera.SuspendLayout();
             this.tlpCameras.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam6)).BeginInit();
             this.pnlMiddleInfo.SuspendLayout();
             this.tlpGates.SuspendLayout();
             this.pnlStatusStrip.SuspendLayout();
             this.tlpStatus.SuspendLayout();
             this.pnlBottomSnapshots.SuspendLayout();
             this.tlpSnapshots.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam6)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap3)).BeginInit();
@@ -119,72 +119,6 @@ namespace IDTSERVER
             this.tlpCameras.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tlpCameras.Size = new System.Drawing.Size(1540, 235);
             this.tlpCameras.TabIndex = 0;
-            // 
-            // pbCam1
-            // 
-            this.pbCam1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCam1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam1.Location = new System.Drawing.Point(2, 2);
-            this.pbCam1.Margin = new System.Windows.Forms.Padding(2);
-            this.pbCam1.Name = "pbCam1";
-            this.pbCam1.Size = new System.Drawing.Size(252, 231);
-            this.pbCam1.TabIndex = 0;
-            this.pbCam1.TabStop = false;
-            // 
-            // pbCam2
-            // 
-            this.pbCam2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam2.Location = new System.Drawing.Point(259, 3);
-            this.pbCam2.Name = "pbCam2";
-            this.pbCam2.Size = new System.Drawing.Size(250, 229);
-            this.pbCam2.TabIndex = 1;
-            this.pbCam2.TabStop = false;
-            // 
-            // pbCam3
-            // 
-            this.pbCam3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam3.Location = new System.Drawing.Point(515, 3);
-            this.pbCam3.Name = "pbCam3";
-            this.pbCam3.Size = new System.Drawing.Size(250, 229);
-            this.pbCam3.TabIndex = 2;
-            this.pbCam3.TabStop = false;
-            // 
-            // pbCam4
-            // 
-            this.pbCam4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam4.Location = new System.Drawing.Point(771, 3);
-            this.pbCam4.Name = "pbCam4";
-            this.pbCam4.Size = new System.Drawing.Size(250, 229);
-            this.pbCam4.TabIndex = 3;
-            this.pbCam4.TabStop = false;
-            // 
-            // pbCam5
-            // 
-            this.pbCam5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCam5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam5.Location = new System.Drawing.Point(1026, 2);
-            this.pbCam5.Margin = new System.Windows.Forms.Padding(2);
-            this.pbCam5.Name = "pbCam5";
-            this.pbCam5.Size = new System.Drawing.Size(252, 231);
-            this.pbCam5.TabIndex = 4;
-            this.pbCam5.TabStop = false;
-            // 
-            // pbCam6
-            // 
-            this.pbCam6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(32)))), ((int)(((byte)(32)))), ((int)(((byte)(32)))));
-            this.pbCam6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pbCam6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbCam6.Location = new System.Drawing.Point(1282, 2);
-            this.pbCam6.Margin = new System.Windows.Forms.Padding(2);
-            this.pbCam6.Name = "pbCam6";
-            this.pbCam6.Size = new System.Drawing.Size(256, 231);
-            this.pbCam6.TabIndex = 5;
-            this.pbCam6.TabStop = false;
             // 
             // pnlMiddleInfo
             // 
@@ -261,7 +195,7 @@ namespace IDTSERVER
             this.tlpStatus.Name = "tlpStatus";
             this.tlpStatus.RowCount = 1;
             this.tlpStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tlpStatus.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 45F));
             this.tlpStatus.Size = new System.Drawing.Size(1556, 45);
             this.tlpStatus.TabIndex = 0;
             // 
@@ -341,8 +275,89 @@ namespace IDTSERVER
             this.tlpSnapshots.Size = new System.Drawing.Size(1540, 270);
             this.tlpSnapshots.TabIndex = 0;
             // 
+            // pbCam1
+            // 
+            this.pbCam1.BackColor = System.Drawing.Color.White;
+            this.pbCam1.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCam1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam1.Location = new System.Drawing.Point(2, 2);
+            this.pbCam1.Margin = new System.Windows.Forms.Padding(2);
+            this.pbCam1.Name = "pbCam1";
+            this.pbCam1.Size = new System.Drawing.Size(252, 231);
+            this.pbCam1.TabIndex = 0;
+            this.pbCam1.TabStop = false;
+            // 
+            // pbCam2
+            // 
+            this.pbCam2.BackColor = System.Drawing.Color.White;
+            this.pbCam2.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam2.Location = new System.Drawing.Point(259, 3);
+            this.pbCam2.Name = "pbCam2";
+            this.pbCam2.Size = new System.Drawing.Size(250, 229);
+            this.pbCam2.TabIndex = 1;
+            this.pbCam2.TabStop = false;
+            // 
+            // pbCam3
+            // 
+            this.pbCam3.BackColor = System.Drawing.Color.White;
+            this.pbCam3.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam3.Location = new System.Drawing.Point(515, 3);
+            this.pbCam3.Name = "pbCam3";
+            this.pbCam3.Size = new System.Drawing.Size(250, 229);
+            this.pbCam3.TabIndex = 2;
+            this.pbCam3.TabStop = false;
+            // 
+            // pbCam4
+            // 
+            this.pbCam4.BackColor = System.Drawing.Color.White;
+            this.pbCam4.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam4.Location = new System.Drawing.Point(771, 3);
+            this.pbCam4.Name = "pbCam4";
+            this.pbCam4.Size = new System.Drawing.Size(250, 229);
+            this.pbCam4.TabIndex = 3;
+            this.pbCam4.TabStop = false;
+            // 
+            // pbCam5
+            // 
+            this.pbCam5.BackColor = System.Drawing.Color.White;
+            this.pbCam5.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCam5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam5.Location = new System.Drawing.Point(1026, 2);
+            this.pbCam5.Margin = new System.Windows.Forms.Padding(2);
+            this.pbCam5.Name = "pbCam5";
+            this.pbCam5.Size = new System.Drawing.Size(252, 231);
+            this.pbCam5.TabIndex = 4;
+            this.pbCam5.TabStop = false;
+            // 
+            // pbCam6
+            // 
+            this.pbCam6.BackColor = System.Drawing.Color.White;
+            this.pbCam6.BackgroundImage = global::IDTSERVER.Properties.Resources.camera;
+            this.pbCam6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.pbCam6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pbCam6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCam6.Location = new System.Drawing.Point(1282, 2);
+            this.pbCam6.Margin = new System.Windows.Forms.Padding(2);
+            this.pbCam6.Name = "pbCam6";
+            this.pbCam6.Size = new System.Drawing.Size(256, 231);
+            this.pbCam6.TabIndex = 5;
+            this.pbCam6.TabStop = false;
+            // 
             // pbSnap1
             // 
+            this.pbSnap1.BackColor = System.Drawing.Color.White;
+            this.pbSnap1.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap1.Location = new System.Drawing.Point(3, 3);
             this.pbSnap1.Name = "pbSnap1";
@@ -352,6 +367,9 @@ namespace IDTSERVER
             // 
             // pbSnap2
             // 
+            this.pbSnap2.BackColor = System.Drawing.Color.White;
+            this.pbSnap2.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap2.Location = new System.Drawing.Point(259, 3);
             this.pbSnap2.Name = "pbSnap2";
@@ -361,6 +379,9 @@ namespace IDTSERVER
             // 
             // pbSnap3
             // 
+            this.pbSnap3.BackColor = System.Drawing.Color.White;
+            this.pbSnap3.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap3.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap3.Location = new System.Drawing.Point(515, 3);
             this.pbSnap3.Name = "pbSnap3";
@@ -370,6 +391,9 @@ namespace IDTSERVER
             // 
             // pbSnap4
             // 
+            this.pbSnap4.BackColor = System.Drawing.Color.White;
+            this.pbSnap4.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap4.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap4.Location = new System.Drawing.Point(771, 3);
             this.pbSnap4.Name = "pbSnap4";
@@ -379,6 +403,9 @@ namespace IDTSERVER
             // 
             // pbSnap5
             // 
+            this.pbSnap5.BackColor = System.Drawing.Color.White;
+            this.pbSnap5.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap5.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap5.Location = new System.Drawing.Point(1027, 3);
             this.pbSnap5.Name = "pbSnap5";
@@ -388,6 +415,9 @@ namespace IDTSERVER
             // 
             // pbSnap6
             // 
+            this.pbSnap6.BackColor = System.Drawing.Color.White;
+            this.pbSnap6.BackgroundImage = global::IDTSERVER.Properties.Resources.image;
+            this.pbSnap6.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.pbSnap6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbSnap6.Location = new System.Drawing.Point(1283, 3);
             this.pbSnap6.Name = "pbSnap6";
@@ -407,18 +437,18 @@ namespace IDTSERVER
             this.tlpLayout.ResumeLayout(false);
             this.pnlTopCamera.ResumeLayout(false);
             this.tlpCameras.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbCam6)).EndInit();
             this.pnlMiddleInfo.ResumeLayout(false);
             this.tlpGates.ResumeLayout(false);
             this.pnlStatusStrip.ResumeLayout(false);
             this.tlpStatus.ResumeLayout(false);
             this.pnlBottomSnapshots.ResumeLayout(false);
             this.tlpSnapshots.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbCam6)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbSnap3)).EndInit();

@@ -50,7 +50,7 @@
     <AppConfigWith>None</AppConfigWith>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -187,8 +187,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
-    <Content Include="Parking_icon.svg.ico" />
+    <Content Include="Assets\Icons\icon.ico" />
+    <Content Include="Assets\Icons\Parking_icon.svg.ico" />
     <Content
       Include="README.txt" />
     <Content Include="FodyWeavers.xml" />
