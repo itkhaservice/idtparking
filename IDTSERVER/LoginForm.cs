@@ -1,5 +1,6 @@
 using System;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace IDTSERVER
@@ -17,6 +18,28 @@ namespace IDTSERVER
             InitializeComponent();
             _settings = AppSettings.Load();
             if (cboShift.Items.Count > 0) cboShift.SelectedIndex = 0;
+            
+            // Cho phép Form nhận sự kiện phím
+            this.KeyPreview = true;
+            this.KeyDown += LoginForm_KeyDown;
+        }
+
+        private void LoginForm_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Hotkeys resize ứng dụng ngay từ màn hình Login
+            if (e.KeyCode == Keys.F5) { this.Owner.WindowState = FormWindowState.Normal; this.Owner.Size = new Size(1366, 768); }
+            if (e.KeyCode == Keys.F6) { this.Owner.WindowState = FormWindowState.Normal; this.Owner.Size = new Size(1600, 900); }
+            if (e.KeyCode == Keys.F7) { this.Owner.WindowState = FormWindowState.Normal; this.Owner.Size = new Size(1920, 1080); }
+            
+            // F12 để BYPASS (Vào thẳng không cần DB) để Test UI Main
+            if (e.KeyCode == Keys.F12)
+            {
+                CurrentUser = "admin_test";
+                FullName = "Người Kiểm Thử";
+                CurrentShift = "Ca Test";
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

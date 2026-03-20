@@ -21,6 +21,10 @@ namespace IDTSERVER
             _settings = AppSettings.Load();
             SetupUIProportions();
             
+            // Cấu hình chống vỡ UI
+            this.MinimumSize = new Size(1200, 700);
+            this.Resize += (s, e) => AdjustLabelFonts();
+
             _clockTimer = new Timer { Interval = 1000 };
             _clockTimer.Tick += (s, e) => {
                 if (lblCurrentTime != null) lblCurrentTime.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
@@ -33,20 +37,133 @@ namespace IDTSERVER
 
         private void SetupUIProportions()
         {
-            // YÊU CẦU 1: Thuộc tính SizeMode đặt là Zoom
+            // YÊU CẦU 1: PictureBoxes Zoom & Fill (Không đụng tới pbSnapL2_1, pbSnapL2_2)
             PictureBox[] allFrames = { 
                 pbCamL1Panorama, pbCamL1Plate, pbCamL2Panorama, pbCamL2Plate,
-                pbSnapL1_1, pbSnapL1_2, pbSnapL2_1, pbSnapL2_2,
+                pbSnapL1_1, pbSnapL1_2,
                 pbAIL1In, pbAIL1Out, pbAIL2In, pbAIL2Out 
             };
 
             foreach (var pb in allFrames) {
                 if (pb != null) {
                     pb.SizeMode = PictureBoxSizeMode.Zoom;
-                    // YÊU CẦU 2: Docking đặt Dock = Fill
                     pb.Dock = DockStyle.Fill;
+                    pb.Margin = new Padding(0); // Triệt tiêu khoảng cách lề
+                    
+                    // Nếu parent là TableLayoutPanel, triệt tiêu Padding của ô đó
+                    if (pb.Parent is TableLayoutPanel tlp) {
+                        tlp.Padding = new Padding(0);
+                    }
                 }
             }
+
+            // Chống vỡ chữ & Chia đều dòng cho các TableLayoutPanel thông tin
+            // Làn 1: tableLayoutPanel8, Làn 2: tableLayoutPanel20
+            FixTableLayoutRowStyles(tableLayoutPanel8, 5);
+            FixTableLayoutRowStyles(tableLayoutPanel20, 5);
+
+            // Cấu hình tỉ lệ cột cho cả 2 Làn
+            // Nhóm Số thẻ - Loại thẻ - TG lưu bãi (30-30-40)
+            FixTableLayoutColumnStyles(tableLayoutPanel25, new float[] { 30f, 30f, 40f });
+            FixTableLayoutColumnStyles(tableLayoutPanel22, new float[] { 30f, 30f, 40f });
+
+            // Nhóm Biển số - Chủ xe (60-40)
+            FixTableLayoutColumnStyles(tableLayoutPanel23, new float[] { 60f, 40f });
+            FixTableLayoutColumnStyles(tableLayoutPanel26, new float[] { 60f, 40f });
+
+            // Nhóm Thời gian Vào - Ra (50-50)
+            FixTableLayoutColumnStyles(tableLayoutPanel31, new float[] { 50f, 50f });
+            FixTableLayoutColumnStyles(tableLayoutPanel24, new float[] { 50f, 50f });
+            
+            Label[] infoLabels = {
+                lblCardID1, lblCardType1, lblStayDuration1, lblOwner1, lblPlate1, lblRegistration1, lblTimeIn1, lblTimeOut1, lblAmount1,
+                lblCardID2, lblCardType2, lblStayDuration2, lblOwner2, lblPlate2, lblRegistration2, lblTimeIn2, lblTimeOut2, lblAmount2,
+                lblAmount1Text, lblAmount2Text
+            };
+
+            foreach (var lb in infoLabels) {
+                if (lb != null) {
+                    lb.AutoSize = false;
+                    lb.Dock = DockStyle.Fill;
+                    lb.TextAlign = ContentAlignment.MiddleLeft;
+                }
+            }
+        }
+
+        private void FixTableLayoutRowStyles(TableLayoutPanel tlp, int rowCount)
+        {
+            if (tlp == null) return;
+            tlp.RowCount = rowCount;
+            tlp.RowStyles.Clear();
+            float percent = 100f / rowCount;
+            for (int i = 0; i < rowCount; i++)
+            {
+                tlp.RowStyles.Add(new RowStyle(SizeType.Percent, percent));
+            }
+        }
+
+        private void FixTableLayoutColumnStyles(TableLayoutPanel tlp, float[] percentages)
+        {
+            if (tlp == null || percentages == null) return;
+            tlp.ColumnCount = percentages.Length;
+            tlp.ColumnStyles.Clear();
+            foreach (var p in percentages)
+            {
+                tlp.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, p));
+            }
+        }
+
+        private void AdjustLabelFonts()
+        {
+            float ratio = this.Width / 1920f;
+            
+            // Định nghĩa các cỡ chữ cơ sở (cho màn 1080p)
+            float sizeStandard = 13f;   // Thông tin thẻ, nhân viên
+            float sizeNotify = 18f;     // Thông báo, Kết quả AI
+            float sizeAmount = 24f;     // Tiền thanh toán
+            float sizeHeader = 22f;     // Tên phần mềm
+            float sizeClock = 16f;      // Đồng hồ
+
+            // Tính toán cỡ chữ mới dựa trên tỉ lệ resize
+            float fStd = Math.Max(8f, sizeStandard * ratio);
+            float fNoti = Math.Max(10f, sizeNotify * ratio);
+            float fAmnt = Math.Max(14f, sizeAmount * ratio);
+            float fHead = Math.Max(12f, sizeHeader * ratio);
+            float fClock = Math.Max(10f, sizeClock * ratio);
+
+            // Tạo các đối tượng Font
+            Font fontStd = new Font("Times New Roman", fStd, FontStyle.Bold);
+            Font fontNoti = new Font("Times New Roman", fNoti, FontStyle.Bold);
+            Font fontAmnt = new Font("Times New Roman", fAmnt, FontStyle.Bold);
+            Font fontHead = new Font("Times New Roman", fHead, FontStyle.Bold);
+            Font fontClock = new Font("Times New Roman", fClock, FontStyle.Bold);
+
+            // 1. Nhóm Thông tin thẻ (Làn 1 & 2)
+            Label[] cardLabels = { 
+                lblCardID1, lblCardType1, lblStayDuration1, lblOwner1, lblPlate1, lblRegistration1, lblTimeIn1, lblTimeOut1, lblAmount1Text,
+                lblCardID2, lblCardType2, lblStayDuration2, lblOwner2, lblPlate2, lblRegistration2, lblTimeIn2, lblTimeOut2, lblAmount2Text
+            };
+            foreach (var lb in cardLabels) if (lb != null) lb.Font = fontStd;
+
+            // 2. Nhóm Thanh toán (Tiền)
+            if (lblAmount1 != null) lblAmount1.Font = fontAmnt;
+            if (lblAmount2 != null) lblAmount2.Font = fontAmnt;
+
+            // 3. Nhóm Thông báo & Nhân viên
+            if (lblNotifyL1 != null) lblNotifyL1.Font = fontNoti;
+            if (lblNotifyL2 != null) lblNotifyL2.Font = fontNoti;
+            if (lblGuardL1 != null) lblGuardL1.Font = fontStd;
+            if (lblGuardL2 != null) lblGuardL2.Font = fontStd;
+
+            // 4. Nhóm AI (Kết quả so khớp & Biển số nhận diện)
+            if (lblAIResultL1 != null) lblAIResultL1.Font = fontNoti;
+            if (lblAIResultL2 != null) lblAIResultL2.Font = fontNoti;
+            Label[] aiPlates = { lblAIPlateInL1, lblAIPlateOutL1, lblAIPlateInL2, lblAIPlateOutL2 };
+            foreach (var lb in aiPlates) if (lb != null) lb.Font = fontStd;
+
+            // 5. Nhóm Header & Clock
+            if (lblSoftwareName != null) lblSoftwareName.Font = fontHead;
+            if (lblCurrentTime != null) lblCurrentTime.Font = fontClock;
         }
 
         private void FormMain_Load(object sender, EventArgs e)
@@ -114,6 +231,7 @@ namespace IDTSERVER
                 }
             } catch (Exception ex) {
                 // Log lỗi hoặc hiển thị thông báo nếu cần
+                Console.WriteLine("Lỗi ProcessMonthlyCardEntry: " + ex.Message);
             }
         }
 
@@ -234,6 +352,12 @@ namespace IDTSERVER
 
         public void FormMain_KeyDown(object sender, KeyEventArgs e)
         {
+            // TEST UI WINFORMS NHIỀU MÀN HÌNH
+            if (e.KeyCode == Keys.F5) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1366, 768); } // 19"
+            if (e.KeyCode == Keys.F6) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1600, 900); } // 21"
+            if (e.KeyCode == Keys.F7) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1920, 1080); } // 24"
+            if (e.KeyCode == Keys.F11) { this.WindowState = (this.WindowState == FormWindowState.Maximized) ? FormWindowState.Normal : FormWindowState.Maximized; }
+
             if (e.KeyCode == Keys.F3) {
                 using (FrmSettings s = new FrmSettings()) { if (s.ShowDialog() == DialogResult.OK) ApplySettingsToUI(); }
             }

@@ -31,17 +31,11 @@ namespace IDTSERVER
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel30 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblAmount2 = new System.Windows.Forms.Label();
             this.lblAmount2Text = new System.Windows.Forms.Label();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.lblPlate2 = new System.Windows.Forms.Label();
             this.lblOwner2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel22 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblStayDuration2 = new System.Windows.Forms.Label();
-            this.lblCardType2 = new System.Windows.Forms.Label();
-            this.lblCardID2 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel24 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblTimeOut2 = new System.Windows.Forms.Label();
-            this.lblTimeIn2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel29 = new System.Windows.Forms.TableLayoutPanel();
             this.lblRegistration2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
@@ -65,14 +59,11 @@ namespace IDTSERVER
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblAmount1 = new System.Windows.Forms.Label();
             this.lblAmount1Text = new System.Windows.Forms.Label();
             this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
             this.lblPlate1 = new System.Windows.Forms.Label();
             this.lblOwner1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel25 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblStayDuration1 = new System.Windows.Forms.Label();
-            this.lblCardType1 = new System.Windows.Forms.Label();
-            this.lblCardID1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel31 = new System.Windows.Forms.TableLayoutPanel();
             this.lblTimeOut1 = new System.Windows.Forms.Label();
             this.lblTimeIn1 = new System.Windows.Forms.Label();
@@ -94,8 +85,17 @@ namespace IDTSERVER
             this.lblExitCount = new System.Windows.Forms.Label();
             this.lblRevenue = new System.Windows.Forms.Label();
             this.lblCurrentTime = new System.Windows.Forms.Label();
-            this.lblAmount1 = new System.Windows.Forms.Label();
-            this.lblAmount2 = new System.Windows.Forms.Label();
+            this.lblCardID1 = new System.Windows.Forms.Label();
+            this.lblCardType1 = new System.Windows.Forms.Label();
+            this.lblStayDuration1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel25 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblCardID2 = new System.Windows.Forms.Label();
+            this.lblCardType2 = new System.Windows.Forms.Label();
+            this.lblStayDuration2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel22 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblTimeIn2 = new System.Windows.Forms.Label();
+            this.lblTimeOut2 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel24 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel12.SuspendLayout();
@@ -110,8 +110,6 @@ namespace IDTSERVER
             this.tableLayoutPanel20.SuspendLayout();
             this.tableLayoutPanel30.SuspendLayout();
             this.tableLayoutPanel26.SuspendLayout();
-            this.tableLayoutPanel22.SuspendLayout();
-            this.tableLayoutPanel24.SuspendLayout();
             this.tableLayoutPanel29.SuspendLayout();
             this.tableLayoutPanel17.SuspendLayout();
             this.tableLayoutPanel18.SuspendLayout();
@@ -130,7 +128,6 @@ namespace IDTSERVER
             this.tableLayoutPanel8.SuspendLayout();
             this.tableLayoutPanel21.SuspendLayout();
             this.tableLayoutPanel23.SuspendLayout();
-            this.tableLayoutPanel25.SuspendLayout();
             this.tableLayoutPanel31.SuspendLayout();
             this.tableLayoutPanel32.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
@@ -140,6 +137,9 @@ namespace IDTSERVER
             this.tableLayoutPanel11.SuspendLayout();
             this.tableLayoutPanel27.SuspendLayout();
             this.tableLayoutPanel28.SuspendLayout();
+            this.tableLayoutPanel25.SuspendLayout();
+            this.tableLayoutPanel22.SuspendLayout();
+            this.tableLayoutPanel24.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -213,6 +213,7 @@ namespace IDTSERVER
             // pbCamL2Panorama
             // 
             this.pbCamL2Panorama.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCamL2Panorama.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pbCamL2Panorama.ImageRotate = 0F;
             this.pbCamL2Panorama.Location = new System.Drawing.Point(3, 3);
             this.pbCamL2Panorama.Name = "pbCamL2Panorama";
@@ -223,6 +224,7 @@ namespace IDTSERVER
             // pbCamL2Plate
             // 
             this.pbCamL2Plate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCamL2Plate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.pbCamL2Plate.ImageRotate = 0F;
             this.pbCamL2Plate.Location = new System.Drawing.Point(384, 3);
             this.pbCamL2Plate.Name = "pbCamL2Plate";
@@ -249,6 +251,7 @@ namespace IDTSERVER
             // pbSnapL2_2
             // 
             this.pbSnapL2_2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbSnapL2_2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.pbSnapL2_2.ImageRotate = 0F;
             this.pbSnapL2_2.Location = new System.Drawing.Point(384, 3);
             this.pbSnapL2_2.Name = "pbSnapL2_2";
@@ -259,6 +262,7 @@ namespace IDTSERVER
             // pbSnapL2_1
             // 
             this.pbSnapL2_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbSnapL2_1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
             this.pbSnapL2_1.ImageRotate = 0F;
             this.pbSnapL2_1.Location = new System.Drawing.Point(3, 3);
             this.pbSnapL2_1.Name = "pbSnapL2_1";
@@ -354,6 +358,20 @@ namespace IDTSERVER
             this.tableLayoutPanel30.Size = new System.Drawing.Size(481, 41);
             this.tableLayoutPanel30.TabIndex = 5;
             // 
+            // lblAmount2
+            // 
+            this.lblAmount2.AutoSize = true;
+            this.lblAmount2.BackColor = System.Drawing.Color.Yellow;
+            this.lblAmount2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAmount2.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.lblAmount2.Location = new System.Drawing.Point(244, 1);
+            this.lblAmount2.Name = "lblAmount2";
+            this.lblAmount2.Size = new System.Drawing.Size(233, 39);
+            this.lblAmount2.TabIndex = 9;
+            this.lblAmount2.Text = "0.0";
+            this.lblAmount2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblAmount2Text
             // 
             this.lblAmount2Text.AutoSize = true;
@@ -408,102 +426,6 @@ namespace IDTSERVER
             this.lblOwner2.TabIndex = 7;
             this.lblOwner2.Text = "Chủ thẻ:";
             this.lblOwner2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel22
-            // 
-            this.tableLayoutPanel22.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel22.ColumnCount = 3;
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tableLayoutPanel22.Controls.Add(this.lblStayDuration2, 2, 0);
-            this.tableLayoutPanel22.Controls.Add(this.lblCardType2, 1, 0);
-            this.tableLayoutPanel22.Controls.Add(this.lblCardID2, 0, 0);
-            this.tableLayoutPanel22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel22.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel22.Name = "tableLayoutPanel22";
-            this.tableLayoutPanel22.RowCount = 1;
-            this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.Size = new System.Drawing.Size(481, 26);
-            this.tableLayoutPanel22.TabIndex = 1;
-            // 
-            // lblStayDuration2
-            // 
-            this.lblStayDuration2.AutoSize = true;
-            this.lblStayDuration2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStayDuration2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStayDuration2.Location = new System.Drawing.Point(342, 1);
-            this.lblStayDuration2.Name = "lblStayDuration2";
-            this.lblStayDuration2.Size = new System.Drawing.Size(135, 24);
-            this.lblStayDuration2.TabIndex = 8;
-            this.lblStayDuration2.Text = "TG lưu bãi:";
-            this.lblStayDuration2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardType2
-            // 
-            this.lblCardType2.AutoSize = true;
-            this.lblCardType2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardType2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardType2.Location = new System.Drawing.Point(173, 1);
-            this.lblCardType2.Name = "lblCardType2";
-            this.lblCardType2.Size = new System.Drawing.Size(162, 24);
-            this.lblCardType2.TabIndex = 7;
-            this.lblCardType2.Text = "Loại thẻ:";
-            this.lblCardType2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardID2
-            // 
-            this.lblCardID2.AutoSize = true;
-            this.lblCardID2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardID2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardID2.Location = new System.Drawing.Point(4, 1);
-            this.lblCardID2.Name = "lblCardID2";
-            this.lblCardID2.Size = new System.Drawing.Size(162, 24);
-            this.lblCardID2.TabIndex = 6;
-            this.lblCardID2.Text = "Số thẻ:";
-            this.lblCardID2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel24
-            // 
-            this.tableLayoutPanel24.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel24.ColumnCount = 2;
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel24.Controls.Add(this.lblTimeOut2, 1, 0);
-            this.tableLayoutPanel24.Controls.Add(this.lblTimeIn2, 0, 0);
-            this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 106);
-            this.tableLayoutPanel24.Name = "tableLayoutPanel24";
-            this.tableLayoutPanel24.RowCount = 1;
-            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel24.Size = new System.Drawing.Size(481, 37);
-            this.tableLayoutPanel24.TabIndex = 3;
-            // 
-            // lblTimeOut2
-            // 
-            this.lblTimeOut2.AutoSize = true;
-            this.lblTimeOut2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTimeOut2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTimeOut2.Location = new System.Drawing.Point(244, 1);
-            this.lblTimeOut2.Name = "lblTimeOut2";
-            this.lblTimeOut2.Size = new System.Drawing.Size(233, 35);
-            this.lblTimeOut2.TabIndex = 8;
-            this.lblTimeOut2.Text = "Ra:";
-            this.lblTimeOut2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTimeIn2
-            // 
-            this.lblTimeIn2.AutoSize = true;
-            this.lblTimeIn2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTimeIn2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTimeIn2.Location = new System.Drawing.Point(4, 1);
-            this.lblTimeIn2.Name = "lblTimeIn2";
-            this.lblTimeIn2.Size = new System.Drawing.Size(233, 35);
-            this.lblTimeIn2.TabIndex = 7;
-            this.lblTimeIn2.Text = "Vào:";
-            this.lblTimeIn2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel29
             // 
@@ -693,8 +615,10 @@ namespace IDTSERVER
             // 
             // pbCamL1Panorama
             // 
+            this.pbCamL1Panorama.BackColor = System.Drawing.Color.Black;
             this.pbCamL1Panorama.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             this.pbCamL1Panorama.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCamL1Panorama.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.pbCamL1Panorama.ImageRotate = 0F;
             this.pbCamL1Panorama.Location = new System.Drawing.Point(3, 3);
             this.pbCamL1Panorama.Name = "pbCamL1Panorama";
@@ -705,6 +629,7 @@ namespace IDTSERVER
             // pbCamL1Plate
             // 
             this.pbCamL1Plate.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbCamL1Plate.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.pbCamL1Plate.ImageRotate = 0F;
             this.pbCamL1Plate.Location = new System.Drawing.Point(384, 3);
             this.pbCamL1Plate.Name = "pbCamL1Plate";
@@ -731,6 +656,7 @@ namespace IDTSERVER
             // pbSnapL1_2
             // 
             this.pbSnapL1_2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbSnapL1_2.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.pbSnapL1_2.ImageRotate = 0F;
             this.pbSnapL1_2.Location = new System.Drawing.Point(384, 3);
             this.pbSnapL1_2.Name = "pbSnapL1_2";
@@ -741,6 +667,7 @@ namespace IDTSERVER
             // pbSnapL1_1
             // 
             this.pbSnapL1_1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbSnapL1_1.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
             this.pbSnapL1_1.ImageRotate = 0F;
             this.pbSnapL1_1.Location = new System.Drawing.Point(3, 3);
             this.pbSnapL1_1.Name = "pbSnapL1_1";
@@ -835,6 +762,20 @@ namespace IDTSERVER
             this.tableLayoutPanel21.Size = new System.Drawing.Size(456, 41);
             this.tableLayoutPanel21.TabIndex = 5;
             // 
+            // lblAmount1
+            // 
+            this.lblAmount1.AutoSize = true;
+            this.lblAmount1.BackColor = System.Drawing.Color.Yellow;
+            this.lblAmount1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAmount1.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.lblAmount1.Location = new System.Drawing.Point(231, 1);
+            this.lblAmount1.Name = "lblAmount1";
+            this.lblAmount1.Size = new System.Drawing.Size(221, 39);
+            this.lblAmount1.TabIndex = 9;
+            this.lblAmount1.Text = "9.925.000";
+            this.lblAmount1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblAmount1Text
             // 
             this.lblAmount1Text.AutoSize = true;
@@ -889,61 +830,6 @@ namespace IDTSERVER
             this.lblOwner1.TabIndex = 7;
             this.lblOwner1.Text = "Chủ thẻ:";
             this.lblOwner1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel25
-            // 
-            this.tableLayoutPanel25.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel25.ColumnCount = 3;
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
-            this.tableLayoutPanel25.Controls.Add(this.lblStayDuration1, 2, 0);
-            this.tableLayoutPanel25.Controls.Add(this.lblCardType1, 1, 0);
-            this.tableLayoutPanel25.Controls.Add(this.lblCardID1, 0, 0);
-            this.tableLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel25.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel25.Name = "tableLayoutPanel25";
-            this.tableLayoutPanel25.RowCount = 1;
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.Size = new System.Drawing.Size(456, 26);
-            this.tableLayoutPanel25.TabIndex = 1;
-            // 
-            // lblStayDuration1
-            // 
-            this.lblStayDuration1.AutoSize = true;
-            this.lblStayDuration1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStayDuration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStayDuration1.Location = new System.Drawing.Point(316, 1);
-            this.lblStayDuration1.Name = "lblStayDuration1";
-            this.lblStayDuration1.Size = new System.Drawing.Size(136, 24);
-            this.lblStayDuration1.TabIndex = 8;
-            this.lblStayDuration1.Text = "TG lưu bãi:";
-            this.lblStayDuration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardType1
-            // 
-            this.lblCardType1.AutoSize = true;
-            this.lblCardType1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardType1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardType1.Location = new System.Drawing.Point(160, 1);
-            this.lblCardType1.Name = "lblCardType1";
-            this.lblCardType1.Size = new System.Drawing.Size(149, 24);
-            this.lblCardType1.TabIndex = 7;
-            this.lblCardType1.Text = "Loại thẻ:";
-            this.lblCardType1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardID1
-            // 
-            this.lblCardID1.AutoSize = true;
-            this.lblCardID1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardID1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardID1.Location = new System.Drawing.Point(4, 1);
-            this.lblCardID1.Name = "lblCardID1";
-            this.lblCardID1.Size = new System.Drawing.Size(149, 24);
-            this.lblCardID1.TabIndex = 6;
-            this.lblCardID1.Text = "Số thẻ:";
-            this.lblCardID1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel31
             // 
@@ -1175,7 +1061,7 @@ namespace IDTSERVER
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.08333F));
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.91667F));
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
+            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 154F));
             this.tableLayoutPanel28.Controls.Add(this.lblEntryCount, 3, 0);
             this.tableLayoutPanel28.Controls.Add(this.lblExitCount, 2, 0);
             this.tableLayoutPanel28.Controls.Add(this.lblRevenue, 1, 0);
@@ -1195,9 +1081,9 @@ namespace IDTSERVER
             this.lblEntryCount.AutoSize = true;
             this.lblEntryCount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblEntryCount.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEntryCount.Location = new System.Drawing.Point(618, 0);
+            this.lblEntryCount.Location = new System.Drawing.Point(617, 0);
             this.lblEntryCount.Name = "lblEntryCount";
-            this.lblEntryCount.Size = new System.Drawing.Size(148, 47);
+            this.lblEntryCount.Size = new System.Drawing.Size(149, 47);
             this.lblEntryCount.TabIndex = 11;
             this.lblEntryCount.Text = "Lượt vào: 1500";
             this.lblEntryCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1207,7 +1093,7 @@ namespace IDTSERVER
             this.lblExitCount.AutoSize = true;
             this.lblExitCount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblExitCount.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExitCount.Location = new System.Drawing.Point(463, 0);
+            this.lblExitCount.Location = new System.Drawing.Point(462, 0);
             this.lblExitCount.Name = "lblExitCount";
             this.lblExitCount.Size = new System.Drawing.Size(149, 47);
             this.lblExitCount.TabIndex = 10;
@@ -1219,7 +1105,7 @@ namespace IDTSERVER
             this.lblRevenue.AutoSize = true;
             this.lblRevenue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblRevenue.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRevenue.Location = new System.Drawing.Point(243, 0);
+            this.lblRevenue.Location = new System.Drawing.Point(242, 0);
             this.lblRevenue.Name = "lblRevenue";
             this.lblRevenue.Size = new System.Drawing.Size(214, 47);
             this.lblRevenue.TabIndex = 9;
@@ -1233,38 +1119,161 @@ namespace IDTSERVER
             this.lblCurrentTime.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCurrentTime.Location = new System.Drawing.Point(3, 0);
             this.lblCurrentTime.Name = "lblCurrentTime";
-            this.lblCurrentTime.Size = new System.Drawing.Size(234, 47);
+            this.lblCurrentTime.Size = new System.Drawing.Size(233, 47);
             this.lblCurrentTime.TabIndex = 8;
             this.lblCurrentTime.Text = "11:53:21 20/03/2026";
             this.lblCurrentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblAmount1
+            // lblCardID1
             // 
-            this.lblAmount1.AutoSize = true;
-            this.lblAmount1.BackColor = System.Drawing.Color.Yellow;
-            this.lblAmount1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAmount1.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmount1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.lblAmount1.Location = new System.Drawing.Point(231, 1);
-            this.lblAmount1.Name = "lblAmount1";
-            this.lblAmount1.Size = new System.Drawing.Size(221, 39);
-            this.lblAmount1.TabIndex = 9;
-            this.lblAmount1.Text = "9.925.000 VNĐ";
-            this.lblAmount1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCardID1.AutoSize = true;
+            this.lblCardID1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardID1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardID1.Location = new System.Drawing.Point(4, 1);
+            this.lblCardID1.Name = "lblCardID1";
+            this.lblCardID1.Size = new System.Drawing.Size(148, 24);
+            this.lblCardID1.TabIndex = 6;
+            this.lblCardID1.Text = "Số thẻ:";
+            this.lblCardID1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblAmount2
+            // lblCardType1
             // 
-            this.lblAmount2.AutoSize = true;
-            this.lblAmount2.BackColor = System.Drawing.Color.Yellow;
-            this.lblAmount2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAmount2.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmount2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
-            this.lblAmount2.Location = new System.Drawing.Point(244, 1);
-            this.lblAmount2.Name = "lblAmount2";
-            this.lblAmount2.Size = new System.Drawing.Size(233, 39);
-            this.lblAmount2.TabIndex = 9;
-            this.lblAmount2.Text = "0.0 VNĐ";
-            this.lblAmount2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblCardType1.AutoSize = true;
+            this.lblCardType1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardType1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardType1.Location = new System.Drawing.Point(159, 1);
+            this.lblCardType1.Name = "lblCardType1";
+            this.lblCardType1.Size = new System.Drawing.Size(148, 24);
+            this.lblCardType1.TabIndex = 7;
+            this.lblCardType1.Text = "Loại thẻ:";
+            this.lblCardType1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStayDuration1
+            // 
+            this.lblStayDuration1.AutoSize = true;
+            this.lblStayDuration1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblStayDuration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStayDuration1.Location = new System.Drawing.Point(314, 1);
+            this.lblStayDuration1.Name = "lblStayDuration1";
+            this.lblStayDuration1.Size = new System.Drawing.Size(138, 24);
+            this.lblStayDuration1.TabIndex = 8;
+            this.lblStayDuration1.Text = "TG lưu bãi:";
+            this.lblStayDuration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel25
+            // 
+            this.tableLayoutPanel25.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel25.ColumnCount = 3;
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 143F));
+            this.tableLayoutPanel25.Controls.Add(this.lblStayDuration1, 2, 0);
+            this.tableLayoutPanel25.Controls.Add(this.lblCardType1, 1, 0);
+            this.tableLayoutPanel25.Controls.Add(this.lblCardID1, 0, 0);
+            this.tableLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel25.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel25.Name = "tableLayoutPanel25";
+            this.tableLayoutPanel25.RowCount = 1;
+            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.Size = new System.Drawing.Size(456, 26);
+            this.tableLayoutPanel25.TabIndex = 1;
+            // 
+            // lblCardID2
+            // 
+            this.lblCardID2.AutoSize = true;
+            this.lblCardID2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardID2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardID2.Location = new System.Drawing.Point(4, 1);
+            this.lblCardID2.Name = "lblCardID2";
+            this.lblCardID2.Size = new System.Drawing.Size(161, 24);
+            this.lblCardID2.TabIndex = 6;
+            this.lblCardID2.Text = "Số thẻ:";
+            this.lblCardID2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblCardType2
+            // 
+            this.lblCardType2.AutoSize = true;
+            this.lblCardType2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardType2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardType2.Location = new System.Drawing.Point(172, 1);
+            this.lblCardType2.Name = "lblCardType2";
+            this.lblCardType2.Size = new System.Drawing.Size(161, 24);
+            this.lblCardType2.TabIndex = 7;
+            this.lblCardType2.Text = "Loại thẻ:";
+            this.lblCardType2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStayDuration2
+            // 
+            this.lblStayDuration2.AutoSize = true;
+            this.lblStayDuration2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblStayDuration2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStayDuration2.Location = new System.Drawing.Point(340, 1);
+            this.lblStayDuration2.Name = "lblStayDuration2";
+            this.lblStayDuration2.Size = new System.Drawing.Size(137, 24);
+            this.lblStayDuration2.TabIndex = 8;
+            this.lblStayDuration2.Text = "TG lưu bãi:";
+            this.lblStayDuration2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel22
+            // 
+            this.tableLayoutPanel22.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel22.ColumnCount = 3;
+            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 142F));
+            this.tableLayoutPanel22.Controls.Add(this.lblStayDuration2, 2, 0);
+            this.tableLayoutPanel22.Controls.Add(this.lblCardType2, 1, 0);
+            this.tableLayoutPanel22.Controls.Add(this.lblCardID2, 0, 0);
+            this.tableLayoutPanel22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel22.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel22.Name = "tableLayoutPanel22";
+            this.tableLayoutPanel22.RowCount = 1;
+            this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel22.Size = new System.Drawing.Size(481, 26);
+            this.tableLayoutPanel22.TabIndex = 1;
+            // 
+            // lblTimeIn2
+            // 
+            this.lblTimeIn2.AutoSize = true;
+            this.lblTimeIn2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTimeIn2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTimeIn2.Location = new System.Drawing.Point(4, 1);
+            this.lblTimeIn2.Name = "lblTimeIn2";
+            this.lblTimeIn2.Size = new System.Drawing.Size(233, 35);
+            this.lblTimeIn2.TabIndex = 7;
+            this.lblTimeIn2.Text = "Vào:";
+            this.lblTimeIn2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblTimeOut2
+            // 
+            this.lblTimeOut2.AutoSize = true;
+            this.lblTimeOut2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTimeOut2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTimeOut2.Location = new System.Drawing.Point(244, 1);
+            this.lblTimeOut2.Name = "lblTimeOut2";
+            this.lblTimeOut2.Size = new System.Drawing.Size(233, 35);
+            this.lblTimeOut2.TabIndex = 8;
+            this.lblTimeOut2.Text = "Ra:";
+            this.lblTimeOut2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel24
+            // 
+            this.tableLayoutPanel24.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel24.ColumnCount = 2;
+            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel24.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel24.Controls.Add(this.lblTimeOut2, 1, 0);
+            this.tableLayoutPanel24.Controls.Add(this.lblTimeIn2, 0, 0);
+            this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 106);
+            this.tableLayoutPanel24.Name = "tableLayoutPanel24";
+            this.tableLayoutPanel24.RowCount = 1;
+            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel24.Size = new System.Drawing.Size(481, 37);
+            this.tableLayoutPanel24.TabIndex = 3;
             // 
             // FormMain
             // 
@@ -1275,6 +1284,7 @@ namespace IDTSERVER
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.KeyPreview = true;
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormMain_KeyDown);
             this.tableLayoutPanel1.ResumeLayout(false);
@@ -1295,10 +1305,6 @@ namespace IDTSERVER
             this.tableLayoutPanel30.PerformLayout();
             this.tableLayoutPanel26.ResumeLayout(false);
             this.tableLayoutPanel26.PerformLayout();
-            this.tableLayoutPanel22.ResumeLayout(false);
-            this.tableLayoutPanel22.PerformLayout();
-            this.tableLayoutPanel24.ResumeLayout(false);
-            this.tableLayoutPanel24.PerformLayout();
             this.tableLayoutPanel29.ResumeLayout(false);
             this.tableLayoutPanel29.PerformLayout();
             this.tableLayoutPanel17.ResumeLayout(false);
@@ -1324,8 +1330,6 @@ namespace IDTSERVER
             this.tableLayoutPanel21.PerformLayout();
             this.tableLayoutPanel23.ResumeLayout(false);
             this.tableLayoutPanel23.PerformLayout();
-            this.tableLayoutPanel25.ResumeLayout(false);
-            this.tableLayoutPanel25.PerformLayout();
             this.tableLayoutPanel31.ResumeLayout(false);
             this.tableLayoutPanel31.PerformLayout();
             this.tableLayoutPanel32.ResumeLayout(false);
@@ -1341,6 +1345,12 @@ namespace IDTSERVER
             this.tableLayoutPanel27.PerformLayout();
             this.tableLayoutPanel28.ResumeLayout(false);
             this.tableLayoutPanel28.PerformLayout();
+            this.tableLayoutPanel25.ResumeLayout(false);
+            this.tableLayoutPanel25.PerformLayout();
+            this.tableLayoutPanel22.ResumeLayout(false);
+            this.tableLayoutPanel22.PerformLayout();
+            this.tableLayoutPanel24.ResumeLayout(false);
+            this.tableLayoutPanel24.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1354,6 +1364,39 @@ namespace IDTSERVER
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel5;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel6;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel7;
+        private Guna.UI2.WinForms.Guna2PictureBox pbCamL1Panorama;
+        private Guna.UI2.WinForms.Guna2PictureBox pbCamL1Plate;
+        private Guna.UI2.WinForms.Guna2PictureBox pbSnapL1_2;
+        private Guna.UI2.WinForms.Guna2PictureBox pbSnapL1_1;
+        private System.Windows.Forms.Label lblNotifyL1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
+        private Guna.UI2.WinForms.Guna2PictureBox pbAIL1Out;
+        private Guna.UI2.WinForms.Guna2PictureBox pbAIL1In;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
+        private System.Windows.Forms.Label lblAIResultL1;
+        private System.Windows.Forms.Label lblAIPlateOutL1;
+        private System.Windows.Forms.Label lblAIPlateInL1;
+        private System.Windows.Forms.Label lblGuardL1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel27;
+        private System.Windows.Forms.Label lblSoftwareName;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel28;
+        private System.Windows.Forms.Label lblEntryCount;
+        private System.Windows.Forms.Label lblExitCount;
+        private System.Windows.Forms.Label lblRevenue;
+        private System.Windows.Forms.Label lblCurrentTime;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
+        private System.Windows.Forms.Label lblAmount1;
+        private System.Windows.Forms.Label lblAmount1Text;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
+        private System.Windows.Forms.Label lblPlate1;
+        private System.Windows.Forms.Label lblOwner1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel31;
+        private System.Windows.Forms.Label lblTimeOut1;
+        private System.Windows.Forms.Label lblTimeIn1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel32;
+        private System.Windows.Forms.Label lblRegistration1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel12;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel13;
         private Guna.UI2.WinForms.Guna2PictureBox pbCamL2Panorama;
@@ -1362,69 +1405,36 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2PictureBox pbSnapL2_2;
         private Guna.UI2.WinForms.Guna2PictureBox pbSnapL2_1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel15;
-        private System.Windows.Forms.Label lblNotifyL2;
-        private Guna.UI2.WinForms.Guna2PictureBox pbCamL1Panorama;
-        private Guna.UI2.WinForms.Guna2PictureBox pbCamL1Plate;
-        private Guna.UI2.WinForms.Guna2PictureBox pbSnapL1_2;
-        private Guna.UI2.WinForms.Guna2PictureBox pbSnapL1_1;
-        private System.Windows.Forms.Label lblNotifyL1;
+        private System.Windows.Forms.Label lblGuardL2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel16;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel20;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel30;
+        private System.Windows.Forms.Label lblAmount2;
+        private System.Windows.Forms.Label lblAmount2Text;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel26;
+        private System.Windows.Forms.Label lblPlate2;
+        private System.Windows.Forms.Label lblOwner2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel29;
+        private System.Windows.Forms.Label lblRegistration2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel17;
+        private System.Windows.Forms.Label lblAIResultL2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel18;
         private Guna.UI2.WinForms.Guna2PictureBox pbAIL2Out;
         private Guna.UI2.WinForms.Guna2PictureBox pbAIL2In;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel19;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel9;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel10;
-        private Guna.UI2.WinForms.Guna2PictureBox pbAIL1Out;
-        private Guna.UI2.WinForms.Guna2PictureBox pbAIL1In;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel11;
-        private System.Windows.Forms.Label lblAIResultL2;
-        private System.Windows.Forms.Label lblAIResultL1;
-        private System.Windows.Forms.Label lblAIPlateOutL1;
-        private System.Windows.Forms.Label lblAIPlateInL1;
-        private System.Windows.Forms.Label lblAIPlateInL2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel26;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
         private System.Windows.Forms.Label lblAIPlateOutL2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel24;
-        private System.Windows.Forms.Label lblGuardL1;
-        private System.Windows.Forms.Label lblGuardL2;
-        private System.Windows.Forms.Label lblPlate2;
-        private System.Windows.Forms.Label lblOwner2;
-        private System.Windows.Forms.Label lblStayDuration2;
-        private System.Windows.Forms.Label lblCardType2;
-        private System.Windows.Forms.Label lblCardID2;
-        private System.Windows.Forms.Label lblTimeOut2;
-        private System.Windows.Forms.Label lblTimeIn2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel27;
-        private System.Windows.Forms.Label lblSoftwareName;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel28;
-        private System.Windows.Forms.Label lblEntryCount;
-        private System.Windows.Forms.Label lblExitCount;
-        private System.Windows.Forms.Label lblRevenue;
-        private System.Windows.Forms.Label lblCurrentTime;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel30;
-        private System.Windows.Forms.Label lblAmount2Text;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel29;
-        private System.Windows.Forms.Label lblRegistration2;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
-        private System.Windows.Forms.Label lblAmount1Text;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
-        private System.Windows.Forms.Label lblPlate1;
-        private System.Windows.Forms.Label lblOwner1;
+        private System.Windows.Forms.Label lblAIPlateInL2;
+        private System.Windows.Forms.Label lblNotifyL2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel25;
         private System.Windows.Forms.Label lblStayDuration1;
         private System.Windows.Forms.Label lblCardType1;
         private System.Windows.Forms.Label lblCardID1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel31;
-        private System.Windows.Forms.Label lblTimeOut1;
-        private System.Windows.Forms.Label lblTimeIn1;
-        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel32;
-        private System.Windows.Forms.Label lblRegistration1;
-        private System.Windows.Forms.Label lblAmount1;
-        private System.Windows.Forms.Label lblAmount2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel22;
+        private System.Windows.Forms.Label lblStayDuration2;
+        private System.Windows.Forms.Label lblCardType2;
+        private System.Windows.Forms.Label lblCardID2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel24;
+        private System.Windows.Forms.Label lblTimeOut2;
+        private System.Windows.Forms.Label lblTimeIn2;
     }
 }
