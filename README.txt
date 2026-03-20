@@ -256,10 +256,17 @@ Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thôn
    4. Cả 2 bên được thiết kế tương đồng nhau, đối xứng để đáp ứng IT setup cho bên trái là Làn ra/hoặc Vào nếu thích. (Lúc đó thông tin nào có sẽ tự hiển thị, không có mặc đinh trống)
    5. Khu vực Ảnh Snapshot và Camera Live phải đều nhau để bảo vệ có thể xem ảnh rõ hơn, khu vực ảnh AI sẽ có tỉ lệ tương đương 2 khu vực kia nhưng nhỏ hơn.
 	
+Khi build lên tôi thấy các phần pbCamL1Panorama, pbCamL1Plate, pbCamL2Plate, pbCamL2Panorama không đều nhau
+
+pbAIL2In pbAIL2Out pbAIL1In pbAIL1Out phải có tỉ lệ tương ứng với các phần pbCamL1Panorama, pbCamL1Plate, pbCamL2Plate, pbCamL2Panorama. Không được thay đổi kích thước các phần pbCamL1Panorama, pbCamL1Plate, pbCamL2Plate, pbCamL2Panorama này nữa
 
 
+   * lblCardID1 và lblCardType1 và lblStayDuration1 có tỉ lệ trong dòng là 30% 30% 40%
+   * lblOwner1 và lblPlate1 có tỉ lệ trong dòng là 60% 40%
+   * lblTimeIn1 và lblTimeOut1 có tỉ lệ trong dòng là 50% 50%
 
 
+========================================================================================
 
 
 

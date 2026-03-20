@@ -31,7 +31,7 @@ namespace IDTSERVER
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel20 = new System.Windows.Forms.TableLayoutPanel();
             this.tableLayoutPanel30 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblAmount2 = new System.Windows.Forms.Label();
+            this.lblAmount2Text = new System.Windows.Forms.Label();
             this.tableLayoutPanel26 = new System.Windows.Forms.TableLayoutPanel();
             this.lblPlate2 = new System.Windows.Forms.Label();
             this.lblOwner2 = new System.Windows.Forms.Label();
@@ -63,6 +63,21 @@ namespace IDTSERVER
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.lblGuardL1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel7 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
+            this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblAmount1Text = new System.Windows.Forms.Label();
+            this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblPlate1 = new System.Windows.Forms.Label();
+            this.lblOwner1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel25 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblStayDuration1 = new System.Windows.Forms.Label();
+            this.lblCardType1 = new System.Windows.Forms.Label();
+            this.lblCardID1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel31 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblTimeOut1 = new System.Windows.Forms.Label();
+            this.lblTimeIn1 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel32 = new System.Windows.Forms.TableLayoutPanel();
+            this.lblRegistration1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.lblAIResultL1 = new System.Windows.Forms.Label();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
@@ -79,21 +94,8 @@ namespace IDTSERVER
             this.lblExitCount = new System.Windows.Forms.Label();
             this.lblRevenue = new System.Windows.Forms.Label();
             this.lblCurrentTime = new System.Windows.Forms.Label();
-            this.tableLayoutPanel8 = new System.Windows.Forms.TableLayoutPanel();
-            this.tableLayoutPanel21 = new System.Windows.Forms.TableLayoutPanel();
             this.lblAmount1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel23 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblPlate1 = new System.Windows.Forms.Label();
-            this.lblOwner1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel25 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblStayDuration1 = new System.Windows.Forms.Label();
-            this.lblCardType1 = new System.Windows.Forms.Label();
-            this.lblCardID1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel31 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblTimeOut1 = new System.Windows.Forms.Label();
-            this.lblTimeIn1 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel32 = new System.Windows.Forms.TableLayoutPanel();
-            this.lblRegistration1 = new System.Windows.Forms.Label();
+            this.lblAmount2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.tableLayoutPanel12.SuspendLayout();
@@ -125,6 +127,12 @@ namespace IDTSERVER
             ((System.ComponentModel.ISupportInitialize)(this.pbSnapL1_1)).BeginInit();
             this.tableLayoutPanel6.SuspendLayout();
             this.tableLayoutPanel7.SuspendLayout();
+            this.tableLayoutPanel8.SuspendLayout();
+            this.tableLayoutPanel21.SuspendLayout();
+            this.tableLayoutPanel23.SuspendLayout();
+            this.tableLayoutPanel25.SuspendLayout();
+            this.tableLayoutPanel31.SuspendLayout();
+            this.tableLayoutPanel32.SuspendLayout();
             this.tableLayoutPanel9.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbAIL1Out)).BeginInit();
@@ -132,12 +140,6 @@ namespace IDTSERVER
             this.tableLayoutPanel11.SuspendLayout();
             this.tableLayoutPanel27.SuspendLayout();
             this.tableLayoutPanel28.SuspendLayout();
-            this.tableLayoutPanel8.SuspendLayout();
-            this.tableLayoutPanel21.SuspendLayout();
-            this.tableLayoutPanel23.SuspendLayout();
-            this.tableLayoutPanel25.SuspendLayout();
-            this.tableLayoutPanel31.SuspendLayout();
-            this.tableLayoutPanel32.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -187,8 +189,8 @@ namespace IDTSERVER
             this.tableLayoutPanel12.RowCount = 4;
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 29.8893F));
+            this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10.3321F));
             this.tableLayoutPanel12.Size = new System.Drawing.Size(769, 813);
             this.tableLayoutPanel12.TabIndex = 1;
             // 
@@ -205,7 +207,7 @@ namespace IDTSERVER
             this.tableLayoutPanel13.RowCount = 1;
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(763, 264);
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(763, 237);
             this.tableLayoutPanel13.TabIndex = 0;
             // 
             // pbCamL2Panorama
@@ -214,7 +216,7 @@ namespace IDTSERVER
             this.pbCamL2Panorama.ImageRotate = 0F;
             this.pbCamL2Panorama.Location = new System.Drawing.Point(3, 3);
             this.pbCamL2Panorama.Name = "pbCamL2Panorama";
-            this.pbCamL2Panorama.Size = new System.Drawing.Size(375, 258);
+            this.pbCamL2Panorama.Size = new System.Drawing.Size(375, 231);
             this.pbCamL2Panorama.TabIndex = 0;
             this.pbCamL2Panorama.TabStop = false;
             // 
@@ -224,7 +226,7 @@ namespace IDTSERVER
             this.pbCamL2Plate.ImageRotate = 0F;
             this.pbCamL2Plate.Location = new System.Drawing.Point(384, 3);
             this.pbCamL2Plate.Name = "pbCamL2Plate";
-            this.pbCamL2Plate.Size = new System.Drawing.Size(376, 258);
+            this.pbCamL2Plate.Size = new System.Drawing.Size(376, 231);
             this.pbCamL2Plate.TabIndex = 1;
             this.pbCamL2Plate.TabStop = false;
             // 
@@ -236,12 +238,12 @@ namespace IDTSERVER
             this.tableLayoutPanel14.Controls.Add(this.pbSnapL2_2, 1, 0);
             this.tableLayoutPanel14.Controls.Add(this.pbSnapL2_1, 0, 0);
             this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel14.Location = new System.Drawing.Point(3, 521);
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(3, 489);
             this.tableLayoutPanel14.Name = "tableLayoutPanel14";
             this.tableLayoutPanel14.RowCount = 1;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(763, 231);
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(763, 236);
             this.tableLayoutPanel14.TabIndex = 1;
             // 
             // pbSnapL2_2
@@ -250,7 +252,7 @@ namespace IDTSERVER
             this.pbSnapL2_2.ImageRotate = 0F;
             this.pbSnapL2_2.Location = new System.Drawing.Point(384, 3);
             this.pbSnapL2_2.Name = "pbSnapL2_2";
-            this.pbSnapL2_2.Size = new System.Drawing.Size(376, 225);
+            this.pbSnapL2_2.Size = new System.Drawing.Size(376, 230);
             this.pbSnapL2_2.TabIndex = 3;
             this.pbSnapL2_2.TabStop = false;
             // 
@@ -260,7 +262,7 @@ namespace IDTSERVER
             this.pbSnapL2_1.ImageRotate = 0F;
             this.pbSnapL2_1.Location = new System.Drawing.Point(3, 3);
             this.pbSnapL2_1.Name = "pbSnapL2_1";
-            this.pbSnapL2_1.Size = new System.Drawing.Size(375, 225);
+            this.pbSnapL2_1.Size = new System.Drawing.Size(375, 230);
             this.pbSnapL2_1.TabIndex = 2;
             this.pbSnapL2_1.TabStop = false;
             // 
@@ -272,13 +274,13 @@ namespace IDTSERVER
             this.tableLayoutPanel15.Controls.Add(this.lblGuardL2, 0, 0);
             this.tableLayoutPanel15.Controls.Add(this.tableLayoutPanel16, 0, 1);
             this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel15.Location = new System.Drawing.Point(3, 273);
+            this.tableLayoutPanel15.Location = new System.Drawing.Point(3, 246);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 2;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.63636F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 86.36364F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(763, 242);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(763, 237);
             this.tableLayoutPanel15.TabIndex = 2;
             // 
             // lblGuardL2
@@ -308,7 +310,7 @@ namespace IDTSERVER
             this.tableLayoutPanel16.RowCount = 1;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(757, 204);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(757, 199);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // tableLayoutPanel20
@@ -330,38 +332,40 @@ namespace IDTSERVER
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
             this.tableLayoutPanel20.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.tableLayoutPanel20.Size = new System.Drawing.Size(487, 198);
+            this.tableLayoutPanel20.Size = new System.Drawing.Size(487, 193);
             this.tableLayoutPanel20.TabIndex = 3;
             this.tableLayoutPanel20.Paint += new System.Windows.Forms.PaintEventHandler(this.tableLayoutPanel20_Paint);
             // 
             // tableLayoutPanel30
             // 
+            this.tableLayoutPanel30.BackColor = System.Drawing.Color.Yellow;
             this.tableLayoutPanel30.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel30.ColumnCount = 1;
+            this.tableLayoutPanel30.ColumnCount = 2;
             this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel30.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel30.Controls.Add(this.lblAmount2, 0, 0);
+            this.tableLayoutPanel30.Controls.Add(this.lblAmount2, 1, 0);
+            this.tableLayoutPanel30.Controls.Add(this.lblAmount2Text, 0, 0);
             this.tableLayoutPanel30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel30.Location = new System.Drawing.Point(3, 153);
+            this.tableLayoutPanel30.Location = new System.Drawing.Point(3, 149);
             this.tableLayoutPanel30.Name = "tableLayoutPanel30";
             this.tableLayoutPanel30.RowCount = 1;
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel30.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel30.Size = new System.Drawing.Size(481, 42);
+            this.tableLayoutPanel30.Size = new System.Drawing.Size(481, 41);
             this.tableLayoutPanel30.TabIndex = 5;
             // 
-            // lblAmount2
+            // lblAmount2Text
             // 
-            this.lblAmount2.AutoSize = true;
-            this.lblAmount2.BackColor = System.Drawing.Color.Yellow;
-            this.lblAmount2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAmount2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmount2.Location = new System.Drawing.Point(4, 1);
-            this.lblAmount2.Name = "lblAmount2";
-            this.lblAmount2.Size = new System.Drawing.Size(473, 40);
-            this.lblAmount2.TabIndex = 8;
-            this.lblAmount2.Text = "Thanh toán:";
-            this.lblAmount2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblAmount2Text.AutoSize = true;
+            this.lblAmount2Text.BackColor = System.Drawing.Color.Yellow;
+            this.lblAmount2Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAmount2Text.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount2Text.Location = new System.Drawing.Point(4, 1);
+            this.lblAmount2Text.Name = "lblAmount2Text";
+            this.lblAmount2Text.Size = new System.Drawing.Size(233, 39);
+            this.lblAmount2Text.TabIndex = 8;
+            this.lblAmount2Text.Text = "Thanh toán:";
+            this.lblAmount2Text.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tableLayoutPanel26
             // 
@@ -373,12 +377,12 @@ namespace IDTSERVER
             this.tableLayoutPanel26.Controls.Add(this.lblPlate2, 1, 0);
             this.tableLayoutPanel26.Controls.Add(this.lblOwner2, 0, 0);
             this.tableLayoutPanel26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel26.Location = new System.Drawing.Point(3, 37);
+            this.tableLayoutPanel26.Location = new System.Drawing.Point(3, 35);
             this.tableLayoutPanel26.Name = "tableLayoutPanel26";
             this.tableLayoutPanel26.RowCount = 1;
             this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel26.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel26.Size = new System.Drawing.Size(481, 28);
+            this.tableLayoutPanel26.Size = new System.Drawing.Size(481, 26);
             this.tableLayoutPanel26.TabIndex = 2;
             // 
             // lblPlate2
@@ -388,7 +392,7 @@ namespace IDTSERVER
             this.lblPlate2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPlate2.Location = new System.Drawing.Point(244, 1);
             this.lblPlate2.Name = "lblPlate2";
-            this.lblPlate2.Size = new System.Drawing.Size(233, 26);
+            this.lblPlate2.Size = new System.Drawing.Size(233, 24);
             this.lblPlate2.TabIndex = 8;
             this.lblPlate2.Text = "BS:";
             this.lblPlate2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -400,7 +404,7 @@ namespace IDTSERVER
             this.lblOwner2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblOwner2.Location = new System.Drawing.Point(4, 1);
             this.lblOwner2.Name = "lblOwner2";
-            this.lblOwner2.Size = new System.Drawing.Size(233, 26);
+            this.lblOwner2.Size = new System.Drawing.Size(233, 24);
             this.lblOwner2.TabIndex = 7;
             this.lblOwner2.Text = "Chủ thẻ:";
             this.lblOwner2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -411,7 +415,7 @@ namespace IDTSERVER
             this.tableLayoutPanel22.ColumnCount = 3;
             this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
+            this.tableLayoutPanel22.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel22.Controls.Add(this.lblStayDuration2, 2, 0);
             this.tableLayoutPanel22.Controls.Add(this.lblCardType2, 1, 0);
             this.tableLayoutPanel22.Controls.Add(this.lblCardID2, 0, 0);
@@ -421,7 +425,7 @@ namespace IDTSERVER
             this.tableLayoutPanel22.RowCount = 1;
             this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel22.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel22.Size = new System.Drawing.Size(481, 28);
+            this.tableLayoutPanel22.Size = new System.Drawing.Size(481, 26);
             this.tableLayoutPanel22.TabIndex = 1;
             // 
             // lblStayDuration2
@@ -429,9 +433,9 @@ namespace IDTSERVER
             this.lblStayDuration2.AutoSize = true;
             this.lblStayDuration2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblStayDuration2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStayDuration2.Location = new System.Drawing.Point(344, 1);
+            this.lblStayDuration2.Location = new System.Drawing.Point(342, 1);
             this.lblStayDuration2.Name = "lblStayDuration2";
-            this.lblStayDuration2.Size = new System.Drawing.Size(133, 26);
+            this.lblStayDuration2.Size = new System.Drawing.Size(135, 24);
             this.lblStayDuration2.TabIndex = 8;
             this.lblStayDuration2.Text = "TG lưu bãi:";
             this.lblStayDuration2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -441,9 +445,9 @@ namespace IDTSERVER
             this.lblCardType2.AutoSize = true;
             this.lblCardType2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblCardType2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardType2.Location = new System.Drawing.Point(174, 1);
+            this.lblCardType2.Location = new System.Drawing.Point(173, 1);
             this.lblCardType2.Name = "lblCardType2";
-            this.lblCardType2.Size = new System.Drawing.Size(163, 26);
+            this.lblCardType2.Size = new System.Drawing.Size(162, 24);
             this.lblCardType2.TabIndex = 7;
             this.lblCardType2.Text = "Loại thẻ:";
             this.lblCardType2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -455,7 +459,7 @@ namespace IDTSERVER
             this.lblCardID2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCardID2.Location = new System.Drawing.Point(4, 1);
             this.lblCardID2.Name = "lblCardID2";
-            this.lblCardID2.Size = new System.Drawing.Size(163, 26);
+            this.lblCardID2.Size = new System.Drawing.Size(162, 24);
             this.lblCardID2.TabIndex = 6;
             this.lblCardID2.Text = "Số thẻ:";
             this.lblCardID2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -469,7 +473,7 @@ namespace IDTSERVER
             this.tableLayoutPanel24.Controls.Add(this.lblTimeOut2, 1, 0);
             this.tableLayoutPanel24.Controls.Add(this.lblTimeIn2, 0, 0);
             this.tableLayoutPanel24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 110);
+            this.tableLayoutPanel24.Location = new System.Drawing.Point(3, 106);
             this.tableLayoutPanel24.Name = "tableLayoutPanel24";
             this.tableLayoutPanel24.RowCount = 1;
             this.tableLayoutPanel24.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -509,7 +513,7 @@ namespace IDTSERVER
             this.tableLayoutPanel29.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel29.Controls.Add(this.lblRegistration2, 0, 0);
             this.tableLayoutPanel29.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel29.Location = new System.Drawing.Point(3, 71);
+            this.tableLayoutPanel29.Location = new System.Drawing.Point(3, 67);
             this.tableLayoutPanel29.Name = "tableLayoutPanel29";
             this.tableLayoutPanel29.RowCount = 1;
             this.tableLayoutPanel29.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -545,7 +549,7 @@ namespace IDTSERVER
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 65.33334F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34.66667F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(258, 198);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(258, 193);
             this.tableLayoutPanel17.TabIndex = 2;
             // 
             // lblAIResultL2
@@ -554,7 +558,7 @@ namespace IDTSERVER
             this.lblAIResultL2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
             this.lblAIResultL2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblAIResultL2.Font = new System.Drawing.Font("Times New Roman", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAIResultL2.Location = new System.Drawing.Point(4, 150);
+            this.lblAIResultL2.Location = new System.Drawing.Point(4, 145);
             this.lblAIResultL2.Name = "lblAIResultL2";
             this.lblAIResultL2.Size = new System.Drawing.Size(250, 47);
             this.lblAIResultL2.TabIndex = 4;
@@ -574,7 +578,7 @@ namespace IDTSERVER
             this.tableLayoutPanel18.RowCount = 1;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(250, 90);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(250, 87);
             this.tableLayoutPanel18.TabIndex = 0;
             // 
             // pbAIL2Out
@@ -583,7 +587,7 @@ namespace IDTSERVER
             this.pbAIL2Out.ImageRotate = 0F;
             this.pbAIL2Out.Location = new System.Drawing.Point(128, 4);
             this.pbAIL2Out.Name = "pbAIL2Out";
-            this.pbAIL2Out.Size = new System.Drawing.Size(118, 82);
+            this.pbAIL2Out.Size = new System.Drawing.Size(118, 79);
             this.pbAIL2Out.TabIndex = 3;
             this.pbAIL2Out.TabStop = false;
             // 
@@ -593,7 +597,7 @@ namespace IDTSERVER
             this.pbAIL2In.ImageRotate = 0F;
             this.pbAIL2In.Location = new System.Drawing.Point(4, 4);
             this.pbAIL2In.Name = "pbAIL2In";
-            this.pbAIL2In.Size = new System.Drawing.Size(117, 82);
+            this.pbAIL2In.Size = new System.Drawing.Size(117, 79);
             this.pbAIL2In.TabIndex = 2;
             this.pbAIL2In.TabStop = false;
             // 
@@ -605,12 +609,12 @@ namespace IDTSERVER
             this.tableLayoutPanel19.Controls.Add(this.lblAIPlateOutL2, 1, 0);
             this.tableLayoutPanel19.Controls.Add(this.lblAIPlateInL2, 0, 0);
             this.tableLayoutPanel19.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel19.Location = new System.Drawing.Point(4, 101);
+            this.tableLayoutPanel19.Location = new System.Drawing.Point(4, 98);
             this.tableLayoutPanel19.Name = "tableLayoutPanel19";
             this.tableLayoutPanel19.RowCount = 1;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(250, 45);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(250, 43);
             this.tableLayoutPanel19.TabIndex = 1;
             // 
             // lblAIPlateOutL2
@@ -620,7 +624,7 @@ namespace IDTSERVER
             this.lblAIPlateOutL2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAIPlateOutL2.Location = new System.Drawing.Point(128, 0);
             this.lblAIPlateOutL2.Name = "lblAIPlateOutL2";
-            this.lblAIPlateOutL2.Size = new System.Drawing.Size(119, 45);
+            this.lblAIPlateOutL2.Size = new System.Drawing.Size(119, 43);
             this.lblAIPlateOutL2.TabIndex = 7;
             this.lblAIPlateOutL2.Text = "47-K6-22966";
             this.lblAIPlateOutL2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -632,7 +636,7 @@ namespace IDTSERVER
             this.lblAIPlateInL2.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAIPlateInL2.Location = new System.Drawing.Point(3, 0);
             this.lblAIPlateInL2.Name = "lblAIPlateInL2";
-            this.lblAIPlateInL2.Size = new System.Drawing.Size(119, 45);
+            this.lblAIPlateInL2.Size = new System.Drawing.Size(119, 43);
             this.lblAIPlateInL2.TabIndex = 6;
             this.lblAIPlateInL2.Text = "47-K6-22966";
             this.lblAIPlateInL2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -643,9 +647,10 @@ namespace IDTSERVER
             this.lblNotifyL2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
             this.lblNotifyL2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblNotifyL2.Font = new System.Drawing.Font("Times New Roman", 16F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNotifyL2.Location = new System.Drawing.Point(3, 755);
+            this.lblNotifyL2.ForeColor = System.Drawing.Color.White;
+            this.lblNotifyL2.Location = new System.Drawing.Point(3, 728);
             this.lblNotifyL2.Name = "lblNotifyL2";
-            this.lblNotifyL2.Size = new System.Drawing.Size(763, 58);
+            this.lblNotifyL2.Size = new System.Drawing.Size(763, 85);
             this.lblNotifyL2.TabIndex = 3;
             this.lblNotifyL2.Text = "Xin mời cho xe vào bãi!";
             this.lblNotifyL2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -683,7 +688,7 @@ namespace IDTSERVER
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(763, 264);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(763, 237);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // pbCamL1Panorama
@@ -693,7 +698,7 @@ namespace IDTSERVER
             this.pbCamL1Panorama.ImageRotate = 0F;
             this.pbCamL1Panorama.Location = new System.Drawing.Point(3, 3);
             this.pbCamL1Panorama.Name = "pbCamL1Panorama";
-            this.pbCamL1Panorama.Size = new System.Drawing.Size(375, 258);
+            this.pbCamL1Panorama.Size = new System.Drawing.Size(375, 231);
             this.pbCamL1Panorama.TabIndex = 0;
             this.pbCamL1Panorama.TabStop = false;
             // 
@@ -703,7 +708,7 @@ namespace IDTSERVER
             this.pbCamL1Plate.ImageRotate = 0F;
             this.pbCamL1Plate.Location = new System.Drawing.Point(384, 3);
             this.pbCamL1Plate.Name = "pbCamL1Plate";
-            this.pbCamL1Plate.Size = new System.Drawing.Size(376, 258);
+            this.pbCamL1Plate.Size = new System.Drawing.Size(376, 231);
             this.pbCamL1Plate.TabIndex = 1;
             this.pbCamL1Plate.TabStop = false;
             // 
@@ -715,12 +720,12 @@ namespace IDTSERVER
             this.tableLayoutPanel5.Controls.Add(this.pbSnapL1_2, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.pbSnapL1_1, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 521);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 489);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(763, 231);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(763, 237);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
             // pbSnapL1_2
@@ -729,7 +734,7 @@ namespace IDTSERVER
             this.pbSnapL1_2.ImageRotate = 0F;
             this.pbSnapL1_2.Location = new System.Drawing.Point(384, 3);
             this.pbSnapL1_2.Name = "pbSnapL1_2";
-            this.pbSnapL1_2.Size = new System.Drawing.Size(376, 225);
+            this.pbSnapL1_2.Size = new System.Drawing.Size(376, 231);
             this.pbSnapL1_2.TabIndex = 3;
             this.pbSnapL1_2.TabStop = false;
             // 
@@ -739,7 +744,7 @@ namespace IDTSERVER
             this.pbSnapL1_1.ImageRotate = 0F;
             this.pbSnapL1_1.Location = new System.Drawing.Point(3, 3);
             this.pbSnapL1_1.Name = "pbSnapL1_1";
-            this.pbSnapL1_1.Size = new System.Drawing.Size(375, 225);
+            this.pbSnapL1_1.Size = new System.Drawing.Size(375, 231);
             this.pbSnapL1_1.TabIndex = 2;
             this.pbSnapL1_1.TabStop = false;
             // 
@@ -751,13 +756,13 @@ namespace IDTSERVER
             this.tableLayoutPanel6.Controls.Add(this.lblGuardL1, 0, 0);
             this.tableLayoutPanel6.Controls.Add(this.tableLayoutPanel7, 0, 1);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 273);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 246);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 2;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 13.63636F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 86.36364F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(763, 242);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(763, 237);
             this.tableLayoutPanel6.TabIndex = 2;
             // 
             // lblGuardL1
@@ -787,8 +792,227 @@ namespace IDTSERVER
             this.tableLayoutPanel7.RowCount = 1;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(757, 204);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(757, 199);
             this.tableLayoutPanel7.TabIndex = 0;
+            // 
+            // tableLayoutPanel8
+            // 
+            this.tableLayoutPanel8.ColumnCount = 1;
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel21, 0, 4);
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel23, 0, 1);
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel25, 0, 0);
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel31, 0, 3);
+            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel32, 0, 2);
+            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
+            this.tableLayoutPanel8.RowCount = 5;
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
+            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(462, 193);
+            this.tableLayoutPanel8.TabIndex = 4;
+            // 
+            // tableLayoutPanel21
+            // 
+            this.tableLayoutPanel21.BackColor = System.Drawing.Color.Yellow;
+            this.tableLayoutPanel21.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel21.ColumnCount = 2;
+            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel21.Controls.Add(this.lblAmount1, 1, 0);
+            this.tableLayoutPanel21.Controls.Add(this.lblAmount1Text, 0, 0);
+            this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel21.Location = new System.Drawing.Point(3, 149);
+            this.tableLayoutPanel21.Name = "tableLayoutPanel21";
+            this.tableLayoutPanel21.RowCount = 1;
+            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel21.Size = new System.Drawing.Size(456, 41);
+            this.tableLayoutPanel21.TabIndex = 5;
+            // 
+            // lblAmount1Text
+            // 
+            this.lblAmount1Text.AutoSize = true;
+            this.lblAmount1Text.BackColor = System.Drawing.Color.Yellow;
+            this.lblAmount1Text.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAmount1Text.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount1Text.Location = new System.Drawing.Point(4, 1);
+            this.lblAmount1Text.Name = "lblAmount1Text";
+            this.lblAmount1Text.Size = new System.Drawing.Size(220, 39);
+            this.lblAmount1Text.TabIndex = 8;
+            this.lblAmount1Text.Text = "Thanh toán:";
+            this.lblAmount1Text.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // tableLayoutPanel23
+            // 
+            this.tableLayoutPanel23.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel23.ColumnCount = 2;
+            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
+            this.tableLayoutPanel23.Controls.Add(this.lblPlate1, 1, 0);
+            this.tableLayoutPanel23.Controls.Add(this.lblOwner1, 0, 0);
+            this.tableLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel23.Location = new System.Drawing.Point(3, 35);
+            this.tableLayoutPanel23.Name = "tableLayoutPanel23";
+            this.tableLayoutPanel23.RowCount = 1;
+            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel23.Size = new System.Drawing.Size(456, 26);
+            this.tableLayoutPanel23.TabIndex = 2;
+            // 
+            // lblPlate1
+            // 
+            this.lblPlate1.AutoSize = true;
+            this.lblPlate1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblPlate1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPlate1.Location = new System.Drawing.Point(231, 1);
+            this.lblPlate1.Name = "lblPlate1";
+            this.lblPlate1.Size = new System.Drawing.Size(221, 24);
+            this.lblPlate1.TabIndex = 8;
+            this.lblPlate1.Text = "BS:";
+            this.lblPlate1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblOwner1
+            // 
+            this.lblOwner1.AutoSize = true;
+            this.lblOwner1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblOwner1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblOwner1.Location = new System.Drawing.Point(4, 1);
+            this.lblOwner1.Name = "lblOwner1";
+            this.lblOwner1.Size = new System.Drawing.Size(220, 24);
+            this.lblOwner1.TabIndex = 7;
+            this.lblOwner1.Text = "Chủ thẻ:";
+            this.lblOwner1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel25
+            // 
+            this.tableLayoutPanel25.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel25.ColumnCount = 3;
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 141F));
+            this.tableLayoutPanel25.Controls.Add(this.lblStayDuration1, 2, 0);
+            this.tableLayoutPanel25.Controls.Add(this.lblCardType1, 1, 0);
+            this.tableLayoutPanel25.Controls.Add(this.lblCardID1, 0, 0);
+            this.tableLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel25.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel25.Name = "tableLayoutPanel25";
+            this.tableLayoutPanel25.RowCount = 1;
+            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel25.Size = new System.Drawing.Size(456, 26);
+            this.tableLayoutPanel25.TabIndex = 1;
+            // 
+            // lblStayDuration1
+            // 
+            this.lblStayDuration1.AutoSize = true;
+            this.lblStayDuration1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblStayDuration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStayDuration1.Location = new System.Drawing.Point(316, 1);
+            this.lblStayDuration1.Name = "lblStayDuration1";
+            this.lblStayDuration1.Size = new System.Drawing.Size(136, 24);
+            this.lblStayDuration1.TabIndex = 8;
+            this.lblStayDuration1.Text = "TG lưu bãi:";
+            this.lblStayDuration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblCardType1
+            // 
+            this.lblCardType1.AutoSize = true;
+            this.lblCardType1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardType1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardType1.Location = new System.Drawing.Point(160, 1);
+            this.lblCardType1.Name = "lblCardType1";
+            this.lblCardType1.Size = new System.Drawing.Size(149, 24);
+            this.lblCardType1.TabIndex = 7;
+            this.lblCardType1.Text = "Loại thẻ:";
+            this.lblCardType1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblCardID1
+            // 
+            this.lblCardID1.AutoSize = true;
+            this.lblCardID1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblCardID1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCardID1.Location = new System.Drawing.Point(4, 1);
+            this.lblCardID1.Name = "lblCardID1";
+            this.lblCardID1.Size = new System.Drawing.Size(149, 24);
+            this.lblCardID1.TabIndex = 6;
+            this.lblCardID1.Text = "Số thẻ:";
+            this.lblCardID1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel31
+            // 
+            this.tableLayoutPanel31.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel31.ColumnCount = 2;
+            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel31.Controls.Add(this.lblTimeOut1, 1, 0);
+            this.tableLayoutPanel31.Controls.Add(this.lblTimeIn1, 0, 0);
+            this.tableLayoutPanel31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel31.Location = new System.Drawing.Point(3, 106);
+            this.tableLayoutPanel31.Name = "tableLayoutPanel31";
+            this.tableLayoutPanel31.RowCount = 1;
+            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel31.Size = new System.Drawing.Size(456, 37);
+            this.tableLayoutPanel31.TabIndex = 3;
+            // 
+            // lblTimeOut1
+            // 
+            this.lblTimeOut1.AutoSize = true;
+            this.lblTimeOut1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTimeOut1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTimeOut1.Location = new System.Drawing.Point(231, 1);
+            this.lblTimeOut1.Name = "lblTimeOut1";
+            this.lblTimeOut1.Size = new System.Drawing.Size(221, 35);
+            this.lblTimeOut1.TabIndex = 8;
+            this.lblTimeOut1.Text = "Ra:";
+            this.lblTimeOut1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblTimeIn1
+            // 
+            this.lblTimeIn1.AutoSize = true;
+            this.lblTimeIn1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTimeIn1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTimeIn1.Location = new System.Drawing.Point(4, 1);
+            this.lblTimeIn1.Name = "lblTimeIn1";
+            this.lblTimeIn1.Size = new System.Drawing.Size(220, 35);
+            this.lblTimeIn1.TabIndex = 7;
+            this.lblTimeIn1.Text = "Vào:";
+            this.lblTimeIn1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tableLayoutPanel32
+            // 
+            this.tableLayoutPanel32.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
+            this.tableLayoutPanel32.ColumnCount = 1;
+            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel32.Controls.Add(this.lblRegistration1, 0, 0);
+            this.tableLayoutPanel32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel32.Location = new System.Drawing.Point(3, 67);
+            this.tableLayoutPanel32.Name = "tableLayoutPanel32";
+            this.tableLayoutPanel32.RowCount = 1;
+            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel32.Size = new System.Drawing.Size(456, 33);
+            this.tableLayoutPanel32.TabIndex = 4;
+            // 
+            // lblRegistration1
+            // 
+            this.lblRegistration1.AutoSize = true;
+            this.lblRegistration1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblRegistration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblRegistration1.Location = new System.Drawing.Point(4, 1);
+            this.lblRegistration1.Name = "lblRegistration1";
+            this.lblRegistration1.Size = new System.Drawing.Size(448, 31);
+            this.lblRegistration1.TabIndex = 7;
+            this.lblRegistration1.Text = "Đăng ký thẻ:";
+            this.lblRegistration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // tableLayoutPanel9
             // 
@@ -806,7 +1030,7 @@ namespace IDTSERVER
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 65.33334F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 34.66667F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 46F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(283, 198);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(283, 193);
             this.tableLayoutPanel9.TabIndex = 1;
             // 
             // lblAIResultL1
@@ -816,7 +1040,7 @@ namespace IDTSERVER
             this.lblAIResultL1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblAIResultL1.Font = new System.Drawing.Font("Times New Roman", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAIResultL1.ForeColor = System.Drawing.Color.White;
-            this.lblAIResultL1.Location = new System.Drawing.Point(4, 150);
+            this.lblAIResultL1.Location = new System.Drawing.Point(4, 145);
             this.lblAIResultL1.Name = "lblAIResultL1";
             this.lblAIResultL1.Size = new System.Drawing.Size(275, 47);
             this.lblAIResultL1.TabIndex = 4;
@@ -837,7 +1061,7 @@ namespace IDTSERVER
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(275, 90);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(275, 87);
             this.tableLayoutPanel10.TabIndex = 0;
             // 
             // pbAIL1Out
@@ -846,7 +1070,7 @@ namespace IDTSERVER
             this.pbAIL1Out.ImageRotate = 0F;
             this.pbAIL1Out.Location = new System.Drawing.Point(141, 4);
             this.pbAIL1Out.Name = "pbAIL1Out";
-            this.pbAIL1Out.Size = new System.Drawing.Size(130, 82);
+            this.pbAIL1Out.Size = new System.Drawing.Size(130, 79);
             this.pbAIL1Out.TabIndex = 3;
             this.pbAIL1Out.TabStop = false;
             // 
@@ -856,7 +1080,7 @@ namespace IDTSERVER
             this.pbAIL1In.ImageRotate = 0F;
             this.pbAIL1In.Location = new System.Drawing.Point(4, 4);
             this.pbAIL1In.Name = "pbAIL1In";
-            this.pbAIL1In.Size = new System.Drawing.Size(130, 82);
+            this.pbAIL1In.Size = new System.Drawing.Size(130, 79);
             this.pbAIL1In.TabIndex = 2;
             this.pbAIL1In.TabStop = false;
             // 
@@ -868,12 +1092,12 @@ namespace IDTSERVER
             this.tableLayoutPanel11.Controls.Add(this.lblAIPlateOutL1, 1, 0);
             this.tableLayoutPanel11.Controls.Add(this.lblAIPlateInL1, 0, 0);
             this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 101);
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(4, 98);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 1;
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(275, 45);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(275, 43);
             this.tableLayoutPanel11.TabIndex = 1;
             // 
             // lblAIPlateOutL1
@@ -883,7 +1107,7 @@ namespace IDTSERVER
             this.lblAIPlateOutL1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAIPlateOutL1.Location = new System.Drawing.Point(140, 0);
             this.lblAIPlateOutL1.Name = "lblAIPlateOutL1";
-            this.lblAIPlateOutL1.Size = new System.Drawing.Size(132, 45);
+            this.lblAIPlateOutL1.Size = new System.Drawing.Size(132, 43);
             this.lblAIPlateOutL1.TabIndex = 6;
             this.lblAIPlateOutL1.Text = "47-K6-22988";
             this.lblAIPlateOutL1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -895,7 +1119,7 @@ namespace IDTSERVER
             this.lblAIPlateInL1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblAIPlateInL1.Location = new System.Drawing.Point(3, 0);
             this.lblAIPlateInL1.Name = "lblAIPlateInL1";
-            this.lblAIPlateInL1.Size = new System.Drawing.Size(131, 45);
+            this.lblAIPlateInL1.Size = new System.Drawing.Size(131, 43);
             this.lblAIPlateInL1.TabIndex = 5;
             this.lblAIPlateInL1.Text = "47-K6-22966";
             this.lblAIPlateInL1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -907,9 +1131,9 @@ namespace IDTSERVER
             this.lblNotifyL1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblNotifyL1.Font = new System.Drawing.Font("Times New Roman", 16F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblNotifyL1.ForeColor = System.Drawing.Color.White;
-            this.lblNotifyL1.Location = new System.Drawing.Point(3, 755);
+            this.lblNotifyL1.Location = new System.Drawing.Point(3, 729);
             this.lblNotifyL1.Name = "lblNotifyL1";
-            this.lblNotifyL1.Size = new System.Drawing.Size(763, 58);
+            this.lblNotifyL1.Size = new System.Drawing.Size(763, 84);
             this.lblNotifyL1.TabIndex = 3;
             this.lblNotifyL1.Text = "Biển số không trùng khớp với xe nào";
             this.lblNotifyL1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -951,7 +1175,7 @@ namespace IDTSERVER
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 52.08333F));
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 47.91667F));
             this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 152F));
+            this.tableLayoutPanel28.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 153F));
             this.tableLayoutPanel28.Controls.Add(this.lblEntryCount, 3, 0);
             this.tableLayoutPanel28.Controls.Add(this.lblExitCount, 2, 0);
             this.tableLayoutPanel28.Controls.Add(this.lblRevenue, 1, 0);
@@ -971,9 +1195,9 @@ namespace IDTSERVER
             this.lblEntryCount.AutoSize = true;
             this.lblEntryCount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblEntryCount.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblEntryCount.Location = new System.Drawing.Point(619, 0);
+            this.lblEntryCount.Location = new System.Drawing.Point(618, 0);
             this.lblEntryCount.Name = "lblEntryCount";
-            this.lblEntryCount.Size = new System.Drawing.Size(147, 47);
+            this.lblEntryCount.Size = new System.Drawing.Size(148, 47);
             this.lblEntryCount.TabIndex = 11;
             this.lblEntryCount.Text = "Lượt vào: 1500";
             this.lblEntryCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -983,7 +1207,7 @@ namespace IDTSERVER
             this.lblExitCount.AutoSize = true;
             this.lblExitCount.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblExitCount.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExitCount.Location = new System.Drawing.Point(464, 0);
+            this.lblExitCount.Location = new System.Drawing.Point(463, 0);
             this.lblExitCount.Name = "lblExitCount";
             this.lblExitCount.Size = new System.Drawing.Size(149, 47);
             this.lblExitCount.TabIndex = 10;
@@ -997,7 +1221,7 @@ namespace IDTSERVER
             this.lblRevenue.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRevenue.Location = new System.Drawing.Point(243, 0);
             this.lblRevenue.Name = "lblRevenue";
-            this.lblRevenue.Size = new System.Drawing.Size(215, 47);
+            this.lblRevenue.Size = new System.Drawing.Size(214, 47);
             this.lblRevenue.TabIndex = 9;
             this.lblRevenue.Text = "Doanh thu: 1.325.000";
             this.lblRevenue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1014,222 +1238,33 @@ namespace IDTSERVER
             this.lblCurrentTime.Text = "11:53:21 20/03/2026";
             this.lblCurrentTime.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel8
-            // 
-            this.tableLayoutPanel8.ColumnCount = 1;
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel21, 0, 4);
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel23, 0, 1);
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel25, 0, 0);
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel31, 0, 3);
-            this.tableLayoutPanel8.Controls.Add(this.tableLayoutPanel32, 0, 2);
-            this.tableLayoutPanel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel8.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel8.Name = "tableLayoutPanel8";
-            this.tableLayoutPanel8.RowCount = 5;
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 39F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 43F));
-            this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 47F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(462, 198);
-            this.tableLayoutPanel8.TabIndex = 4;
-            // 
-            // tableLayoutPanel21
-            // 
-            this.tableLayoutPanel21.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel21.ColumnCount = 1;
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel21.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel21.Controls.Add(this.lblAmount1, 0, 0);
-            this.tableLayoutPanel21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel21.Location = new System.Drawing.Point(3, 153);
-            this.tableLayoutPanel21.Name = "tableLayoutPanel21";
-            this.tableLayoutPanel21.RowCount = 1;
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel21.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel21.Size = new System.Drawing.Size(456, 42);
-            this.tableLayoutPanel21.TabIndex = 5;
-            // 
             // lblAmount1
             // 
             this.lblAmount1.AutoSize = true;
             this.lblAmount1.BackColor = System.Drawing.Color.Yellow;
             this.lblAmount1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblAmount1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblAmount1.Location = new System.Drawing.Point(4, 1);
+            this.lblAmount1.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.lblAmount1.Location = new System.Drawing.Point(231, 1);
             this.lblAmount1.Name = "lblAmount1";
-            this.lblAmount1.Size = new System.Drawing.Size(448, 40);
-            this.lblAmount1.TabIndex = 8;
-            this.lblAmount1.Text = "Thanh toán:";
-            this.lblAmount1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblAmount1.Size = new System.Drawing.Size(221, 39);
+            this.lblAmount1.TabIndex = 9;
+            this.lblAmount1.Text = "9.925.000 VNĐ";
+            this.lblAmount1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // tableLayoutPanel23
+            // lblAmount2
             // 
-            this.tableLayoutPanel23.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel23.ColumnCount = 2;
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel23.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
-            this.tableLayoutPanel23.Controls.Add(this.lblPlate1, 1, 0);
-            this.tableLayoutPanel23.Controls.Add(this.lblOwner1, 0, 0);
-            this.tableLayoutPanel23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel23.Location = new System.Drawing.Point(3, 37);
-            this.tableLayoutPanel23.Name = "tableLayoutPanel23";
-            this.tableLayoutPanel23.RowCount = 1;
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel23.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel23.Size = new System.Drawing.Size(456, 28);
-            this.tableLayoutPanel23.TabIndex = 2;
-            // 
-            // lblPlate1
-            // 
-            this.lblPlate1.AutoSize = true;
-            this.lblPlate1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPlate1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPlate1.Location = new System.Drawing.Point(231, 1);
-            this.lblPlate1.Name = "lblPlate1";
-            this.lblPlate1.Size = new System.Drawing.Size(221, 26);
-            this.lblPlate1.TabIndex = 8;
-            this.lblPlate1.Text = "BS:";
-            this.lblPlate1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblOwner1
-            // 
-            this.lblOwner1.AutoSize = true;
-            this.lblOwner1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblOwner1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblOwner1.Location = new System.Drawing.Point(4, 1);
-            this.lblOwner1.Name = "lblOwner1";
-            this.lblOwner1.Size = new System.Drawing.Size(220, 26);
-            this.lblOwner1.TabIndex = 7;
-            this.lblOwner1.Text = "Chủ thẻ:";
-            this.lblOwner1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel25
-            // 
-            this.tableLayoutPanel25.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel25.ColumnCount = 3;
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 139F));
-            this.tableLayoutPanel25.Controls.Add(this.lblStayDuration1, 2, 0);
-            this.tableLayoutPanel25.Controls.Add(this.lblCardType1, 1, 0);
-            this.tableLayoutPanel25.Controls.Add(this.lblCardID1, 0, 0);
-            this.tableLayoutPanel25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel25.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel25.Name = "tableLayoutPanel25";
-            this.tableLayoutPanel25.RowCount = 1;
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel25.Size = new System.Drawing.Size(456, 28);
-            this.tableLayoutPanel25.TabIndex = 1;
-            // 
-            // lblStayDuration1
-            // 
-            this.lblStayDuration1.AutoSize = true;
-            this.lblStayDuration1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStayDuration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStayDuration1.Location = new System.Drawing.Point(318, 1);
-            this.lblStayDuration1.Name = "lblStayDuration1";
-            this.lblStayDuration1.Size = new System.Drawing.Size(134, 26);
-            this.lblStayDuration1.TabIndex = 8;
-            this.lblStayDuration1.Text = "TG lưu bãi:";
-            this.lblStayDuration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardType1
-            // 
-            this.lblCardType1.AutoSize = true;
-            this.lblCardType1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardType1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardType1.Location = new System.Drawing.Point(161, 1);
-            this.lblCardType1.Name = "lblCardType1";
-            this.lblCardType1.Size = new System.Drawing.Size(150, 26);
-            this.lblCardType1.TabIndex = 7;
-            this.lblCardType1.Text = "Loại thẻ:";
-            this.lblCardType1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblCardID1
-            // 
-            this.lblCardID1.AutoSize = true;
-            this.lblCardID1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblCardID1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblCardID1.Location = new System.Drawing.Point(4, 1);
-            this.lblCardID1.Name = "lblCardID1";
-            this.lblCardID1.Size = new System.Drawing.Size(150, 26);
-            this.lblCardID1.TabIndex = 6;
-            this.lblCardID1.Text = "Số thẻ:";
-            this.lblCardID1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel31
-            // 
-            this.tableLayoutPanel31.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel31.ColumnCount = 2;
-            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel31.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel31.Controls.Add(this.lblTimeOut1, 1, 0);
-            this.tableLayoutPanel31.Controls.Add(this.lblTimeIn1, 0, 0);
-            this.tableLayoutPanel31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel31.Location = new System.Drawing.Point(3, 110);
-            this.tableLayoutPanel31.Name = "tableLayoutPanel31";
-            this.tableLayoutPanel31.RowCount = 1;
-            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel31.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel31.Size = new System.Drawing.Size(456, 37);
-            this.tableLayoutPanel31.TabIndex = 3;
-            // 
-            // lblTimeOut1
-            // 
-            this.lblTimeOut1.AutoSize = true;
-            this.lblTimeOut1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTimeOut1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTimeOut1.Location = new System.Drawing.Point(231, 1);
-            this.lblTimeOut1.Name = "lblTimeOut1";
-            this.lblTimeOut1.Size = new System.Drawing.Size(221, 35);
-            this.lblTimeOut1.TabIndex = 8;
-            this.lblTimeOut1.Text = "Ra:";
-            this.lblTimeOut1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTimeIn1
-            // 
-            this.lblTimeIn1.AutoSize = true;
-            this.lblTimeIn1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTimeIn1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTimeIn1.Location = new System.Drawing.Point(4, 1);
-            this.lblTimeIn1.Name = "lblTimeIn1";
-            this.lblTimeIn1.Size = new System.Drawing.Size(220, 35);
-            this.lblTimeIn1.TabIndex = 7;
-            this.lblTimeIn1.Text = "Vào:";
-            this.lblTimeIn1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // tableLayoutPanel32
-            // 
-            this.tableLayoutPanel32.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
-            this.tableLayoutPanel32.ColumnCount = 1;
-            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel32.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel32.Controls.Add(this.lblRegistration1, 0, 0);
-            this.tableLayoutPanel32.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel32.Location = new System.Drawing.Point(3, 71);
-            this.tableLayoutPanel32.Name = "tableLayoutPanel32";
-            this.tableLayoutPanel32.RowCount = 1;
-            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel32.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel32.Size = new System.Drawing.Size(456, 33);
-            this.tableLayoutPanel32.TabIndex = 4;
-            // 
-            // lblRegistration1
-            // 
-            this.lblRegistration1.AutoSize = true;
-            this.lblRegistration1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblRegistration1.Font = new System.Drawing.Font("Times New Roman", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRegistration1.Location = new System.Drawing.Point(4, 1);
-            this.lblRegistration1.Name = "lblRegistration1";
-            this.lblRegistration1.Size = new System.Drawing.Size(448, 31);
-            this.lblRegistration1.TabIndex = 7;
-            this.lblRegistration1.Text = "Đăng ký thẻ:";
-            this.lblRegistration1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.lblAmount2.AutoSize = true;
+            this.lblAmount2.BackColor = System.Drawing.Color.Yellow;
+            this.lblAmount2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblAmount2.Font = new System.Drawing.Font("Times New Roman", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblAmount2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(69)))), ((int)(((byte)(115)))));
+            this.lblAmount2.Location = new System.Drawing.Point(244, 1);
+            this.lblAmount2.Name = "lblAmount2";
+            this.lblAmount2.Size = new System.Drawing.Size(233, 39);
+            this.lblAmount2.TabIndex = 9;
+            this.lblAmount2.Text = "0.0 VNĐ";
+            this.lblAmount2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // FormMain
             // 
@@ -1284,17 +1319,6 @@ namespace IDTSERVER
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
             this.tableLayoutPanel7.ResumeLayout(false);
-            this.tableLayoutPanel9.ResumeLayout(false);
-            this.tableLayoutPanel9.PerformLayout();
-            this.tableLayoutPanel10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbAIL1Out)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbAIL1In)).EndInit();
-            this.tableLayoutPanel11.ResumeLayout(false);
-            this.tableLayoutPanel11.PerformLayout();
-            this.tableLayoutPanel27.ResumeLayout(false);
-            this.tableLayoutPanel27.PerformLayout();
-            this.tableLayoutPanel28.ResumeLayout(false);
-            this.tableLayoutPanel28.PerformLayout();
             this.tableLayoutPanel8.ResumeLayout(false);
             this.tableLayoutPanel21.ResumeLayout(false);
             this.tableLayoutPanel21.PerformLayout();
@@ -1306,6 +1330,17 @@ namespace IDTSERVER
             this.tableLayoutPanel31.PerformLayout();
             this.tableLayoutPanel32.ResumeLayout(false);
             this.tableLayoutPanel32.PerformLayout();
+            this.tableLayoutPanel9.ResumeLayout(false);
+            this.tableLayoutPanel9.PerformLayout();
+            this.tableLayoutPanel10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pbAIL1Out)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbAIL1In)).EndInit();
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.tableLayoutPanel11.PerformLayout();
+            this.tableLayoutPanel27.ResumeLayout(false);
+            this.tableLayoutPanel27.PerformLayout();
+            this.tableLayoutPanel28.ResumeLayout(false);
+            this.tableLayoutPanel28.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1371,12 +1406,12 @@ namespace IDTSERVER
         private System.Windows.Forms.Label lblRevenue;
         private System.Windows.Forms.Label lblCurrentTime;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel30;
-        private System.Windows.Forms.Label lblAmount2;
+        private System.Windows.Forms.Label lblAmount2Text;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel29;
         private System.Windows.Forms.Label lblRegistration2;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel8;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel21;
-        private System.Windows.Forms.Label lblAmount1;
+        private System.Windows.Forms.Label lblAmount1Text;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel23;
         private System.Windows.Forms.Label lblPlate1;
         private System.Windows.Forms.Label lblOwner1;
@@ -1389,5 +1424,7 @@ namespace IDTSERVER
         private System.Windows.Forms.Label lblTimeIn1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel32;
         private System.Windows.Forms.Label lblRegistration1;
+        private System.Windows.Forms.Label lblAmount1;
+        private System.Windows.Forms.Label lblAmount2;
     }
 }

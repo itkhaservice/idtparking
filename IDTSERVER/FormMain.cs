@@ -91,8 +91,8 @@ namespace IDTSERVER
                             lblCardID2.Text = "SỐ THẺ: " + cardId;
                             lblTimeIn2.Text = "VÀO: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                             lblTimeOut2.Text = "---";
-                            lblAmount2.Text = "THẺ THÁNG OK";
-                            lblAmount2.ForeColor = Color.Green;
+                            lblAmount2Text.Text = "THẺ THÁNG OK";
+                            lblAmount2Text.ForeColor = Color.Green;
                         }
                         reader.Close();
                     }
