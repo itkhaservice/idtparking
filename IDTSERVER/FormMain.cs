@@ -52,7 +52,22 @@ namespace IDTSERVER
         private void FormMain_Load(object sender, EventArgs e)
         {
             if (lblSoftwareName != null) lblSoftwareName.Text = "IDT PARKING SYSTEM";
-            ApplySettingsToUI();
+            
+            using (LoginForm login = new LoginForm())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    string info = $"Nhân viên: {login.FullName} ({login.CurrentUser}) - Ca: {login.CurrentShift} - Vào ca: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+                    if (lblGuardL1 != null) lblGuardL1.Text = info;
+                    if (lblGuardL2 != null) lblGuardL2.Text = info;
+                    
+                    ApplySettingsToUI();
+                }
+                else
+                {
+                    Application.Exit();
+                }
+            }
         }
 
         private void ApplySettingsToUI()
@@ -91,8 +106,8 @@ namespace IDTSERVER
                             lblCardID2.Text = "SỐ THẺ: " + cardId;
                             lblTimeIn2.Text = "VÀO: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
                             lblTimeOut2.Text = "---";
-                            lblAmount2Text.Text = "THẺ THÁNG OK";
-                            lblAmount2Text.ForeColor = Color.Green;
+                            lblAmount2.Text = "THẺ THÁNG OK";
+                            lblAmount2.ForeColor = Color.Green;
                         }
                         reader.Close();
                     }
@@ -132,18 +147,80 @@ namespace IDTSERVER
         {
             StopCameras();
             string vlcPath = GetVlcPath();
-            if (string.IsNullOrEmpty(vlcPath)) return;
+            if (string.IsNullOrEmpty(vlcPath)) {
+                MessageBox.Show("Không tìm thấy thư mục cài đặt VLC!", "Lỗi Camera", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
-            // Xây dựng URL RTSP từ settings và khởi tạo VLC controls
-            // (Phần này sẽ triển khai chi tiết dựa trên logic RTSP trong FrmSettings)
+            DirectoryInfo vlcDir = new DirectoryInfo(vlcPath);
+            string[] options = { ":rtsp-tcp", ":network-caching=300", ":live-caching=300", ":no-stats", ":no-video-title-show" };
+
+            // Khởi tạo và chạy 4 Camera
+            _vlcL1Pano = CreateVlcControl(vlcDir, options, pbCamL1Panorama, GetRtspUrl(1, false));
+            _vlcL1Plate = CreateVlcControl(vlcDir, options, pbCamL1Plate, GetRtspUrl(1, true));
+            _vlcL2Pano = CreateVlcControl(vlcDir, options, pbCamL2Panorama, GetRtspUrl(2, false));
+            _vlcL2Plate = CreateVlcControl(vlcDir, options, pbCamL2Plate, GetRtspUrl(2, true));
+        }
+
+        private VlcControl CreateVlcControl(DirectoryInfo vlcDir, string[] options, PictureBox container, string rtspUrl)
+        {
+            if (container == null || string.IsNullOrEmpty(rtspUrl)) return null;
+
+            var vlc = new VlcControl();
+            vlc.BeginInit();
+            vlc.VlcLibDirectory = vlcDir;
+            vlc.VlcMediaplayerOptions = options;
+            vlc.EndInit();
+
+            vlc.Dock = DockStyle.Fill;
+            container.Controls.Clear();
+            container.Controls.Add(vlc);
+            
+            vlc.Play(new Uri(rtspUrl));
+            return vlc;
+        }
+
+        private string GetRtspUrl(int lane, bool isPlate)
+        {
+            if (_settings.CameraType == 0) // Analog
+            {
+                int channel = 1;
+                if (lane == 1) channel = isPlate ? _settings.ChLane1Plate : _settings.ChLane1Front;
+                else channel = isPlate ? _settings.ChLane2Plate : _settings.ChLane2Front;
+                
+                return $"rtsp://{_settings.DvrUser}:{_settings.DvrPass}@{_settings.DvrHost}:554/cam/realmonitor?channel={channel}&subtype=1";
+            }
+            else // IP
+            {
+                string host = "", user = "", pass = "", path = "";
+                if (lane == 1) {
+                    host = isPlate ? _settings.IpCamL1PlateHost : _settings.IpCamL1FrontHost;
+                    user = isPlate ? _settings.IpCamL1PlateUser : _settings.IpCamL1FrontUser;
+                    pass = isPlate ? _settings.IpCamL1PlatePass : _settings.IpCamL1FrontPass;
+                    path = isPlate ? _settings.IpCamL1PlateRTSP : _settings.IpCamL1FrontRTSP;
+                } else {
+                    host = isPlate ? _settings.IpCamL2PlateHost : _settings.IpCamL2FrontHost;
+                    user = isPlate ? _settings.IpCamL2PlateUser : _settings.IpCamL2FrontUser;
+                    pass = isPlate ? _settings.IpCamL2PlatePass : _settings.IpCamL2FrontPass;
+                    path = isPlate ? _settings.IpCamL2PlateRTSP : _settings.IpCamL2FrontRTSP;
+                }
+
+                if (path.StartsWith("rtsp://")) return path;
+                string separator = path.Contains("?") ? "&" : "?";
+                string finalPath = path.Contains("subtype=") ? path : $"{path}{separator}subtype=1";
+                return $"rtsp://{user}:{pass}@{host}:554{finalPath}";
+            }
         }
 
         private void StopCameras()
         {
-            if (_vlcL1Pano != null) _vlcL1Pano.Dispose();
-            if (_vlcL1Plate != null) _vlcL1Plate.Dispose();
-            if (_vlcL2Pano != null) _vlcL2Pano.Dispose();
-            if (_vlcL2Plate != null) _vlcL2Plate.Dispose();
+            VlcControl[] controls = { _vlcL1Pano, _vlcL1Plate, _vlcL2Pano, _vlcL2Plate };
+            foreach (var vlc in controls) {
+                if (vlc != null) {
+                    try { vlc.Stop(); vlc.Dispose(); } catch { }
+                }
+            }
+            _vlcL1Pano = _vlcL1Plate = _vlcL2Pano = _vlcL2Plate = null;
         }
 
         private string GetVlcPath()
