@@ -18,7 +18,7 @@ Bảo vệ chỉ được phép sử dụng màn hình chính để kiểm soát
 IT có thể cấu hình phần mềm
 Kế toán có thể đăng nhập để sử dụng như Phần mềm Kế toán quản lý dữ liệu hệ thống xe
 Dùng chung SQL mô tả trong file .cs
-
+========================================================================================
 Trên phần mềm Bảo vệ có thể sử dụng được các nút
 Esc - Thoát chương trình (Có hỏi xác nhận lại)
 F1 - Đăng nhập để sử dụng
@@ -30,30 +30,7 @@ F8 - Đổi làn ra/vào bên màn hình bên phải
 F11- Reset chương trình
 F12 - Thoát ra màn hình chính
 
-Thông tin màn hình chính
-   * Hàng 1 (Camera Live): 30%
-   * Hàng 2 (Thông tin xe): 40%
-   * Hàng 3 (Snapshots): 30%
-
-Hàng 2 (Thông tin xe): 40% 
-Ảnh vào - Ảnh ra: Là ảnh nhận diện biển số và đọc bằng AI, tỉ lệ chiều ngang - dọc theo hình camera live và camera chụp lại snapshots
-
-Thông tin thẻ xe mẫu phải có tiêu đề và giá trị mẫu
-SỐ THẺ:
-LOẠI XE:
-CHỦ XE:
-BIỂN SỐ:
-THỜI GIAN:
-THỜI ĐIỂM VÀO:
-THỜI ĐIÊM RA:
-THANH TOÁN (PHÍ LƯỢT):
-25.000 VNĐ
-Được trải dài bên phải phần nhận diện biển số
-2 thông tin quan trọng font chữ to hơn 1 xíu có màu sắc để nhận diện nhanh là 
-CHỦ XE
-BIỂN SỐ
-ĐỊA CHỈ (bổ sung thêm)
-
+========================================================================================
 Tính năng cho nút F2 Giao ca
 --------------------------------------
  XÁC NHẬN BÀN GIAO CA
@@ -83,18 +60,10 @@ Tổng tiền vãng lai: 2,500,000 VND
 
 --------------------------------------
       [Đồng ý]   [Hủy]
-
+========================================================================================
 npx @google/gemini-cli
+========================================================================================
 
-Sử dụng khoảng trắng giữa Section 2 và Section làm vùng hiển thị thông tin sau khi quẹt thẻ ở mỗi làn
-Ví dụ
-Vui lòng Đăng nhập phần mềm để sử dụng !
-Thẻ chưa có dữ liệu vào. Vui lòng RA bãi !
-Thẻ chưa có dữ liệu ra. Vui lòng VÀO bãi !
-Thẻ bị khóa. Vui lòng liên hệ Ban quản lý để MỞ thẻ !
-Thẻ hết hạn. Vui lòng liên hệ Ban quản lý để GIA HẠN thẻ !
-XIN MỜI VÀO !
-HẸN GẶP LẠI !
 
 Chức năng Cài đặt có 5 tab chính
 HỆ THỐNG	
@@ -153,18 +122,7 @@ GIÁ TIỀN
 Chưa có ý tưởng, để trống Form - Đang thu thập thông tin	
 NÂNG CAO	
 Chưa có ý tưởng, để trống Form - Đang thu thập thông tin	
-
-
-Tôi đang test với máy chủ  192.168.100.81 và cơ sở dữ liệu GIUXE với tài khoản sa mật khẩu là 123ABC thành công
-
-Khi tôi bấm kiểm tra ở phần Cài đặt Server thông báo Không phản hồi (Timeout/Wrong Port)!
-Với các dữ liệu tôi nhập lần lượt là
-192.168.100.81
-192.168.100.81
-1433
-Tôi nghĩ có 2 chỗ nhập Server Name và Server Local là để khi dữ liệu kết nối đến Server chính và Server Local để sao lưu dữ liệu đồng bộ với nhau, mỗi khi có sự cố thì có thể hoán đổi nhanh để trở thành máy chủ
-Nhưng nếu không nhập Server Local vẫn hoạt động được
-
+========================================================================================
 Cấu hình Thiết bị Camera
 Chọn loại camera Analog: OK
 Chọn loại camera IP: Phải đủ 4 camera ( Ra (Trước - Sau) và Vào (Trước - Sau)
@@ -176,7 +134,119 @@ Tôi sẽ cung cấp thông tin Đầu ghi
 Port: 8888
 Username: admin
 Password: idt123321
-Có các kênh 0 1 2 3 đúng như thực tế mà bấm xem không được hình ảnh Xem thử
+========================================================================================
+Giải thích các phần trên FrmMain.cs
+Đầu tiên
+KHA - PARKING giới thiệu tên phần mềm
+Bên trái nó là thông tin thời gian hiện tại. Doanh thu của ca đăng nhập. Bao nhiêu lượt ra. Bao nhiêu lượt vào.
+Bên dưới được chia ra làm 2 làn xe
+Đối với làn bên trái - được cho làn ra của hệ thống
+Có 2 camera live lần lượt là Camera Toàn cảnh và Camera Biển số
+Bên dưới là thông tin đăng nhập của Bảo vệ
+Bên dưới nữa được chia ra làm 2 phần
+Phần 1 là phần thông tin thẻ vượt quẹt, bao gồm
+Số thẻ | Loại thẻ | TG lưu bãi
+Chủ thẻ | BS
+Đăng ký thẻ
+Vào | Ra
+Thanh toán (áp dụng cho xe vãng lai)
+Phần 2 là phần AI nhận diện biển số, nếu làn ra sẽ có cả 2 hình biển số lúc vào - ra, AI đọc và so sánh
+Bên dưới tiếp theo là 2 khung ảnh Camera Snapshot, chụp lại lúc quẹt thẻ vào hệ thống
+Cuối cùng là phần thông báo sau khi quẹt thẻ
+Bên phải thì tương tự, nó được cho là làn vào của hệ thống, làn vào thì thẻ đó chỉ có 1 hình biển số nên AI không thể so sánh được
+Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thông tin mặc định như Số thẻ, Loại thẻ, Chủ thẻ, Biển số, Đăng ký thẻ (Tức bao gồm ngày đăng ký và ngày hết hạn của thẻ), Vào (Thời gian vào của lượt mới nhất), Ra (Thời gian ra lượt mới nhất) và thanh toán 0 vnđ
+========================================================================================
+Đây là danh sách toàn bộ các tên thành phần (Name) bạn cần đặt cho các Toolbox trên giao diện FormMain để khớp hoàn
+  toàn với logic xử lý 2 làn (Trái-Ra, Phải-Vào) mà chúng ta đã thống nhất.
+
+  1. Nhóm Tiêu đề & Thống kê (Phía trên cùng)
+   * Tên phần mềm (KHA - PARKING): lblSoftwareName
+   * Đồng hồ hiển thị thời gian: lblCurrentTime
+   * Doanh thu ca hiện tại: lblRevenue
+   * Tổng số lượt xe vào: lblEntryCount
+   * Tổng số lượt xe ra: lblExitCount
+
+  ---
+
+  2. Làn 1: Bên Trái (Làn RA)
+  Khu vực Camera Live:
+   * Camera Toàn cảnh: pbCamL1Panorama
+   * Camera Biển số: pbCamL1Plate
+
+  Thông tin Bảo vệ:
+   * Tên bảo vệ trực làn: lblGuardL1
+
+  Bảng thông tin thẻ (UserControl gateL1 - Xem chi tiết mục 4 bên dưới):
+   * Tên Control tổng: gateL1
+
+  Khu vực AI Nhận diện (So sánh):
+   * Ảnh biển số lúc VÀO (đối soát): pbAIL1In
+   * Ảnh biển số lúc RA (hiện tại): pbAIL1Out
+   * Kết quả so sánh AI (Text): lblAIResultL1
+
+  Khu vực Ảnh Snapshot (Chụp lúc quẹt thẻ):
+   * Ảnh Snapshot 1: pbSnapL1_1
+   * Ảnh Snapshot 2: pbSnapL1_2
+
+  Thông báo:
+   * Dòng thông báo sau quẹt thẻ: lblNotifyL1
+
+  ---
+
+  3. Làn 2: Bên Phải (Làn VÀO)
+  Khu vực Camera Live:
+   * Camera Toàn cảnh: pbCamL2Panorama
+   * Camera Biển số: pbCamL2Plate
+
+  Thông tin Bảo vệ:
+   * Tên bảo vệ trực làn: lblGuardL2
+
+  Bảng thông tin thẻ (UserControl gateL2):
+   * Tên Control tổng: gateL2
+
+  Khu vực AI Nhận diện (Làn vào chỉ có 1 ảnh):
+   * Ảnh biển số AI đọc được: pbAIL2In
+   * Kết quả đọc AI (Text): lblAIResultL2
+
+  Khu vực Ảnh Snapshot (Chụp lúc quẹt thẻ):
+   * Ảnh Snapshot 1: pbSnapL2_1
+   * Ảnh Snapshot 2: pbSnapL2_2
+
+  Thông báo:
+   * Dòng thông báo sau quẹt thẻ: lblNotifyL2
+
+  ---
+
+  4. Chi tiết các Label bên trong Bảng thông tin thẻ
+  Nếu bạn dùng UserControl ParkingGateSection, bạn hãy mở file Designer của nó và đặt tên cho các nhãn bên trong. Code
+  sẽ gọi thông qua gateL1.lblCardID,...:
+
+   * Số thẻ: lblCardID
+   * Loại thẻ: lblCardType
+   * Thời gian lưu bãi: lblStayDuration
+   * Chủ thẻ (Tên khách hàng): lblOwner
+   * Biển số (BS đăng ký): lblPlate
+   * Đăng ký thẻ (Ngày BD - KT): lblRegistration
+   * Thời điểm VÀO: lblTimeIn
+   * Thời điểm RA: lblTimeOut
+   * Thanh toán (Phí): lblAmount
+
+  ---
+
+  Một số lưu ý quan trọng:
+   1. Thuộc tính SizeMode: Tất cả các PictureBox (pb...) nên đặt là Zoom để ảnh không bị méo.
+   2. Docking: Các thành phần bên trong TableLayoutPanel nên đặt Dock = Fill.
+   3. Lưu ý về Làn vào: Đối với thẻ tháng quẹt vào làn Phải, Code sẽ tự động đổ dữ liệu mặc định vào lblOwner, lblPlate,
+      và lblRegistration.
+
+
+
+
+
+
+
+
+
 
 
 

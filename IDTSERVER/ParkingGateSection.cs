@@ -11,46 +11,34 @@ namespace IDTSERVER
             InitializeComponent();
         }
 
-        // Cập nhật thông tin thẻ xe kèm Tiêu đề và Giá trị mẫu
-        public void SetCardInfo(string cardId, string vehicleType, string owner, string plate, string duration, string timeIn, string timeOut, string amount)
-        {
-            lblCardID.Text = $"SỐ THẺ: {cardId}";
-            lblVehicleType.Text = $"LOẠI XE: {vehicleType}";
-            lblOwner.Text = $"CHỦ XE: {owner}";
-            lblPlate.Text = $"BIỂN SỐ: {plate}";
-            lblDuration.Text = $"THỜI GIAN: {duration}";
-            lblTimeEntry.Text = $"THỜI ĐIỂM VÀO: {timeIn}";
-            lblTimeExit.Text = $"THỜI ĐIỂM RA: {timeOut}";
-            
-            // Phần thanh toán thường có nhãn riêng hoặc định dạng đặc biệt
-            lblPayTitle.Text = "THANH TOÁN (PHÍ LƯỢT):";
-            lblAmount.Text = amount;
-        }
+        //public void SetCardInfo(string cardId, string cardType, string duration, string owner, string plate, string registration, string timeIn, string timeOut, string amount)
+        //{
+        //    if (lblCardID != null) lblCardID.Text = cardId;
+        //    if (lblCardType != null) lblCardType.Text = cardType;
+        //    if (lblStayDuration != null) lblStayDuration.Text = duration;
+        //    if (lblOwner != null) lblOwner.Text = owner;
+        //    if (lblPlate != null) lblPlate.Text = plate;
+        //    if (lblRegistration != null) lblRegistration.Text = registration;
+        //    if (lblTimeIn != null) lblTimeIn.Text = timeIn;
+        //    if (lblTimeOut != null) lblTimeOut.Text = timeOut;
+        //    if (lblAmount != null) lblAmount.Text = amount;
+        //}
 
-        public void SetAIPlates(string entryPlate, string exitPlate)
-        {
-            lblAIEntry.Text = entryPlate;
-            lblAIExit.Text = exitPlate;
-        }
+        //public void SetGateStatus(string status, Color color)
+        //{
+        //}
 
-        public void SetGateStatus(string status)
-        {
-            chipStatus.Text = status;
-            if (status == "SẴN SÀNG") chipStatus.FillColor = Color.Green;
-            else if (status.Contains("LỖI")) chipStatus.FillColor = Color.Red;
-            else chipStatus.FillColor = Color.Orange;
-        }
-
-        public void ClearInfo()
-        {
-            lblCardID.Text = "SỐ THẺ: ---";
-            lblVehicleType.Text = "LOẠI XE: ---";
-            lblOwner.Text = "CHỦ XE: ---";
-            lblPlate.Text = "BIỂN SỐ: ---";
-            lblDuration.Text = "THỜI GIAN: ---";
-            lblTimeEntry.Text = "THỜI ĐIỂM VÀO: ---";
-            lblTimeExit.Text = "THỜI ĐIỂM RA: ---";
-            lblAmount.Text = "0 VNĐ";
-        }
+        //public void ClearInfo()
+        //{
+        //    if (lblCardID != null) lblCardID.Text = "---";
+        //    if (lblCardType != null) lblCardType.Text = "---";
+        //    if (lblStayDuration != null) lblStayDuration.Text = "---";
+        //    if (lblOwner != null) lblOwner.Text = "---";
+        //    if (lblPlate != null) lblPlate.Text = "---";
+        //    if (lblRegistration != null) lblRegistration.Text = "---";
+        //    if (lblTimeIn != null) lblTimeIn.Text = "---";
+        //    if (lblTimeOut != null) lblTimeOut.Text = "---";
+        //    if (lblAmount != null) lblAmount.Text = "0 VNĐ";
+        //}
     }
 }

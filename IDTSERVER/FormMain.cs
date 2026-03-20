@@ -8,289 +8,125 @@ namespace IDTSERVER
 {
     public partial class FormMain : Form
     {
-        private bool _isSystemActive = false;
-        private string _currentUser = "Chưa đăng nhập";
-        private string _currentShift = "Chưa xác định";
         private AppSettings _settings;
-
-        private VlcControl _vlc1, _vlc2, _vlc3, _vlc4, _vlc5, _vlc6;
+        private Timer _clockTimer;
+        
+        // Luồng Video Live
+        private VlcControl _vlcL1Pano, _vlcL1Plate, _vlcL2Pano, _vlcL2Plate;
 
         public FormMain()
         {
             InitializeComponent();
             _settings = AppSettings.Load();
-            this.Load += FormMain_Load;
-            this.KeyDown += FormMain_KeyDown;
-            this.KeyPreview = true;
+            SetupUIProportions();
+            
+            //_clockTimer = new Timer { Interval = 1000 };
+            //_clockTimer.Tick += (s, e) => {
+            //    if (lblCurrentTime != null) lblCurrentTime.Text = DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss");
+            //};
+            //_clockTimer.Start();
 
-            // Gán sự kiện Paint để đánh số Camera
-            pbCam1.Paint += (s, e) => DrawCamLabel(e, "CAM 1", "LÀN 1 - BIỂN SỐ");
-            pbCam2.Paint += (s, e) => DrawCamLabel(e, "CAM 2", "LÀN 1 - TOÀN CẢNH");
-            pbCam3.Paint += (s, e) => DrawCamLabel(e, "CAM 3", "LÀN 2 - BIỂN SỐ");
-            pbCam4.Paint += (s, e) => DrawCamLabel(e, "CAM 4", "LÀN 2 - TOÀN CẢNH");
-            pbCam5.Paint += (s, e) => DrawCamLabel(e, "CAM 5", "LÀN 3 - BIỂN SỐ");
-            pbCam6.Paint += (s, e) => DrawCamLabel(e, "CAM 6", "LÀN 3 - TOÀN CẢNH");
+            //this.Load += FormMain_Load;
+            //this.KeyDown += FormMain_KeyDown;
         }
 
-        private void DrawCamLabel(PaintEventArgs e, string camId, string desc)
+        private void SetupUIProportions()
         {
-            using (Font fontId = new Font("Segoe UI", 12, FontStyle.Bold))
-            using (Font fontDesc = new Font("Segoe UI", 8, FontStyle.Regular))
-            {
-                // Vẽ nền mờ cho nhãn
-                e.Graphics.FillRectangle(new SolidBrush(Color.FromArgb(180, Color.Black)), 5, 5, 160, 45);
-                
-                // Vẽ số Camera
-                e.Graphics.DrawString(camId, fontId, Brushes.Yellow, 10, 8);
-                
-                // Vẽ mô tả
-                e.Graphics.DrawString(desc, fontDesc, Brushes.White, 10, 28);
-            }
+            //PictureBox[] allFrames = { 
+            //    pbCamL1Panorama, pbCamL1Plate, pbCamL2Panorama, pbCamL2Plate,
+            //    pbSnapL1_1, pbSnapL1_2, pbSnapL2_1, pbSnapL2_2,
+            //    pbAIL1In, pbAIL1Out, pbAIL2In 
+            //};
+
+            //foreach (var pb in allFrames) {
+            //    if (pb != null) pb.SizeMode = PictureBoxSizeMode.Zoom;
+            //}
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            ApplySettingsToUI();
-        }
+        //private void FormMain_Load(object sender, EventArgs e)
+        //{
+        //    if (lblSoftwareName != null) lblSoftwareName.Text = "KHA - PARKING";
+        //    ApplySettingsToUI();
+        //}
 
-        private void ApplySettingsToUI()
-        {
-            UpdateStatusInfo();
+        //private void ApplySettingsToUI()
+        //{
+        //    _settings = AppSettings.Load();
+        //    if (_settings.ShowCamerasOnMain) LoadCameras();
+        //    else StopCameras();
+        //}
 
-            pnlTopCamera.Visible = true;
-            bool is3Lanes = (_settings.LaneCount == 3);
+        //// --- HÀM CẬP NHẬT 5 PHẦN AI CHO LÀN RA (Làn 1) ---
+        //public void UpdateAILaneExit(Image imgIn, Image imgOut, string plateIn, string plateOut)
+        //{
+        //    if (pbAIL1In != null) pbAIL1In.Image = imgIn;
+        //    if (pbAIL1Out != null) pbAIL1Out.Image = imgOut;
+        //    if (lblAIPlateInL1 != null) lblAIPlateInL1.Text = "VÀO: " + plateIn;
+        //    if (lblAIPlateOutL1 != null) lblAIPlateOutL1.Text = "RA: " + plateOut;
 
-            // --- ĐIỀU KHIỂN GATE VÀ LABEL TRẠNG THÁI ---
-            // Làn 1 (Trái): Luôn hiện
-            gateLeft.Visible = true;
-            lblStatusLeft.Visible = true;
+        //    if (lblAICompareL1 != null) 
+        //    {
+        //        bool isMatch = (plateIn == plateOut);
+        //        lblAICompareL1.Text = isMatch ? "KHỚP BIỂN SỐ" : "KHÔNG KHỚP";
+        //        lblAICompareL1.ForeColor = isMatch ? Color.LimeGreen : Color.Red;
+        //    }
+        //}
 
-            // Làn Giữa (Middle): Chỉ hiện khi là 3 làn
-            gateMiddle.Visible = is3Lanes;
-            if (lblStatusMiddle != null) lblStatusMiddle.Visible = is3Lanes;
+        //// --- HÀM CẬP NHẬT AI CHO LÀN VÀO (Làn 2) ---
+        //public void UpdateAILaneEntry(Image imgIn, string plateIn)
+        //{
+        //    if (pbAIL2In != null) pbAIL2In.Image = imgIn;
+        //    if (lblAIPlateInL2 != null) lblAIPlateInL2.Text = "BIỂN SỐ: " + plateIn;
+        //}
 
-            // Làn Phải (Right): Luôn hiện (Sẽ là Làn 2 nếu máy chạy 2 làn, hoặc Làn 3 nếu chạy 3 làn)
-            gateRight.Visible = true;
-            lblStatusRight.Visible = true;
+        //private void LoadCameras()
+        //{
+        //    StopCameras();
+        //    string vlcPath = GetVlcPath();
+        //    if (string.IsNullOrEmpty(vlcPath)) return;
 
-            // --- ĐIỀU KHIỂN CAMERA LIVE (THEO CẶP) ---
-            // Cặp 1 (Làn Trái): Cam 1 & 2 luôn hiện
-            pbCam1.Visible = true;
-            pbCam2.Visible = true;
+        //    _vlcL1Pano = CreateVlc(vlcPath, "url_pano_1", pbCamL1Panorama);
+        //    _vlcL1Plate = CreateVlc(vlcPath, "url_plate_1", pbCamL1Plate);
+        //    _vlcL2Pano = CreateVlc(vlcPath, "url_pano_2", pbCamL2Panorama);
+        //    _vlcL2Plate = CreateVlc(vlcPath, "url_plate_2", pbCamL2Plate);
+        //}
 
-            // Cặp 2 (Vùng giữa): Cam 3 & 4 chỉ hiện khi là 3 làn
-            pbCam3.Visible = is3Lanes;
-            pbCam4.Visible = is3Lanes;
+        //private VlcControl CreateVlc(string path, string url, PictureBox host)
+        //{
+        //    if (host == null) return null;
+        //    var vlc = new VlcControl();
+        //    vlc.BeginInit();
+        //    vlc.VlcLibDirectory = new DirectoryInfo(path);
+        //    vlc.EndInit();
+        //    vlc.Dock = DockStyle.Fill;
+        //    host.Controls.Clear();
+        //    host.Controls.Add(vlc);
+        //    return vlc;
+        //}
 
-            // Cặp 3 (Vùng phải cùng): Cam 5 & 6 luôn hiện
-            pbCam5.Visible = true;
-            pbCam6.Visible = true;
+        //private void StopCameras()
+        //{
+        //    if (_vlcL1Pano != null) _vlcL1Pano.Dispose();
+        //    if (_vlcL1Plate != null) _vlcL1Plate.Dispose();
+        //    if (_vlcL2Pano != null) _vlcL2Pano.Dispose();
+        //    if (_vlcL2Plate != null) _vlcL2Plate.Dispose();
+        //}
 
-            // --- ĐIỀU KHIỂN SNAPSHOTS (ẢNH CHỤP ĐỐI SOÁT) ---
-            pbSnap1.Visible = true;
-            pbSnap2.Visible = true;
+        //private string GetVlcPath()
+        //{
+        //    string programFiles = Environment.Is64BitProcess ? "ProgramFiles" : "ProgramFiles(x86)";
+        //    string path = Path.Combine(Environment.GetEnvironmentVariable(programFiles), "VideoLAN", "VLC");
+        //    return Directory.Exists(path) ? path : "";
+        //}
 
-            // Ẩn cặp snap giữa nếu chỉ có 2 làn xe để dồn ảnh làn 2 về phía trái cho dễ nhìn
-            pbSnap3.Visible = is3Lanes;
-            pbSnap4.Visible = is3Lanes;
-
-            pbSnap5.Visible = true;
-            pbSnap6.Visible = true;
-
-            // --- KHỞI TẠO CAMERA ---
-            if (_settings.ShowCamerasOnMain)
-            {
-                LoadCamerasFromSettings();
-            }
-            else
-            {
-                StopAllCameras();
-            }
-        }
-
-        private void UpdateStatusInfo()
-        {
-            bool is3Lanes = (_settings.LaneCount == 3);
-
-            // Cập nhật text tiêu đề cho các làn
-            lblStatusLeft.Text = "LÀN 1: " + GetDirName(_settings.Lane1Direction);
-
-            if (is3Lanes)
-            {
-                if (lblStatusMiddle != null) lblStatusMiddle.Text = "LÀN 2: " + GetDirName(_settings.Lane2Direction);
-                lblStatusRight.Text = "LÀN 3: " + GetDirName(_settings.Lane3Direction);
-
-                gateMiddle.SetGateStatus("SẴN SÀNG");
-                gateRight.SetGateStatus("SẴN SÀNG");
-            }
-            else
-            {
-                lblStatusRight.Text = "LÀN 2: " + GetDirName(_settings.Lane2Direction);
-                gateRight.SetGateStatus("SẴN SÀNG");
-            }
-
-            gateLeft.SetGateStatus("SẴN SÀNG");
-        }
-
-        private string GetDirName(int dir)
-        {
-            switch (dir)
-            {
-                case 0: return "VÀO";
-                case 1: return "RA";
-                case 2: return "ĐẢO CHIỀU";
-                default: return "K.XÁC ĐỊNH";
-            }
-        }
-
-        private void LoadCamerasFromSettings()
-        {
-            StopAllCameras();
-            try
-            {
-                string vlcPath = GetVlcPath();
-                if (string.IsNullOrEmpty(vlcPath)) return;
-
-                bool is3Lanes = (_settings.LaneCount == 3);
-                string url1, url2, url3 = "", url4 = "", url5, url6;
-
-                // LOGIC GÁN URL: 
-                // Nếu 2 làn: Cam 5,6 sẽ lấy cấu hình của Làn 2.
-                // Nếu 3 làn: Cam 3,4 là Làn 2 | Cam 5,6 là Làn 3.
-
-                if (_settings.CameraType == 0) // Analog
-                {
-                    string h = _settings.DvrHost; string u = _settings.DvrUser; string p = _settings.DvrPass;
-                    url1 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane1Plate}&subtype=1";
-                    url2 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane1Front}&subtype=1";
-
-                    if (is3Lanes)
-                    {
-                        url3 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Plate}&subtype=1";
-                        url4 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Front}&subtype=1";
-                        url5 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane3Plate}&subtype=1";
-                        url6 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane3Front}&subtype=1";
-                    }
-                    else
-                    {
-                        url5 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Plate}&subtype=1";
-                        url6 = $"rtsp://{u}:{p}@{h}:554/cam/realmonitor?channel={_settings.ChLane2Front}&subtype=1";
-                    }
-                }
-                else // IP Camera
-                {
-                    url1 = GetIpCamUrl(_settings.IpCamL1PlateHost, _settings.IpCamL1PlateUser, _settings.IpCamL1PlatePass, _settings.IpCamL1PlateRTSP);
-                    url2 = GetIpCamUrl(_settings.IpCamL1FrontHost, _settings.IpCamL1FrontUser, _settings.IpCamL1FrontPass, _settings.IpCamL1FrontRTSP);
-
-                    if (is3Lanes)
-                    {
-                        url3 = GetIpCamUrl(_settings.IpCamL2PlateHost, _settings.IpCamL2PlateUser, _settings.IpCamL2PlatePass, _settings.IpCamL2PlateRTSP);
-                        url4 = GetIpCamUrl(_settings.IpCamL2FrontHost, _settings.IpCamL2FrontUser, _settings.IpCamL2FrontPass, _settings.IpCamL2FrontRTSP);
-                        url5 = GetIpCamUrl(_settings.IpCamL3PlateHost, _settings.IpCamL3PlateUser, _settings.IpCamL3PlatePass, _settings.IpCamL3PlateRTSP);
-                        url6 = GetIpCamUrl(_settings.IpCamL3FrontHost, _settings.IpCamL3FrontUser, _settings.IpCamL3FrontPass, _settings.IpCamL3FrontRTSP);
-                    }
-                    else
-                    {
-                        url5 = GetIpCamUrl(_settings.IpCamL2PlateHost, _settings.IpCamL2PlateUser, _settings.IpCamL2PlatePass, _settings.IpCamL2PlateRTSP);
-                        url6 = GetIpCamUrl(_settings.IpCamL2FrontHost, _settings.IpCamL2FrontUser, _settings.IpCamL2FrontPass, _settings.IpCamL2FrontRTSP);
-                    }
-                }
-
-                // Khởi tạo hiển thị
-                _vlc1 = CreateVlc(vlcPath, url1, pbCam1);
-                _vlc2 = CreateVlc(vlcPath, url2, pbCam2);
-                if (is3Lanes)
-                {
-                    _vlc3 = CreateVlc(vlcPath, url3, pbCam3);
-                    _vlc4 = CreateVlc(vlcPath, url4, pbCam4);
-                }
-                _vlc5 = CreateVlc(vlcPath, url5, pbCam5);
-                _vlc6 = CreateVlc(vlcPath, url6, pbCam6);
-            }
-            catch { }
-        }
-
-        private VlcControl CreateVlc(string vlcPath, string url, PictureBox host)
-        {
-            if (string.IsNullOrEmpty(url)) return null;
-            var vlc = new VlcControl();
-            vlc.BeginInit();
-            vlc.VlcLibDirectory = new DirectoryInfo(vlcPath);
-            vlc.VlcMediaplayerOptions = new string[] { ":rtsp-tcp", ":network-caching=300", ":no-stats", ":no-video-title-show" };
-            vlc.EndInit();
-            vlc.Dock = DockStyle.Fill;
-            host.Controls.Clear();
-            host.Controls.Add(vlc);
-            vlc.Play(new Uri(url));
-            return vlc;
-        }
-
-        private void StopAllCameras()
-        {
-            try
-            {
-                if (_vlc1 != null) { _vlc1.Stop(); _vlc1.Dispose(); _vlc1 = null; pbCam1.Controls.Clear(); }
-                if (_vlc2 != null) { _vlc2.Stop(); _vlc2.Dispose(); _vlc2 = null; pbCam2.Controls.Clear(); }
-                if (_vlc3 != null) { _vlc3.Stop(); _vlc3.Dispose(); _vlc3 = null; pbCam3.Controls.Clear(); }
-                if (_vlc4 != null) { _vlc4.Stop(); _vlc4.Dispose(); _vlc4 = null; pbCam4.Controls.Clear(); }
-                if (_vlc5 != null) { _vlc5.Stop(); _vlc5.Dispose(); _vlc5 = null; pbCam5.Controls.Clear(); }
-                if (_vlc6 != null) { _vlc6.Stop(); _vlc6.Dispose(); _vlc6 = null; pbCam6.Controls.Clear(); }
-            }
-            catch { }
-        }
-
-        private string GetVlcPath()
-        {
-            string programFiles = Environment.Is64BitProcess ? "ProgramFiles" : "ProgramFiles(x86)";
-            string path = Path.Combine(Environment.GetEnvironmentVariable(programFiles), "VideoLAN", "VLC");
-            return Directory.Exists(path) ? path : "";
-        }
-
-        private string GetIpCamUrl(string host, string user, string pass, string path)
-        {
-            if (string.IsNullOrEmpty(host)) return "";
-            if (path.StartsWith("rtsp://")) return path;
-            string sep = path.Contains("?") ? "&" : "?";
-            return $"rtsp://{user}:{pass}@{host}:554{path}{sep}subtype=1";
-        }
+        private void tableLayoutPanel20_Paint(object sender, PaintEventArgs e) { }
 
         public void FormMain_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
-            {
-                case Keys.F1:
-                    using (LoginForm login = new LoginForm())
-                    {
-                        if (login.ShowDialog() == DialogResult.OK)
-                        {
-                            _isSystemActive = true;
-                            _currentUser = login.CurrentUser;
-                            _currentShift = login.CurrentShift;
-                            this.Text = $"IDT PARKING - ĐANG HOẠT ĐỘNG | NV: {_currentUser} | {_currentShift}";
-                        }
-                    }
-                    break;
-                case Keys.F3:
-                    using (FrmSettings settings = new FrmSettings())
-                    {
-                        if (settings.ShowDialog() == DialogResult.OK)
-                        {
-                            _settings = AppSettings.Load();
-                            ApplySettingsToUI();
-                        }
-                    }
-                    break;
-                case Keys.F11:
-                    _settings = AppSettings.Load();
-                    ApplySettingsToUI();
-                    this.Refresh(); // Buộc vẽ lại toàn bộ Form
-                    MessageBox.Show("Đã tải lại cấu hình hệ thống (F11)!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    break;
-                case Keys.Escape:
-                    if (MessageBox.Show("Thoát chương trình?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        Application.Exit();
-                    break;
-            }
+            //if (e.KeyCode == Keys.F3) {
+            //    using (FrmSettings s = new FrmSettings()) { if (s.ShowDialog() == DialogResult.OK) ApplySettingsToUI(); }
+            //}
+            if (e.KeyCode == Keys.Escape) Application.Exit();
         }
     }
 }

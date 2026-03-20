@@ -30,7 +30,6 @@ namespace IDT_PARKING
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -47,7 +46,7 @@ namespace IDT_PARKING
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.toolTip1 = new System.Windows.Forms.ToolTip();
             this.btnExportExcel_KH = new Guna.UI2.WinForms.Guna2Button();
             this.btnExportExcel_TT = new Guna.UI2.WinForms.Guna2Button();
             this.btnGiaHan_TT = new Guna.UI2.WinForms.Guna2Button();
@@ -228,6 +227,7 @@ namespace IDT_PARKING
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.chartTk = new System.Windows.Forms.TabPage();
             this.chartRevenueReport = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.dgvTK = new System.Windows.Forms.TabPage();
             this.dgvRevenueReport = new System.Windows.Forms.DataGridView();
             this.filterPanel = new System.Windows.Forms.Panel();
@@ -271,6 +271,7 @@ namespace IDT_PARKING
             this.dtdF_XR_KHAC = new System.Windows.Forms.DateTimePicker();
             this.label55 = new System.Windows.Forms.Label();
             this.tabCaiDat = new System.Windows.Forms.TabPage();
+            this.btnDongQuery = new Guna.UI2.WinForms.Guna2Button();
             this.btnBackUp = new Guna.UI2.WinForms.Guna2Button();
             this.btnMoQuery = new Guna.UI2.WinForms.Guna2Button();
             this.btnOpenBackup = new Guna.UI2.WinForms.Guna2Button();
@@ -306,8 +307,6 @@ namespace IDT_PARKING
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label67 = new System.Windows.Forms.Label();
             this.guna2Button4 = new Guna.UI2.WinForms.Guna2Button();
-            this.btnDongQuery = new Guna.UI2.WinForms.Guna2Button();
-            this.loadingControl = new IDT_PARKING.LoadingControl();
             this.tabThe.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.guna2DataGridView1)).BeginInit();
@@ -3141,6 +3140,16 @@ namespace IDT_PARKING
             this.chartRevenueReport.TabIndex = 1003;
             this.chartRevenueReport.Text = "chart1";
             // 
+            // loadingControl
+            // 
+            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
+            this.loadingControl.Location = new System.Drawing.Point(311, 351);
+            this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
+            this.loadingControl.Name = "loadingControl";
+            this.loadingControl.Size = new System.Drawing.Size(408, 173);
+            this.loadingControl.TabIndex = 1002;
+            this.loadingControl.Visible = false;
+            // 
             // dgvTK
             // 
             this.dgvTK.Controls.Add(this.dgvRevenueReport);
@@ -3675,6 +3684,23 @@ namespace IDT_PARKING
             this.tabCaiDat.TabIndex = 6;
             this.tabCaiDat.Text = "Cài đặt";
             this.tabCaiDat.UseVisualStyleBackColor = true;
+            // 
+            // btnDongQuery
+            // 
+            this.btnDongQuery.BorderRadius = 4;
+            this.btnDongQuery.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
+            this.btnDongQuery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
+            this.btnDongQuery.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
+            this.btnDongQuery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
+            this.btnDongQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
+            this.btnDongQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.btnDongQuery.ForeColor = System.Drawing.Color.White;
+            this.btnDongQuery.Location = new System.Drawing.Point(745, 6);
+            this.btnDongQuery.Name = "btnDongQuery";
+            this.btnDongQuery.Size = new System.Drawing.Size(111, 25);
+            this.btnDongQuery.TabIndex = 96;
+            this.btnDongQuery.Text = "Đóng truy vấn";
+            this.btnDongQuery.Click += new System.EventHandler(this.btnDongQuery_Click);
             // 
             // btnBackUp
             // 
@@ -4235,33 +4261,6 @@ namespace IDT_PARKING
             this.guna2Button4.Size = new System.Drawing.Size(126, 24);
             this.guna2Button4.TabIndex = 71;
             this.guna2Button4.Text = "Tìm kiếm";
-            // 
-            // btnDongQuery
-            // 
-            this.btnDongQuery.BorderRadius = 4;
-            this.btnDongQuery.DisabledState.BorderColor = System.Drawing.Color.DarkGray;
-            this.btnDongQuery.DisabledState.CustomBorderColor = System.Drawing.Color.DarkGray;
-            this.btnDongQuery.DisabledState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(169)))), ((int)(((byte)(169)))), ((int)(((byte)(169)))));
-            this.btnDongQuery.DisabledState.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(141)))), ((int)(((byte)(141)))), ((int)(((byte)(141)))));
-            this.btnDongQuery.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(37)))), ((int)(((byte)(115)))), ((int)(((byte)(73)))));
-            this.btnDongQuery.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.btnDongQuery.ForeColor = System.Drawing.Color.White;
-            this.btnDongQuery.Location = new System.Drawing.Point(745, 6);
-            this.btnDongQuery.Name = "btnDongQuery";
-            this.btnDongQuery.Size = new System.Drawing.Size(111, 25);
-            this.btnDongQuery.TabIndex = 96;
-            this.btnDongQuery.Text = "Đóng truy vấn";
-            this.btnDongQuery.Click += new System.EventHandler(this.btnDongQuery_Click);
-            // 
-            // loadingControl
-            // 
-            this.loadingControl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(240)))), ((int)(((byte)(240)))), ((int)(((byte)(240)))));
-            this.loadingControl.Location = new System.Drawing.Point(311, 351);
-            this.loadingControl.Margin = new System.Windows.Forms.Padding(5);
-            this.loadingControl.Name = "loadingControl";
-            this.loadingControl.Size = new System.Drawing.Size(408, 173);
-            this.loadingControl.TabIndex = 1002;
-            this.loadingControl.Visible = false;
             // 
             // FormMain
             // 
