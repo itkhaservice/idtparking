@@ -28,9 +28,9 @@ namespace IDTSERVER
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
             this.guna2TabControl1 = new Guna.UI2.WinForms.Guna2TabControl();
             this.tabHeThong = new System.Windows.Forms.TabPage();
             this.pnlHeThongContent = new System.Windows.Forms.Panel();
@@ -91,26 +91,8 @@ namespace IDTSERVER
             this.txtIpL2F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtIpL2F_User = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtIpL2F_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.guna2GroupBox3 = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.btnPreviewIpL3P = new Guna.UI2.WinForms.Guna2Button();
-            this.txtIpL3P_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3P_Pass = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3P_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3P_Host = new Guna.UI2.WinForms.Guna2TextBox();
-            this.guna2GroupBox2 = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.btnPreviewIpL3F = new Guna.UI2.WinForms.Guna2Button();
-            this.txtIpL3F_Rtsp = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3F_Pass = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3F_User = new Guna.UI2.WinForms.Guna2TextBox();
-            this.txtIpL3F_Host = new Guna.UI2.WinForms.Guna2TextBox();
             this.pnlAnalogConfig = new System.Windows.Forms.Panel();
             this.grpAnalogChannels = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.btnPreviewAnL3F = new Guna.UI2.WinForms.Guna2Button();
-            this.btnPreviewAnL3P = new Guna.UI2.WinForms.Guna2Button();
-            this.numChL3F = new Guna.UI2.WinForms.Guna2NumericUpDown();
-            this.numChL3P = new Guna.UI2.WinForms.Guna2NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
             this.btnPreviewAnL2F = new Guna.UI2.WinForms.Guna2Button();
             this.btnPreviewAnL2P = new Guna.UI2.WinForms.Guna2Button();
             this.btnPreviewAnL1F = new Guna.UI2.WinForms.Guna2Button();
@@ -129,9 +111,6 @@ namespace IDTSERVER
             this.txtDvrPort = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtDvrHost = new Guna.UI2.WinForms.Guna2TextBox();
             this.grpLaneConfig = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.txtLane3Com = new Guna.UI2.WinForms.Guna2TextBox();
-            this.cboLane3Dir = new Guna.UI2.WinForms.Guna2ComboBox();
-            this.lbl3 = new System.Windows.Forms.Label();
             this.txtLane2Com = new Guna.UI2.WinForms.Guna2TextBox();
             this.txtLane1Com = new Guna.UI2.WinForms.Guna2TextBox();
             this.cboLane2Dir = new Guna.UI2.WinForms.Guna2ComboBox();
@@ -139,15 +118,13 @@ namespace IDTSERVER
             this.lblL2 = new System.Windows.Forms.Label();
             this.lblL1 = new System.Windows.Forms.Label();
             this.pnlThietBiTop = new System.Windows.Forms.Panel();
-            this.guna2GroupBox1 = new Guna.UI2.WinForms.Guna2GroupBox();
-            this.rdo3lane = new Guna.UI2.WinForms.Guna2RadioButton();
-            this.rdo2lane = new Guna.UI2.WinForms.Guna2RadioButton();
             this.grpDisplayOptions = new Guna.UI2.WinForms.Guna2GroupBox();
             this.chkShowCamerasOnMain = new Guna.UI2.WinForms.Guna2CheckBox();
             this.grpCameraType = new Guna.UI2.WinForms.Guna2GroupBox();
             this.rdoAnalogCamera = new Guna.UI2.WinForms.Guna2RadioButton();
             this.rdoIPCamera = new Guna.UI2.WinForms.Guna2RadioButton();
             this.pnlThietBiBottom = new System.Windows.Forms.Panel();
+            this.btnExitDevice = new Guna.UI2.WinForms.Guna2Button();
             this.btnGuideDevice = new Guna.UI2.WinForms.Guna2Button();
             this.btnSaveDevice = new Guna.UI2.WinForms.Guna2Button();
             this.tabLoaiThe = new System.Windows.Forms.TabPage();
@@ -163,7 +140,6 @@ namespace IDTSERVER
             this.lblGiaTienDev = new System.Windows.Forms.Label();
             this.tabNangCao = new System.Windows.Forms.TabPage();
             this.lblNangCaoDev = new System.Windows.Forms.Label();
-            this.btnExitDevice = new Guna.UI2.WinForms.Guna2Button();
             this.guna2TabControl1.SuspendLayout();
             this.tabHeThong.SuspendLayout();
             this.pnlHeThongContent.SuspendLayout();
@@ -180,12 +156,8 @@ namespace IDTSERVER
             this.grpIpL1F.SuspendLayout();
             this.grpIpL2P.SuspendLayout();
             this.grpIpL2F.SuspendLayout();
-            this.guna2GroupBox3.SuspendLayout();
-            this.guna2GroupBox2.SuspendLayout();
             this.pnlAnalogConfig.SuspendLayout();
             this.grpAnalogChannels.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numChL3F)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChL3P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL2F)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL2P)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL1F)).BeginInit();
@@ -193,7 +165,6 @@ namespace IDTSERVER
             this.grpDvrInfo.SuspendLayout();
             this.grpLaneConfig.SuspendLayout();
             this.pnlThietBiTop.SuspendLayout();
-            this.guna2GroupBox1.SuspendLayout();
             this.grpDisplayOptions.SuspendLayout();
             this.grpCameraType.SuspendLayout();
             this.pnlThietBiBottom.SuspendLayout();
@@ -346,7 +317,7 @@ namespace IDTSERVER
             this.chkAutoReconnect.Location = new System.Drawing.Point(265, 13);
             this.chkAutoReconnect.Name = "chkAutoReconnect";
             this.chkAutoReconnect.Padding = new System.Windows.Forms.Padding(0, 0, 20, 10);
-            this.chkAutoReconnect.Size = new System.Drawing.Size(114, 29);
+            this.chkAutoReconnect.Size = new System.Drawing.Size(113, 29);
             this.chkAutoReconnect.TabIndex = 2;
             this.chkAutoReconnect.Text = "Tự kết nối lại";
             this.chkAutoReconnect.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
@@ -363,10 +334,10 @@ namespace IDTSERVER
             this.chkAutoPrint.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.chkAutoPrint.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.chkAutoPrint.ForeColor = System.Drawing.Color.Black;
-            this.chkAutoPrint.Location = new System.Drawing.Point(385, 13);
+            this.chkAutoPrint.Location = new System.Drawing.Point(384, 13);
             this.chkAutoPrint.Name = "chkAutoPrint";
             this.chkAutoPrint.Padding = new System.Windows.Forms.Padding(0, 0, 20, 10);
-            this.chkAutoPrint.Size = new System.Drawing.Size(104, 29);
+            this.chkAutoPrint.Size = new System.Drawing.Size(103, 29);
             this.chkAutoPrint.TabIndex = 3;
             this.chkAutoPrint.Text = "Tự động in";
             this.chkAutoPrint.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
@@ -383,7 +354,7 @@ namespace IDTSERVER
             this.chkOnlineImage.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.chkOnlineImage.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.chkOnlineImage.ForeColor = System.Drawing.Color.Black;
-            this.chkOnlineImage.Location = new System.Drawing.Point(495, 13);
+            this.chkOnlineImage.Location = new System.Drawing.Point(493, 13);
             this.chkOnlineImage.Name = "chkOnlineImage";
             this.chkOnlineImage.Padding = new System.Windows.Forms.Padding(0, 0, 20, 10);
             this.chkOnlineImage.Size = new System.Drawing.Size(125, 29);
@@ -729,6 +700,7 @@ namespace IDTSERVER
             // tabThietBi
             // 
             this.tabThietBi.Controls.Add(this.pnlThietBiContent);
+            this.tabThietBi.Controls.Add(this.grpCameraType);
             this.tabThietBi.Controls.Add(this.pnlThietBiTop);
             this.tabThietBi.Controls.Add(this.pnlThietBiBottom);
             this.tabThietBi.Location = new System.Drawing.Point(184, 4);
@@ -753,16 +725,14 @@ namespace IDTSERVER
             // 
             // pnlIPConfig
             // 
-            this.pnlIPConfig.Controls.Add(this.grpIpL1P);
             this.pnlIPConfig.Controls.Add(this.grpIpL1F);
-            this.pnlIPConfig.Controls.Add(this.grpIpL2P);
+            this.pnlIPConfig.Controls.Add(this.grpIpL1P);
             this.pnlIPConfig.Controls.Add(this.grpIpL2F);
-            this.pnlIPConfig.Controls.Add(this.guna2GroupBox3);
-            this.pnlIPConfig.Controls.Add(this.guna2GroupBox2);
+            this.pnlIPConfig.Controls.Add(this.grpIpL2P);
             this.pnlIPConfig.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlIPConfig.Location = new System.Drawing.Point(0, 573);
+            this.pnlIPConfig.Location = new System.Drawing.Point(0, 450);
             this.pnlIPConfig.Name = "pnlIPConfig";
-            this.pnlIPConfig.Size = new System.Drawing.Size(715, 687);
+            this.pnlIPConfig.Size = new System.Drawing.Size(715, 376);
             this.pnlIPConfig.TabIndex = 2;
             this.pnlIPConfig.Visible = false;
             // 
@@ -777,9 +747,9 @@ namespace IDTSERVER
             this.grpIpL1P.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.grpIpL1P.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpIpL1P.ForeColor = System.Drawing.Color.White;
-            this.grpIpL1P.Location = new System.Drawing.Point(3, 3);
+            this.grpIpL1P.Location = new System.Drawing.Point(359, 3);
             this.grpIpL1P.Name = "grpIpL1P";
-            this.grpIpL1P.Size = new System.Drawing.Size(350, 215);
+            this.grpIpL1P.Size = new System.Drawing.Size(350, 180);
             this.grpIpL1P.TabIndex = 0;
             this.grpIpL1P.Text = "LÀN 1 - BIỂN SỐ (SAU)";
             // 
@@ -802,7 +772,7 @@ namespace IDTSERVER
             this.txtIpL1P_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1P_Rtsp.DefaultText = "";
             this.txtIpL1P_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1P_Rtsp.Location = new System.Drawing.Point(10, 165);
+            this.txtIpL1P_Rtsp.Location = new System.Drawing.Point(10, 137);
             this.txtIpL1P_Rtsp.Name = "txtIpL1P_Rtsp";
             this.txtIpL1P_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
             this.txtIpL1P_Rtsp.SelectedText = "";
@@ -815,7 +785,7 @@ namespace IDTSERVER
             this.txtIpL1P_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1P_Pass.DefaultText = "";
             this.txtIpL1P_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1P_Pass.Location = new System.Drawing.Point(180, 125);
+            this.txtIpL1P_Pass.Location = new System.Drawing.Point(180, 97);
             this.txtIpL1P_Pass.Name = "txtIpL1P_Pass";
             this.txtIpL1P_Pass.PasswordChar = '●';
             this.txtIpL1P_Pass.PlaceholderText = "Password";
@@ -829,7 +799,7 @@ namespace IDTSERVER
             this.txtIpL1P_User.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1P_User.DefaultText = "";
             this.txtIpL1P_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1P_User.Location = new System.Drawing.Point(10, 125);
+            this.txtIpL1P_User.Location = new System.Drawing.Point(10, 97);
             this.txtIpL1P_User.Name = "txtIpL1P_User";
             this.txtIpL1P_User.PlaceholderText = "User";
             this.txtIpL1P_User.SelectedText = "";
@@ -860,9 +830,9 @@ namespace IDTSERVER
             this.grpIpL1F.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.grpIpL1F.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpIpL1F.ForeColor = System.Drawing.Color.White;
-            this.grpIpL1F.Location = new System.Drawing.Point(359, 3);
+            this.grpIpL1F.Location = new System.Drawing.Point(3, 3);
             this.grpIpL1F.Name = "grpIpL1F";
-            this.grpIpL1F.Size = new System.Drawing.Size(350, 215);
+            this.grpIpL1F.Size = new System.Drawing.Size(350, 180);
             this.grpIpL1F.TabIndex = 1;
             this.grpIpL1F.Text = "LÀN 1 - TOÀN CẢNH (TRƯỚC)";
             // 
@@ -885,7 +855,7 @@ namespace IDTSERVER
             this.txtIpL1F_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1F_Rtsp.DefaultText = "";
             this.txtIpL1F_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1F_Rtsp.Location = new System.Drawing.Point(10, 165);
+            this.txtIpL1F_Rtsp.Location = new System.Drawing.Point(10, 137);
             this.txtIpL1F_Rtsp.Name = "txtIpL1F_Rtsp";
             this.txtIpL1F_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
             this.txtIpL1F_Rtsp.SelectedText = "";
@@ -898,7 +868,7 @@ namespace IDTSERVER
             this.txtIpL1F_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1F_Pass.DefaultText = "";
             this.txtIpL1F_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1F_Pass.Location = new System.Drawing.Point(180, 125);
+            this.txtIpL1F_Pass.Location = new System.Drawing.Point(180, 97);
             this.txtIpL1F_Pass.Name = "txtIpL1F_Pass";
             this.txtIpL1F_Pass.PasswordChar = '●';
             this.txtIpL1F_Pass.PlaceholderText = "Password";
@@ -912,7 +882,7 @@ namespace IDTSERVER
             this.txtIpL1F_User.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL1F_User.DefaultText = "";
             this.txtIpL1F_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL1F_User.Location = new System.Drawing.Point(10, 125);
+            this.txtIpL1F_User.Location = new System.Drawing.Point(10, 97);
             this.txtIpL1F_User.Name = "txtIpL1F_User";
             this.txtIpL1F_User.PlaceholderText = "User";
             this.txtIpL1F_User.SelectedText = "";
@@ -943,9 +913,9 @@ namespace IDTSERVER
             this.grpIpL2P.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.grpIpL2P.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpIpL2P.ForeColor = System.Drawing.Color.White;
-            this.grpIpL2P.Location = new System.Drawing.Point(3, 224);
+            this.grpIpL2P.Location = new System.Drawing.Point(359, 189);
             this.grpIpL2P.Name = "grpIpL2P";
-            this.grpIpL2P.Size = new System.Drawing.Size(350, 215);
+            this.grpIpL2P.Size = new System.Drawing.Size(350, 177);
             this.grpIpL2P.TabIndex = 2;
             this.grpIpL2P.Text = "LÀN 2 - BIỂN SỐ (SAU)";
             // 
@@ -968,7 +938,7 @@ namespace IDTSERVER
             this.txtIpL2P_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2P_Rtsp.DefaultText = "";
             this.txtIpL2P_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2P_Rtsp.Location = new System.Drawing.Point(10, 165);
+            this.txtIpL2P_Rtsp.Location = new System.Drawing.Point(10, 137);
             this.txtIpL2P_Rtsp.Name = "txtIpL2P_Rtsp";
             this.txtIpL2P_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
             this.txtIpL2P_Rtsp.SelectedText = "";
@@ -981,7 +951,7 @@ namespace IDTSERVER
             this.txtIpL2P_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2P_Pass.DefaultText = "";
             this.txtIpL2P_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2P_Pass.Location = new System.Drawing.Point(180, 125);
+            this.txtIpL2P_Pass.Location = new System.Drawing.Point(180, 97);
             this.txtIpL2P_Pass.Name = "txtIpL2P_Pass";
             this.txtIpL2P_Pass.PasswordChar = '●';
             this.txtIpL2P_Pass.PlaceholderText = "Password";
@@ -995,7 +965,7 @@ namespace IDTSERVER
             this.txtIpL2P_User.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2P_User.DefaultText = "";
             this.txtIpL2P_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2P_User.Location = new System.Drawing.Point(10, 125);
+            this.txtIpL2P_User.Location = new System.Drawing.Point(10, 97);
             this.txtIpL2P_User.Name = "txtIpL2P_User";
             this.txtIpL2P_User.PlaceholderText = "User";
             this.txtIpL2P_User.SelectedText = "";
@@ -1026,9 +996,9 @@ namespace IDTSERVER
             this.grpIpL2F.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
             this.grpIpL2F.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpIpL2F.ForeColor = System.Drawing.Color.White;
-            this.grpIpL2F.Location = new System.Drawing.Point(359, 224);
+            this.grpIpL2F.Location = new System.Drawing.Point(3, 189);
             this.grpIpL2F.Name = "grpIpL2F";
-            this.grpIpL2F.Size = new System.Drawing.Size(350, 215);
+            this.grpIpL2F.Size = new System.Drawing.Size(350, 177);
             this.grpIpL2F.TabIndex = 3;
             this.grpIpL2F.Text = "LÀN 2 - TOÀN CẢNH (TRƯỚC)";
             // 
@@ -1051,7 +1021,7 @@ namespace IDTSERVER
             this.txtIpL2F_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2F_Rtsp.DefaultText = "";
             this.txtIpL2F_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2F_Rtsp.Location = new System.Drawing.Point(10, 165);
+            this.txtIpL2F_Rtsp.Location = new System.Drawing.Point(12, 137);
             this.txtIpL2F_Rtsp.Name = "txtIpL2F_Rtsp";
             this.txtIpL2F_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
             this.txtIpL2F_Rtsp.SelectedText = "";
@@ -1064,7 +1034,7 @@ namespace IDTSERVER
             this.txtIpL2F_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2F_Pass.DefaultText = "";
             this.txtIpL2F_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2F_Pass.Location = new System.Drawing.Point(180, 125);
+            this.txtIpL2F_Pass.Location = new System.Drawing.Point(182, 97);
             this.txtIpL2F_Pass.Name = "txtIpL2F_Pass";
             this.txtIpL2F_Pass.PasswordChar = '●';
             this.txtIpL2F_Pass.PlaceholderText = "Password";
@@ -1078,7 +1048,7 @@ namespace IDTSERVER
             this.txtIpL2F_User.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.txtIpL2F_User.DefaultText = "";
             this.txtIpL2F_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL2F_User.Location = new System.Drawing.Point(10, 125);
+            this.txtIpL2F_User.Location = new System.Drawing.Point(12, 97);
             this.txtIpL2F_User.Name = "txtIpL2F_User";
             this.txtIpL2F_User.PlaceholderText = "User";
             this.txtIpL2F_User.SelectedText = "";
@@ -1098,191 +1068,19 @@ namespace IDTSERVER
             this.txtIpL2F_Host.Size = new System.Drawing.Size(245, 36);
             this.txtIpL2F_Host.TabIndex = 0;
             // 
-            // guna2GroupBox3
-            // 
-            this.guna2GroupBox3.BorderRadius = 5;
-            this.guna2GroupBox3.Controls.Add(this.btnPreviewIpL3P);
-            this.guna2GroupBox3.Controls.Add(this.txtIpL3P_Rtsp);
-            this.guna2GroupBox3.Controls.Add(this.txtIpL3P_Pass);
-            this.guna2GroupBox3.Controls.Add(this.txtIpL3P_User);
-            this.guna2GroupBox3.Controls.Add(this.txtIpL3P_Host);
-            this.guna2GroupBox3.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.guna2GroupBox3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.guna2GroupBox3.ForeColor = System.Drawing.Color.White;
-            this.guna2GroupBox3.Location = new System.Drawing.Point(3, 445);
-            this.guna2GroupBox3.Name = "guna2GroupBox3";
-            this.guna2GroupBox3.Size = new System.Drawing.Size(350, 215);
-            this.guna2GroupBox3.TabIndex = 6;
-            this.guna2GroupBox3.Text = "LÀN 3 - TOÀN CẢNH (TRƯỚC)";
-            // 
-            // btnPreviewIpL3P
-            // 
-            this.btnPreviewIpL3P.BorderRadius = 5;
-            this.btnPreviewIpL3P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
-            this.btnPreviewIpL3P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.btnPreviewIpL3P.ForeColor = System.Drawing.Color.White;
-            this.btnPreviewIpL3P.Location = new System.Drawing.Point(260, 55);
-            this.btnPreviewIpL3P.Name = "btnPreviewIpL3P";
-            this.btnPreviewIpL3P.Size = new System.Drawing.Size(80, 36);
-            this.btnPreviewIpL3P.TabIndex = 4;
-            this.btnPreviewIpL3P.Text = "XEM THỬ";
-            this.btnPreviewIpL3P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
-            // 
-            // txtIpL3P_Rtsp
-            // 
-            this.txtIpL3P_Rtsp.BorderRadius = 5;
-            this.txtIpL3P_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3P_Rtsp.DefaultText = "";
-            this.txtIpL3P_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3P_Rtsp.Location = new System.Drawing.Point(10, 165);
-            this.txtIpL3P_Rtsp.Name = "txtIpL3P_Rtsp";
-            this.txtIpL3P_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
-            this.txtIpL3P_Rtsp.SelectedText = "";
-            this.txtIpL3P_Rtsp.Size = new System.Drawing.Size(330, 30);
-            this.txtIpL3P_Rtsp.TabIndex = 3;
-            // 
-            // txtIpL3P_Pass
-            // 
-            this.txtIpL3P_Pass.BorderRadius = 5;
-            this.txtIpL3P_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3P_Pass.DefaultText = "";
-            this.txtIpL3P_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3P_Pass.Location = new System.Drawing.Point(180, 125);
-            this.txtIpL3P_Pass.Name = "txtIpL3P_Pass";
-            this.txtIpL3P_Pass.PasswordChar = '●';
-            this.txtIpL3P_Pass.PlaceholderText = "Password";
-            this.txtIpL3P_Pass.SelectedText = "";
-            this.txtIpL3P_Pass.Size = new System.Drawing.Size(160, 30);
-            this.txtIpL3P_Pass.TabIndex = 2;
-            // 
-            // txtIpL3P_User
-            // 
-            this.txtIpL3P_User.BorderRadius = 5;
-            this.txtIpL3P_User.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3P_User.DefaultText = "";
-            this.txtIpL3P_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3P_User.Location = new System.Drawing.Point(10, 125);
-            this.txtIpL3P_User.Name = "txtIpL3P_User";
-            this.txtIpL3P_User.PlaceholderText = "User";
-            this.txtIpL3P_User.SelectedText = "";
-            this.txtIpL3P_User.Size = new System.Drawing.Size(160, 30);
-            this.txtIpL3P_User.TabIndex = 1;
-            // 
-            // txtIpL3P_Host
-            // 
-            this.txtIpL3P_Host.BorderRadius = 5;
-            this.txtIpL3P_Host.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3P_Host.DefaultText = "";
-            this.txtIpL3P_Host.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3P_Host.Location = new System.Drawing.Point(10, 55);
-            this.txtIpL3P_Host.Name = "txtIpL3P_Host";
-            this.txtIpL3P_Host.PlaceholderText = "IP Camera";
-            this.txtIpL3P_Host.SelectedText = "";
-            this.txtIpL3P_Host.Size = new System.Drawing.Size(245, 36);
-            this.txtIpL3P_Host.TabIndex = 0;
-            // 
-            // guna2GroupBox2
-            // 
-            this.guna2GroupBox2.BorderRadius = 5;
-            this.guna2GroupBox2.Controls.Add(this.btnPreviewIpL3F);
-            this.guna2GroupBox2.Controls.Add(this.txtIpL3F_Rtsp);
-            this.guna2GroupBox2.Controls.Add(this.txtIpL3F_Pass);
-            this.guna2GroupBox2.Controls.Add(this.txtIpL3F_User);
-            this.guna2GroupBox2.Controls.Add(this.txtIpL3F_Host);
-            this.guna2GroupBox2.CustomBorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.guna2GroupBox2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.guna2GroupBox2.ForeColor = System.Drawing.Color.White;
-            this.guna2GroupBox2.Location = new System.Drawing.Point(359, 445);
-            this.guna2GroupBox2.Name = "guna2GroupBox2";
-            this.guna2GroupBox2.Size = new System.Drawing.Size(350, 215);
-            this.guna2GroupBox2.TabIndex = 5;
-            this.guna2GroupBox2.Text = "LÀN 3 - BIỂN SỐ (SAU)";
-            // 
-            // btnPreviewIpL3F
-            // 
-            this.btnPreviewIpL3F.BorderRadius = 5;
-            this.btnPreviewIpL3F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
-            this.btnPreviewIpL3F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.btnPreviewIpL3F.ForeColor = System.Drawing.Color.White;
-            this.btnPreviewIpL3F.Location = new System.Drawing.Point(260, 55);
-            this.btnPreviewIpL3F.Name = "btnPreviewIpL3F";
-            this.btnPreviewIpL3F.Size = new System.Drawing.Size(80, 36);
-            this.btnPreviewIpL3F.TabIndex = 4;
-            this.btnPreviewIpL3F.Text = "XEM THỬ";
-            this.btnPreviewIpL3F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
-            // 
-            // txtIpL3F_Rtsp
-            // 
-            this.txtIpL3F_Rtsp.BorderRadius = 5;
-            this.txtIpL3F_Rtsp.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3F_Rtsp.DefaultText = "";
-            this.txtIpL3F_Rtsp.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3F_Rtsp.Location = new System.Drawing.Point(10, 165);
-            this.txtIpL3F_Rtsp.Name = "txtIpL3F_Rtsp";
-            this.txtIpL3F_Rtsp.PlaceholderText = "RTSP Path (/Streaming/...)";
-            this.txtIpL3F_Rtsp.SelectedText = "";
-            this.txtIpL3F_Rtsp.Size = new System.Drawing.Size(330, 30);
-            this.txtIpL3F_Rtsp.TabIndex = 3;
-            // 
-            // txtIpL3F_Pass
-            // 
-            this.txtIpL3F_Pass.BorderRadius = 5;
-            this.txtIpL3F_Pass.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3F_Pass.DefaultText = "";
-            this.txtIpL3F_Pass.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3F_Pass.Location = new System.Drawing.Point(180, 125);
-            this.txtIpL3F_Pass.Name = "txtIpL3F_Pass";
-            this.txtIpL3F_Pass.PasswordChar = '●';
-            this.txtIpL3F_Pass.PlaceholderText = "Password";
-            this.txtIpL3F_Pass.SelectedText = "";
-            this.txtIpL3F_Pass.Size = new System.Drawing.Size(160, 30);
-            this.txtIpL3F_Pass.TabIndex = 2;
-            // 
-            // txtIpL3F_User
-            // 
-            this.txtIpL3F_User.BorderRadius = 5;
-            this.txtIpL3F_User.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3F_User.DefaultText = "";
-            this.txtIpL3F_User.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3F_User.Location = new System.Drawing.Point(10, 125);
-            this.txtIpL3F_User.Name = "txtIpL3F_User";
-            this.txtIpL3F_User.PlaceholderText = "User";
-            this.txtIpL3F_User.SelectedText = "";
-            this.txtIpL3F_User.Size = new System.Drawing.Size(160, 30);
-            this.txtIpL3F_User.TabIndex = 1;
-            // 
-            // txtIpL3F_Host
-            // 
-            this.txtIpL3F_Host.BorderRadius = 5;
-            this.txtIpL3F_Host.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtIpL3F_Host.DefaultText = "";
-            this.txtIpL3F_Host.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtIpL3F_Host.Location = new System.Drawing.Point(10, 55);
-            this.txtIpL3F_Host.Name = "txtIpL3F_Host";
-            this.txtIpL3F_Host.PlaceholderText = "IP Camera";
-            this.txtIpL3F_Host.SelectedText = "";
-            this.txtIpL3F_Host.Size = new System.Drawing.Size(245, 36);
-            this.txtIpL3F_Host.TabIndex = 0;
-            // 
             // pnlAnalogConfig
             // 
             this.pnlAnalogConfig.Controls.Add(this.grpAnalogChannels);
             this.pnlAnalogConfig.Controls.Add(this.grpDvrInfo);
             this.pnlAnalogConfig.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlAnalogConfig.Location = new System.Drawing.Point(0, 181);
+            this.pnlAnalogConfig.Location = new System.Drawing.Point(0, 137);
             this.pnlAnalogConfig.Name = "pnlAnalogConfig";
-            this.pnlAnalogConfig.Size = new System.Drawing.Size(715, 392);
+            this.pnlAnalogConfig.Size = new System.Drawing.Size(715, 313);
             this.pnlAnalogConfig.TabIndex = 1;
             // 
             // grpAnalogChannels
             // 
             this.grpAnalogChannels.BorderRadius = 5;
-            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL3F);
-            this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL3P);
-            this.grpAnalogChannels.Controls.Add(this.numChL3F);
-            this.grpAnalogChannels.Controls.Add(this.numChL3P);
-            this.grpAnalogChannels.Controls.Add(this.label6);
-            this.grpAnalogChannels.Controls.Add(this.label7);
             this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL2F);
             this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL2P);
             this.grpAnalogChannels.Controls.Add(this.btnPreviewAnL1F);
@@ -1301,77 +1099,9 @@ namespace IDTSERVER
             this.grpAnalogChannels.ForeColor = System.Drawing.Color.White;
             this.grpAnalogChannels.Location = new System.Drawing.Point(0, 160);
             this.grpAnalogChannels.Name = "grpAnalogChannels";
-            this.grpAnalogChannels.Size = new System.Drawing.Size(715, 189);
+            this.grpAnalogChannels.Size = new System.Drawing.Size(715, 147);
             this.grpAnalogChannels.TabIndex = 1;
             this.grpAnalogChannels.Text = "PHÂN KÊNH CAMERA THEO LÀN";
-            // 
-            // btnPreviewAnL3F
-            // 
-            this.btnPreviewAnL3F.BorderRadius = 5;
-            this.btnPreviewAnL3F.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
-            this.btnPreviewAnL3F.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.btnPreviewAnL3F.ForeColor = System.Drawing.Color.White;
-            this.btnPreviewAnL3F.Location = new System.Drawing.Point(570, 139);
-            this.btnPreviewAnL3F.Name = "btnPreviewAnL3F";
-            this.btnPreviewAnL3F.Size = new System.Drawing.Size(80, 36);
-            this.btnPreviewAnL3F.TabIndex = 17;
-            this.btnPreviewAnL3F.Text = "XEM THỬ";
-            this.btnPreviewAnL3F.Click += new System.EventHandler(this.btnPreviewCamera_Click);
-            // 
-            // btnPreviewAnL3P
-            // 
-            this.btnPreviewAnL3P.BorderRadius = 5;
-            this.btnPreviewAnL3P.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(42)))), ((int)(((byte)(57)))));
-            this.btnPreviewAnL3P.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
-            this.btnPreviewAnL3P.ForeColor = System.Drawing.Color.White;
-            this.btnPreviewAnL3P.Location = new System.Drawing.Point(250, 139);
-            this.btnPreviewAnL3P.Name = "btnPreviewAnL3P";
-            this.btnPreviewAnL3P.Size = new System.Drawing.Size(80, 36);
-            this.btnPreviewAnL3P.TabIndex = 16;
-            this.btnPreviewAnL3P.Text = "XEM THỬ";
-            this.btnPreviewAnL3P.Click += new System.EventHandler(this.btnPreviewCamera_Click);
-            // 
-            // numChL3F
-            // 
-            this.numChL3F.BackColor = System.Drawing.Color.Transparent;
-            this.numChL3F.BorderRadius = 5;
-            this.numChL3F.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.numChL3F.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.numChL3F.Location = new System.Drawing.Point(480, 139);
-            this.numChL3F.Name = "numChL3F";
-            this.numChL3F.Size = new System.Drawing.Size(80, 36);
-            this.numChL3F.TabIndex = 15;
-            // 
-            // numChL3P
-            // 
-            this.numChL3P.BackColor = System.Drawing.Color.Transparent;
-            this.numChL3P.BorderRadius = 5;
-            this.numChL3P.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.numChL3P.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.numChL3P.Location = new System.Drawing.Point(160, 139);
-            this.numChL3P.Name = "numChL3P";
-            this.numChL3P.Size = new System.Drawing.Size(80, 36);
-            this.numChL3P.TabIndex = 13;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.ForeColor = System.Drawing.Color.Black;
-            this.label6.Location = new System.Drawing.Point(330, 144);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(129, 19);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Làn 3 - Toàn cảnh:";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.ForeColor = System.Drawing.Color.Black;
-            this.label7.Location = new System.Drawing.Point(15, 144);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(110, 19);
-            this.label7.TabIndex = 12;
-            this.label7.Text = "Làn 3 - Biển số:";
             // 
             // btnPreviewAnL2F
             // 
@@ -1582,9 +1312,6 @@ namespace IDTSERVER
             // grpLaneConfig
             // 
             this.grpLaneConfig.BorderRadius = 5;
-            this.grpLaneConfig.Controls.Add(this.txtLane3Com);
-            this.grpLaneConfig.Controls.Add(this.cboLane3Dir);
-            this.grpLaneConfig.Controls.Add(this.lbl3);
             this.grpLaneConfig.Controls.Add(this.txtLane2Com);
             this.grpLaneConfig.Controls.Add(this.txtLane1Com);
             this.grpLaneConfig.Controls.Add(this.cboLane2Dir);
@@ -1597,52 +1324,9 @@ namespace IDTSERVER
             this.grpLaneConfig.ForeColor = System.Drawing.Color.White;
             this.grpLaneConfig.Location = new System.Drawing.Point(0, 0);
             this.grpLaneConfig.Name = "grpLaneConfig";
-            this.grpLaneConfig.Size = new System.Drawing.Size(715, 181);
+            this.grpLaneConfig.Size = new System.Drawing.Size(715, 137);
             this.grpLaneConfig.TabIndex = 0;
             this.grpLaneConfig.Text = "CẤU HÌNH LÀN XE & ĐẦU ĐỌC";
-            // 
-            // txtLane3Com
-            // 
-            this.txtLane3Com.BorderRadius = 5;
-            this.txtLane3Com.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.txtLane3Com.DefaultText = "";
-            this.txtLane3Com.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.txtLane3Com.Location = new System.Drawing.Point(330, 134);
-            this.txtLane3Com.Name = "txtLane3Com";
-            this.txtLane3Com.PlaceholderText = "Cổng COM (COM3)";
-            this.txtLane3Com.SelectedText = "";
-            this.txtLane3Com.Size = new System.Drawing.Size(150, 36);
-            this.txtLane3Com.TabIndex = 8;
-            // 
-            // cboLane3Dir
-            // 
-            this.cboLane3Dir.BackColor = System.Drawing.Color.Transparent;
-            this.cboLane3Dir.BorderRadius = 5;
-            this.cboLane3Dir.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.cboLane3Dir.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboLane3Dir.FocusedColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.cboLane3Dir.FocusedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(94)))), ((int)(((byte)(148)))), ((int)(((byte)(255)))));
-            this.cboLane3Dir.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.cboLane3Dir.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(68)))), ((int)(((byte)(88)))), ((int)(((byte)(112)))));
-            this.cboLane3Dir.ItemHeight = 30;
-            this.cboLane3Dir.Items.AddRange(new object[] {
-            "LÀN VÀO",
-            "LÀN RA",
-            "ĐẢO CHIỀU"});
-            this.cboLane3Dir.Location = new System.Drawing.Point(130, 134);
-            this.cboLane3Dir.Name = "cboLane3Dir";
-            this.cboLane3Dir.Size = new System.Drawing.Size(180, 36);
-            this.cboLane3Dir.TabIndex = 7;
-            // 
-            // lbl3
-            // 
-            this.lbl3.AutoSize = true;
-            this.lbl3.ForeColor = System.Drawing.Color.Black;
-            this.lbl3.Location = new System.Drawing.Point(15, 139);
-            this.lbl3.Name = "lbl3";
-            this.lbl3.Size = new System.Drawing.Size(109, 19);
-            this.lbl3.TabIndex = 6;
-            this.lbl3.Text = "Cấu hình Làn 3:";
             // 
             // txtLane2Com
             // 
@@ -1732,64 +1416,12 @@ namespace IDTSERVER
             // 
             // pnlThietBiTop
             // 
-            this.pnlThietBiTop.Controls.Add(this.guna2GroupBox1);
             this.pnlThietBiTop.Controls.Add(this.grpDisplayOptions);
-            this.pnlThietBiTop.Controls.Add(this.grpCameraType);
             this.pnlThietBiTop.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlThietBiTop.Location = new System.Drawing.Point(15, 15);
             this.pnlThietBiTop.Name = "pnlThietBiTop";
             this.pnlThietBiTop.Size = new System.Drawing.Size(732, 70);
             this.pnlThietBiTop.TabIndex = 2;
-            // 
-            // guna2GroupBox1
-            // 
-            this.guna2GroupBox1.BorderRadius = 5;
-            this.guna2GroupBox1.Controls.Add(this.rdo3lane);
-            this.guna2GroupBox1.Controls.Add(this.rdo2lane);
-            this.guna2GroupBox1.CustomBorderThickness = new System.Windows.Forms.Padding(0, 25, 0, 0);
-            this.guna2GroupBox1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.guna2GroupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
-            this.guna2GroupBox1.Location = new System.Drawing.Point(3, 3);
-            this.guna2GroupBox1.Name = "guna2GroupBox1";
-            this.guna2GroupBox1.Size = new System.Drawing.Size(210, 60);
-            this.guna2GroupBox1.TabIndex = 2;
-            this.guna2GroupBox1.Text = "SỐ LƯỢNG LÀN XE";
-            // 
-            // rdo3lane
-            // 
-            this.rdo3lane.AutoSize = true;
-            this.rdo3lane.CheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.rdo3lane.CheckedState.BorderThickness = 0;
-            this.rdo3lane.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.rdo3lane.CheckedState.InnerColor = System.Drawing.Color.White;
-            this.rdo3lane.Location = new System.Drawing.Point(127, 33);
-            this.rdo3lane.Name = "rdo3lane";
-            this.rdo3lane.Size = new System.Drawing.Size(32, 19);
-            this.rdo3lane.TabIndex = 3;
-            this.rdo3lane.Text = "3";
-            this.rdo3lane.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
-            this.rdo3lane.UncheckedState.BorderThickness = 2;
-            this.rdo3lane.UncheckedState.FillColor = System.Drawing.Color.Transparent;
-            this.rdo3lane.UncheckedState.InnerColor = System.Drawing.Color.Transparent;
-            // 
-            // rdo2lane
-            // 
-            this.rdo2lane.AutoSize = true;
-            this.rdo2lane.Checked = true;
-            this.rdo2lane.CheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.rdo2lane.CheckedState.BorderThickness = 0;
-            this.rdo2lane.CheckedState.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.rdo2lane.CheckedState.InnerColor = System.Drawing.Color.White;
-            this.rdo2lane.Location = new System.Drawing.Point(10, 34);
-            this.rdo2lane.Name = "rdo2lane";
-            this.rdo2lane.Size = new System.Drawing.Size(32, 19);
-            this.rdo2lane.TabIndex = 2;
-            this.rdo2lane.TabStop = true;
-            this.rdo2lane.Text = "2";
-            this.rdo2lane.UncheckedState.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
-            this.rdo2lane.UncheckedState.BorderThickness = 2;
-            this.rdo2lane.UncheckedState.FillColor = System.Drawing.Color.Transparent;
-            this.rdo2lane.UncheckedState.InnerColor = System.Drawing.Color.Transparent;
             // 
             // grpDisplayOptions
             // 
@@ -1798,9 +1430,9 @@ namespace IDTSERVER
             this.grpDisplayOptions.CustomBorderThickness = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.grpDisplayOptions.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpDisplayOptions.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
-            this.grpDisplayOptions.Location = new System.Drawing.Point(470, 3);
+            this.grpDisplayOptions.Location = new System.Drawing.Point(330, 3);
             this.grpDisplayOptions.Name = "grpDisplayOptions";
-            this.grpDisplayOptions.Size = new System.Drawing.Size(250, 60);
+            this.grpDisplayOptions.Size = new System.Drawing.Size(390, 60);
             this.grpDisplayOptions.TabIndex = 2;
             this.grpDisplayOptions.Text = "TÙY CHỌN HIỂN THỊ";
             // 
@@ -1831,9 +1463,9 @@ namespace IDTSERVER
             this.grpCameraType.CustomBorderThickness = new System.Windows.Forms.Padding(0, 25, 0, 0);
             this.grpCameraType.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.grpCameraType.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(125)))), ((int)(((byte)(137)))), ((int)(((byte)(149)))));
-            this.grpCameraType.Location = new System.Drawing.Point(219, 4);
+            this.grpCameraType.Location = new System.Drawing.Point(15, 15);
             this.grpCameraType.Name = "grpCameraType";
-            this.grpCameraType.Size = new System.Drawing.Size(245, 60);
+            this.grpCameraType.Size = new System.Drawing.Size(310, 60);
             this.grpCameraType.TabIndex = 1;
             this.grpCameraType.Text = "LOẠI CAMERA SỬ DỤNG";
             // 
@@ -1887,6 +1519,20 @@ namespace IDTSERVER
             this.pnlThietBiBottom.Size = new System.Drawing.Size(732, 50);
             this.pnlThietBiBottom.TabIndex = 1;
             // 
+            // btnExitDevice
+            // 
+            this.btnExitDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExitDevice.BorderRadius = 5;
+            this.btnExitDevice.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            this.btnExitDevice.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnExitDevice.ForeColor = System.Drawing.Color.White;
+            this.btnExitDevice.Location = new System.Drawing.Point(306, 7);
+            this.btnExitDevice.Name = "btnExitDevice";
+            this.btnExitDevice.Size = new System.Drawing.Size(120, 36);
+            this.btnExitDevice.TabIndex = 2;
+            this.btnExitDevice.Text = "ĐÓNG";
+            this.btnExitDevice.Click += new System.EventHandler(this.btnExitDevice_Click);
+            // 
             // btnGuideDevice
             // 
             this.btnGuideDevice.BorderRadius = 5;
@@ -1929,26 +1575,26 @@ namespace IDTSERVER
             // dgvCardType
             // 
             this.dgvCardType.AllowUserToAddRows = false;
-            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
-            this.dgvCardType.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle4;
-            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            dataGridViewCellStyle5.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle5.ForeColor = System.Drawing.Color.White;
-            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvCardType.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle5;
+            dataGridViewCellStyle10.BackColor = System.Drawing.Color.White;
+            this.dgvCardType.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
+            dataGridViewCellStyle11.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle11.ForeColor = System.Drawing.Color.White;
+            dataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvCardType.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle11;
             this.dgvCardType.ColumnHeadersHeight = 35;
             this.dgvCardType.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.EnableResizing;
-            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.Color.White;
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Segoe UI", 9F);
-            dataGridViewCellStyle6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
-            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvCardType.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle12.BackColor = System.Drawing.Color.White;
+            dataGridViewCellStyle12.Font = new System.Drawing.Font("Segoe UI", 9F);
+            dataGridViewCellStyle12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle12.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle12.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(71)))), ((int)(((byte)(69)))), ((int)(((byte)(94)))));
+            dataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvCardType.DefaultCellStyle = dataGridViewCellStyle12;
             this.dgvCardType.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvCardType.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(231)))), ((int)(((byte)(229)))), ((int)(((byte)(255)))));
             this.dgvCardType.Location = new System.Drawing.Point(15, 65);
@@ -2105,20 +1751,6 @@ namespace IDTSERVER
             this.lblNangCaoDev.Text = "Cấu hình AI nhận diện biển số và các tùy chọn nâng cao khác...";
             this.lblNangCaoDev.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnExitDevice
-            // 
-            this.btnExitDevice.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnExitDevice.BorderRadius = 5;
-            this.btnExitDevice.FillColor = System.Drawing.Color.FromArgb(((int)(((byte)(16)))), ((int)(((byte)(128)))), ((int)(((byte)(66)))));
-            this.btnExitDevice.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnExitDevice.ForeColor = System.Drawing.Color.White;
-            this.btnExitDevice.Location = new System.Drawing.Point(306, 7);
-            this.btnExitDevice.Name = "btnExitDevice";
-            this.btnExitDevice.Size = new System.Drawing.Size(120, 36);
-            this.btnExitDevice.TabIndex = 2;
-            this.btnExitDevice.Text = "ĐÓNG";
-            this.btnExitDevice.Click += new System.EventHandler(this.btnExitDevice_Click);
-            // 
             // FrmSettings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -2149,13 +1781,9 @@ namespace IDTSERVER
             this.grpIpL1F.ResumeLayout(false);
             this.grpIpL2P.ResumeLayout(false);
             this.grpIpL2F.ResumeLayout(false);
-            this.guna2GroupBox3.ResumeLayout(false);
-            this.guna2GroupBox2.ResumeLayout(false);
             this.pnlAnalogConfig.ResumeLayout(false);
             this.grpAnalogChannels.ResumeLayout(false);
             this.grpAnalogChannels.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numChL3F)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numChL3P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL2F)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL2P)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numChL1F)).EndInit();
@@ -2164,8 +1792,6 @@ namespace IDTSERVER
             this.grpLaneConfig.ResumeLayout(false);
             this.grpLaneConfig.PerformLayout();
             this.pnlThietBiTop.ResumeLayout(false);
-            this.guna2GroupBox1.ResumeLayout(false);
-            this.guna2GroupBox1.PerformLayout();
             this.grpDisplayOptions.ResumeLayout(false);
             this.grpDisplayOptions.PerformLayout();
             this.grpCameraType.ResumeLayout(false);
@@ -2288,31 +1914,7 @@ namespace IDTSERVER
         private Guna.UI2.WinForms.Guna2Button btnSaveCardType;
         private System.Windows.Forms.Label lblGiaTienDev;
         private System.Windows.Forms.Label lblNangCaoDev;
-        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox1;
-        private Guna.UI2.WinForms.Guna2RadioButton rdo3lane;
-        private Guna.UI2.WinForms.Guna2RadioButton rdo2lane;
-        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL3F;
-        private Guna.UI2.WinForms.Guna2Button btnPreviewAnL3P;
-        private Guna.UI2.WinForms.Guna2NumericUpDown numChL3F;
-        private Guna.UI2.WinForms.Guna2NumericUpDown numChL3P;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label7;
-        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL3F;
-        private Guna.UI2.WinForms.Guna2Button btnPreviewIpL3P;
-        private Guna.UI2.WinForms.Guna2TextBox txtLane3Com;
         private Guna.UI2.WinForms.Guna2Button btnExitSystem;
-        private Guna.UI2.WinForms.Guna2ComboBox cboLane3Dir;
-        private System.Windows.Forms.Label lbl3;
-        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox3;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Rtsp;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Pass;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_User;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3P_Host;
-        private Guna.UI2.WinForms.Guna2GroupBox guna2GroupBox2;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Rtsp;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Pass;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_User;
-        private Guna.UI2.WinForms.Guna2TextBox txtIpL3F_Host;
         private Guna.UI2.WinForms.Guna2Button btnExitDevice;
     }
 }

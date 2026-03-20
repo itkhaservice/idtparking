@@ -182,6 +182,8 @@ Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thôn
   Khu vực AI Nhận diện (So sánh):
    * Ảnh biển số lúc VÀO (đối soát): pbAIL1In
    * Ảnh biển số lúc RA (hiện tại): pbAIL1Out
+   * Kết quả biển số lúc VÀO (đối soát): lblAIPlateInL1
+   * Kết quả biển số lúc RA (hiện tại): lblAIPlateOutL1
    * Kết quả so sánh AI (Text): lblAIResultL1
 
   Khu vực Ảnh Snapshot (Chụp lúc quẹt thẻ):
@@ -205,8 +207,11 @@ Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thôn
    * Tên Control tổng: gateL2
 
   Khu vực AI Nhận diện (Làn vào chỉ có 1 ảnh):
-   * Ảnh biển số AI đọc được: pbAIL2In
-   * Kết quả đọc AI (Text): lblAIResultL2
+   * Ảnh biển số lúc VÀO (đối soát): pbAIL2In
+   * Ảnh biển số lúc RA (hiện tại): pbAIL2Out
+   * Kết quả biển số lúc VÀO (đối soát): lblAIPlateInL2
+   * Kết quả biển số lúc RA (hiện tại): lblAIPlateOutL2
+   * Kết quả so sánh AI (Text): lblAIResultL2
 
   Khu vực Ảnh Snapshot (Chụp lúc quẹt thẻ):
    * Ảnh Snapshot 1: pbSnapL2_1
@@ -220,17 +225,27 @@ Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thôn
   4. Chi tiết các Label bên trong Bảng thông tin thẻ
   Nếu bạn dùng UserControl ParkingGateSection, bạn hãy mở file Designer của nó và đặt tên cho các nhãn bên trong. Code
   sẽ gọi thông qua gateL1.lblCardID,...:
+Áp dụng cho Làn 1 từ trái qua
+   * Số thẻ: lblCardID1
+   * Loại thẻ: lblCardType1
+   * Thời gian lưu bãi: lblStayDuration1
+   * Chủ thẻ (Tên khách hàng): lblOwner1
+   * Biển số (BS đăng ký): lblPlate1
+   * Đăng ký thẻ (Ngày BD - KT): lblRegistration1
+   * Thời điểm VÀO: lblTimeIn1
+   * Thời điểm RA: lblTimeOut1
+   * Thanh toán (Phí): lblAmount1
 
-   * Số thẻ: lblCardID
-   * Loại thẻ: lblCardType
-   * Thời gian lưu bãi: lblStayDuration
-   * Chủ thẻ (Tên khách hàng): lblOwner
-   * Biển số (BS đăng ký): lblPlate
-   * Đăng ký thẻ (Ngày BD - KT): lblRegistration
-   * Thời điểm VÀO: lblTimeIn
-   * Thời điểm RA: lblTimeOut
-   * Thanh toán (Phí): lblAmount
-
+Áp dụng cho Làn 2 từ trái qua
+   * Số thẻ: lblCardID2
+   * Loại thẻ: lblCardType2
+   * Thời gian lưu bãi: lblStayDuration2
+   * Chủ thẻ (Tên khách hàng): lblOwner2
+   * Biển số (BS đăng ký): lblPlate2
+   * Đăng ký thẻ (Ngày BD - KT): lblRegistration2
+   * Thời điểm VÀO: lblTimeIn2
+   * Thời điểm RA: lblTimeOut2
+   * Thanh toán (Phí): lblAmount2
   ---
 
   Một số lưu ý quan trọng:
@@ -238,6 +253,10 @@ Ghi chú: Nếu là thẻ đăng ký tháng, khi quẹt vào sẽ có các thôn
    2. Docking: Các thành phần bên trong TableLayoutPanel nên đặt Dock = Fill.
    3. Lưu ý về Làn vào: Đối với thẻ tháng quẹt vào làn Phải, Code sẽ tự động đổ dữ liệu mặc định vào lblOwner, lblPlate,
       và lblRegistration.
+   4. Cả 2 bên được thiết kế tương đồng nhau, đối xứng để đáp ứng IT setup cho bên trái là Làn ra/hoặc Vào nếu thích. (Lúc đó thông tin nào có sẽ tự hiển thị, không có mặc đinh trống)
+   5. Khu vực Ảnh Snapshot và Camera Live phải đều nhau để bảo vệ có thể xem ảnh rõ hơn, khu vực ảnh AI sẽ có tỉ lệ tương đương 2 khu vực kia nhưng nhỏ hơn.
+	
+
 
 
 
