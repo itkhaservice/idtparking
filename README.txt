@@ -25,6 +25,8 @@ F1 - Đăng nhập để sử dụng
 F2 - Đăng xuất - Hiển thị thông tin giao ca 
 F3 - Mở bảng cấu hình phần mềm để hoạt động
 F4 - Đăng nhập vào Quản lý dữ liệu hệ thống xe (Như các chức năng của Kế toán)
+F5 - Xem lại hình ảnh của thẻ vừa quẹt ở làn bên trái
+F5 - Xem lại hình ảnh của thẻ vừa quẹt ở làn bên phải
 F7 - Đổi làn ra/vào bên màn hình bên trái
 F8 - Đổi làn ra/vào bên màn hình bên phải
 F11- Reset chương trình
@@ -267,7 +269,15 @@ pbAIL2In pbAIL2Out pbAIL1In pbAIL1Out phải có tỉ lệ tương ứng với c
 
 
 ========================================================================================
-
+Bảng KhachHang
+Bảng TheThang
+Bảng Vao
+Bảng Ra
+Mô tả cách hoạt động của hệ thống
+Sau khi setup loại làn của 2 bên màn hình
+Ví dụ: Bên trái là Ra B, Bên phải là Vào A nhé
+Khi cư dân quẹt thẻ vào làn A, đầu đọc làn A nhận mã thẻ từ đưa về hệ thống để xử lý:
+- Thẻ đăng ký tháng: Sẽ hiển thị thông tin lên hệ thống xe, đồng thời 2 camera làn A sẽ chụp và đưa hình ảnh lúc quẹt thẻ xuống 2 camera snapshot, còn 2 camera live vẫn tiếp tục hình ảnh trực tuyến. 
 
 
 

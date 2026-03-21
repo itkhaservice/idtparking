@@ -11,6 +11,7 @@ namespace IDTSERVER
     {
         private AppSettings _settings;
         private Timer _clockTimer;
+        private bool _isLoggedIn = false;
         
         // Luồng Video Live
         private VlcControl _vlcL1Pano, _vlcL1Plate, _vlcL2Pano, _vlcL2Plate;
@@ -32,7 +33,6 @@ namespace IDTSERVER
             _clockTimer.Start();
 
             this.Load += FormMain_Load;
-            this.KeyDown += FormMain_KeyDown;
         }
 
         private void SetupUIProportions()
@@ -170,20 +170,75 @@ namespace IDTSERVER
         {
             if (lblSoftwareName != null) lblSoftwareName.Text = "IDT PARKING SYSTEM";
             
+            // Mặc định ban đầu: Chưa đăng nhập
+            UpdateLoginStatus(null, null, null);
+            ApplySettingsToUI();
+            LoadDefaultImages();
+
+            // Hiển thị bảng đăng nhập khi khởi động nhưng không bắt buộc (bấm thoát vẫn vào được FormMain)
             using (LoginForm login = new LoginForm())
             {
                 if (login.ShowDialog() == DialogResult.OK)
                 {
-                    string info = $"Nhân viên: {login.FullName} ({login.CurrentUser}) - Ca: {login.CurrentShift} - Vào ca: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
-                    if (lblGuardL1 != null) lblGuardL1.Text = info;
-                    if (lblGuardL2 != null) lblGuardL2.Text = info;
-                    
-                    ApplySettingsToUI();
+                    UpdateLoginStatus(login.FullName, login.CurrentUser, login.CurrentShift);
                 }
-                else
+            }
+        }
+
+        private void LoadDefaultImages()
+        {
+            try
+            {
+                // Đường dẫn tương đối từ thư mục thực thi (giả định bin/Debug)
+                string projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..", ".."));
+                string assetsPath = Path.Combine(projectRoot, "Assets", "Images");
+
+                if (!Directory.Exists(assetsPath))
                 {
-                    Application.Exit();
+                    // Thử trường hợp chạy thực tế nếu folder Assets được copy vào folder thực thi
+                    assetsPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "Images");
                 }
+
+                string imgVao = Path.Combine(assetsPath, "lan-vao.png");
+                string imgRa = Path.Combine(assetsPath, "lan-ra.png");
+
+                // Làn 1 (Trái) - Mặc định là RA
+                if (File.Exists(imgRa))
+                {
+                    Image raImg = Image.FromFile(imgRa);
+                    if (pbSnapL1_1 != null) pbSnapL1_1.Image = raImg;
+                    if (pbSnapL1_2 != null) pbSnapL1_2.Image = raImg;
+                }
+
+                // Làn 2 (Phải) - Mặc định là VÀO
+                if (File.Exists(imgVao))
+                {
+                    Image vaoImg = Image.FromFile(imgVao);
+                    if (pbSnapL2_1 != null) pbSnapL2_1.Image = vaoImg;
+                    if (pbSnapL2_2 != null) pbSnapL2_2.Image = vaoImg;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Lỗi LoadDefaultImages: " + ex.Message);
+            }
+        }
+
+        private void UpdateLoginStatus(string fullName, string user, string shift)
+        {
+            if (string.IsNullOrEmpty(user))
+            {
+                _isLoggedIn = false;
+                string info = "TRẠNG THÁI: CHƯA ĐĂNG NHẬP (Nhấn F1 để đăng nhập)";
+                if (lblGuardL1 != null) lblGuardL1.Text = info;
+                if (lblGuardL2 != null) lblGuardL2.Text = info;
+            }
+            else
+            {
+                _isLoggedIn = true;
+                string info = $"Nhân viên: {fullName} ({user}) - Ca: {shift} - Vào ca: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+                if (lblGuardL1 != null) lblGuardL1.Text = info;
+                if (lblGuardL2 != null) lblGuardL2.Text = info;
             }
         }
 
@@ -352,16 +407,138 @@ namespace IDTSERVER
 
         public void FormMain_KeyDown(object sender, KeyEventArgs e)
         {
-            // TEST UI WINFORMS NHIỀU MÀN HÌNH
-            if (e.KeyCode == Keys.F5) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1366, 768); } // 19"
-            if (e.KeyCode == Keys.F6) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1600, 900); } // 21"
-            if (e.KeyCode == Keys.F7) { this.WindowState = FormWindowState.Normal; this.Size = new Size(1920, 1080); } // 24"
-            if (e.KeyCode == Keys.F11) { this.WindowState = (this.WindowState == FormWindowState.Maximized) ? FormWindowState.Normal : FormWindowState.Maximized; }
+            switch (e.KeyCode)
+            {
+                case Keys.Escape:
+                    if (MessageBox.Show("Bạn có chắc chắn muốn thoát chương trình?", "Xác nhận thoát", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        Application.Exit();
+                    }
+                    break;
 
-            if (e.KeyCode == Keys.F3) {
-                using (FrmSettings s = new FrmSettings()) { if (s.ShowDialog() == DialogResult.OK) ApplySettingsToUI(); }
+                case Keys.F1:
+                    PerformLogin();
+                    break;
+
+                case Keys.F2:
+                    PerformLogout();
+                    break;
+
+                case Keys.F3:
+                    using (FrmSettings s = new FrmSettings())
+                    {
+                        if (s.ShowDialog() == DialogResult.OK) ApplySettingsToUI();
+                    }
+                    break;
+
+                case Keys.F4:
+                    // Đăng nhập vào Quản lý dữ liệu hệ thống xe
+                    using (LoginForm login = new LoginForm())
+                    {
+                        if (login.ShowDialog() == DialogResult.OK)
+                        {
+                            // Sau khi đăng nhập thành công thì mở FormTruyVan (Kế toán/Quản lý)
+                            // Lưu ý: FormTruyVan ở project root, cần kiểm tra namespace
+                            // Mở FormMain ở IDTPARKING để tránh lỗi liên quan đến việc mở Form từ một project khác
+                            MessageBox.Show("Mở chức năng Quản lý dữ liệu (Kế toán)");
+                        }
+                    }
+                    break;
+
+                case Keys.F5:
+                    // Xem lại hình ảnh của thẻ vừa quẹt ở làn bên trái
+                    MessageBox.Show("Xem lại hình ảnh Làn Trái (Làn 1)");
+                    break;
+
+                case Keys.F6:
+                    // Xem lại hình ảnh của thẻ vừa quẹt ở làn bên phải (Giả định F6 vì yêu cầu ghi 2 lần F5)
+                    MessageBox.Show("Xem lại hình ảnh Làn Phải (Làn 2)");
+                    break;
+
+                case Keys.F7:
+                    // Đổi làn ra/vào bên màn hình bên trái (Chỉ hoán đổi Vào <-> Ra)
+                    _settings.Lane1Direction = (_settings.Lane1Direction == 0) ? 1 : 0;
+                    _settings.Save();
+                    // Cập nhật lại hình ảnh mặc định theo chiều làn mới
+                    if (_settings.Lane1Direction == 0) { // VÀO
+                        if (pbSnapL1_1 != null) pbSnapL1_1.Image = Properties.Resources.lan_vao;
+                        if (pbSnapL1_2 != null) pbSnapL1_2.Image = Properties.Resources.lan_vao;
+                    } else { // RA
+                        if (pbSnapL1_1 != null) pbSnapL1_1.Image = Properties.Resources.lan_ra;
+                        if (pbSnapL1_2 != null) pbSnapL1_2.Image = Properties.Resources.lan_ra;
+                    }
+                    break;
+
+                case Keys.F8:
+                    // Đổi làn ra/vào bên màn hình bên phải (Chỉ hoán đổi Vào <-> Ra)
+                    _settings.Lane2Direction = (_settings.Lane2Direction == 0) ? 1 : 0;
+                    _settings.Save();
+                    // Cập nhật lại hình ảnh mặc định theo chiều làn mới
+                    if (_settings.Lane2Direction == 0) { // VÀO
+                        if (pbSnapL2_1 != null) pbSnapL2_1.Image = Properties.Resources.lan_vao;
+                        if (pbSnapL2_2 != null) pbSnapL2_2.Image = Properties.Resources.lan_vao;
+                    } else { // RA
+                        if (pbSnapL2_1 != null) pbSnapL2_1.Image = Properties.Resources.lan_ra;
+                        if (pbSnapL2_2 != null) pbSnapL2_2.Image = Properties.Resources.lan_ra;
+                    }
+                    break;
+
+                case Keys.F11:
+                    if (MessageBox.Show("Bạn có muốn khởi động lại chương trình?", "Reset", 
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        Application.Restart();
+                    }
+                    break;
+
+                case Keys.F12:
+                    // Thoát ra màn hình chính (Thu nhỏ hoặc về trạng thái mặc định)
+                    this.WindowState = FormWindowState.Minimized;
+                    break;
             }
-            if (e.KeyCode == Keys.Escape) Application.Exit();
+        }
+
+        private void PerformLogin()
+        {
+            using (LoginForm login = new LoginForm())
+            {
+                if (login.ShowDialog() == DialogResult.OK)
+                {
+                    string info = $"Nhân viên: {login.FullName} ({login.CurrentUser}) - Ca: {login.CurrentShift} - Vào ca: {DateTime.Now:dd/MM/yyyy HH:mm:ss}";
+                    if (lblGuardL1 != null) lblGuardL1.Text = info;
+                    if (lblGuardL2 != null) lblGuardL2.Text = info;
+                    ApplySettingsToUI();
+                }
+            }
+        }
+
+        private void PerformLogout()
+        {
+            if (MessageBox.Show("Bạn có muốn đăng xuất và thực hiện bàn giao ca?", "Xác nhận", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                // Hiển thị thông tin giao ca
+                // using (ShiftHandoverForm shf = new ShiftHandoverForm()) { shf.ShowDialog(); }
+                
+                if (lblGuardL1 != null) lblGuardL1.Text = "Nhân viên: ---";
+                if (lblGuardL2 != null) lblGuardL2.Text = "Nhân viên: ---";
+                StopCameras();
+                
+                // Sau khi đăng xuất, yêu cầu đăng nhập lại
+                PerformLogin();
+            }
+        }
+
+        private string GetDirectionName(int dir)
+        {
+            switch (dir)
+            {
+                case 0: return "VÀO";
+                case 1: return "RA";
+                case 2: return "ĐẢO CHIỀU";
+                default: return "KHÔNG XÁC ĐỊNH";
+            }
         }
     }
 }
