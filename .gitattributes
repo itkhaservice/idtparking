@@ -1,1 +1,2 @@
+db-21032021.sql filter=lfs diff=lfs merge=lfs -text
 *.sql filter=lfs diff=lfs merge=lfs -text
