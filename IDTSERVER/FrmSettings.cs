@@ -52,10 +52,10 @@ namespace IDTSERVER
             txtDvrPort.Text = _settings.DvrPort.ToString();
             txtDvrUser.Text = _settings.DvrUser;
             txtDvrPass.Text = _settings.DvrPass;
-            numChL1P.Value = _settings.ChLane1Plate;
-            numChL1F.Value = _settings.ChLane1Front;
-            numChL2P.Value = _settings.ChLane2Plate;
-            numChL2F.Value = _settings.ChLane2Front;
+            numChL1P.Value = _settings.ChLane1Front; // Hoán đổi: Ô Biển số hiển thị kênh Toàn cảnh
+            numChL1F.Value = _settings.ChLane1Plate; // Hoán đổi: Ô Toàn cảnh hiển thị kênh Biển số
+            numChL2P.Value = _settings.ChLane2Front;
+            numChL2F.Value = _settings.ChLane2Plate;
 
             // Tab 2 - IP Camera Config (6 Camera)
             txtIpL1P_Host.Text = _settings.IpCamL1PlateHost;
@@ -113,10 +113,10 @@ namespace IDTSERVER
             _settings.DvrPort = int.TryParse(txtDvrPort.Text, out int port) ? port : 8888;
             _settings.DvrUser = txtDvrUser.Text;
             _settings.DvrPass = txtDvrPass.Text;
-            _settings.ChLane1Plate = (int)numChL1P.Value;
-            _settings.ChLane1Front = (int)numChL1F.Value;
-            _settings.ChLane2Plate = (int)numChL2P.Value;
-            _settings.ChLane2Front = (int)numChL2F.Value;
+            _settings.ChLane1Plate = (int)numChL1F.Value; // Lưu giá trị từ ô Toàn cảnh vào Plate
+            _settings.ChLane1Front = (int)numChL1P.Value; // Lưu giá trị từ ô Biển số vào Front (Panorama)
+            _settings.ChLane2Plate = (int)numChL2F.Value;
+            _settings.ChLane2Front = (int)numChL2P.Value;
 
 
             _settings.IpCamL1PlateHost = txtIpL1P_Host.Text;
@@ -232,11 +232,7 @@ namespace IDTSERVER
             string cameraName = "";
             string rtspUrl = "";
 
-            if (btn == btnPreviewAnL1P) {
-                cameraName = "TEST MẶC ĐỊNH (Kênh 3)";
-                rtspUrl = "rtsp://admin:idt123321@192.168.100.99:554/cam/realmonitor?channel=3&subtype=1";
-            }
-            else if (rdoAnalogCamera.Checked) {
+            if (rdoAnalogCamera.Checked) {
                 string host = txtDvrHost.Text; string user = txtDvrUser.Text; string pass = txtDvrPass.Text;
                 int channel = 1;
                 if (btn == btnPreviewAnL1P) { cameraName = "Làn 1 - Biển số (Sau)"; channel = (int)numChL1P.Value; }
