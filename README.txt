@@ -269,20 +269,121 @@ pbAIL2In pbAIL2Out pbAIL1In pbAIL1Out phải có tỉ lệ tương ứng với c
 
 
 ========================================================================================
+Các bảng chính trong hệ thống
 Bảng KhachHang
+MaKH	varchar(20)	Unchecked
+hoten	nvarchar(50)	Unchecked
+DonVi	nvarchar(200)	Checked
+DiaChi	nvarchar(200)	Checked
+dienthoai	varchar(50)	Checked
+hopdong	varchar(50)	Checked
+chungloai	nvarchar(250)	Checked
+hinhanh	varchar(200)	Checked
+
 Bảng TheThang
+CardID	varchar(20)	Unchecked
+SoTT	float	Unchecked
+MaKH	varchar(20)	Unchecked
+TTrang	int	Unchecked
+MaLoaiThe	varchar(20)	Unchecked
+NgayBD	datetime	Unchecked
+NgayKT	datetime	Unchecked
+soxe	nvarchar(100)	Checked
+nguoicap	varchar(50)	Checked
+giatien	varchar(50)	Checked
+datcoc	varchar(50)	Checked
+MaKH liên kết từ MaKH của bảng KhachHang
+TTrang (có 2 giá trị là 1 và 5, 1 là đang sử dụng, 5 là đang bị khóa), MaLoaiThe (Do kế toán đăng ký có thể là VT, VT-XM, VT-XH, NV)
+
 Bảng Vao
+STTThe	float	Unchecked
+CardID	varchar(20)	Unchecked
+NgayVao	datetime	Unchecked
+ThoiGian	float	Unchecked
+MaLoaiThe	varchar(20)	Checked
+username	varchar(20)	Unchecked
+IDXe	varchar(50)	Unchecked
+IDMat	varchar(50)	Unchecked
+TT	int	Unchecked
+UsernameXoa	varchar(20)	Checked
+NgayXoa	datetime	Checked
+ThoiGianXoa	nchar(10)	Checked
+cong	varchar(50)	Checked
+congxoa	varchar(50)	Checked
+loaithe	int	Checked
+soxe	varchar(50)	Checked
+ghichu	varchar(50)	Checked
+
 Bảng Ra
-Mô tả cách hoạt động của hệ thống
+STTThe	varchar(10)	Unchecked
+CardID	varchar(20)	Unchecked
+NgayRa	datetime	Unchecked
+THoiGianRa	float	Unchecked
+MaLoaiThe	varchar(10)	Unchecked
+GiaTien	money	Unchecked
+username	varchar(20)	Unchecked
+IDXe	varchar(50)	Unchecked
+IDMat	varchar(50)	Unchecked
+GioRa	nchar(10)	Unchecked
+cong	varchar(50)	Checked
+soxe	varchar(50)	Checked
+soxera	varchar(50)	Checked
+
+Bảng Active
+sttthe	float	Unchecked
+CardID	varchar(50)	Unchecked
+trangthai	int	Checked
+Trong Active có 3 trạng thái: 0 là thẻ bị khóa, 1 là thẻ vãng lai, 2 là thẻ tháng (có thể là hết hạn, đang sử dụng, bị khóa)		
+
+Khi quẹt đầu vào, dữ liệu đầu vào sẽ được tạo ra như sau:
+STTThe là sttthe trong Active, CardID là CardID trong Active, NgayVao là ngày quẹt thẻ (giá trị mẫu 2022-10-22 00:00:00.000), ThoiGian là lúc quẹt thẻ (giá trị mẫu là 80733, có lẽ là lúc 22:25:33.89), MaLoaiThe (tôi chưa biết lấy từ đâu ra giá trị), username chắc có lẽ là user của tài khoản bảo vệ đang đăng nhập, IDXe = IDMat (Giá trị mẫu 2022102222253389 được kết hợp từ thời điểm lúc quẹt thẻ), TT (2 Có thêm giá trị Usernamexoa/Ngayxoa/ThoiGianXoa, 0 là thẻ đó chưa ra, 1 là thẻ đó đã ra khỏi bãi), UsernameXoa(NULL), NgayXoa(NULL),ThoiGianXoa(NULL), cong (tôi chưa biết lấy từ đâu ra giá trị), congxoa(tôi chưa biết lấy từ đâu ra giá trị),loaithe(là sttthe trong Active), soxe là giá trị đọc biển số của AI (giá trị mẫu là 72-C1-763.65), ghichu(NULL)
+
+
+Mô tả cách hoạt động của hệ thống (Đang viết chưa hoàn thiện)
 Sau khi setup loại làn của 2 bên màn hình
 Ví dụ: Bên trái là Ra B, Bên phải là Vào A nhé
 Khi cư dân quẹt thẻ vào làn A, đầu đọc làn A nhận mã thẻ từ đưa về hệ thống để xử lý:
 - Thẻ đăng ký tháng: Sẽ hiển thị thông tin lên hệ thống xe, đồng thời 2 camera làn A sẽ chụp và đưa hình ảnh lúc quẹt thẻ xuống 2 camera snapshot, còn 2 camera live vẫn tiếp tục hình ảnh trực tuyến. 
 
+========================================================================================
+PHÂN TÍCH HỆ THỐNG DATABASE (AI PHÂN TÍCH)
+========================================================================================
 
+1. Móc nối các bảng chính:
+   * Trái tim hệ thống là bảng [Active]: Định danh CardID và [trangthai] (0:Khóa, 1:Vãng lai, 2:Tháng).
+   * Luồng Thẻ tháng: [KhachHang] (Thông tin cá nhân) <-> [TheThang] (Thông tin xe/hạn dùng) <-> [LoaiThe] (Phân loại VT, XM...).
+   * Luồng Giao dịch: [Vao] lưu vết xe đang trong bãi ([TT]=0). Khi xe ra, cập nhật [Vao].[TT]=1 và ghi mới vào bảng [Ra].
 
+2. Cơ chế đồng bộ Hình ảnh & Dữ liệu (Dành cho chế độ 3 máy/Online):
+   * Bảng [Sync_Img]: Đóng vai trò "Hàng đợi" (Queue) để vận chuyển ảnh.
+     - [FromImg]: Đường dẫn vật lý tại máy trạm (D:\PARKING_IMAGES\...).
+     - [ToImg]: Đường dẫn đích trên Server hoặc URL (http://...).
+     - [F1]: Cờ trạng thái (0: Chờ đồng bộ, 1: Đã xong).
+   * Mối liên hệ AppSettings: Khi bật "Đồng bộ dữ liệu" (SyncData), hệ thống sẽ quét bảng này để đẩy ảnh từ LocalPath lên URLServer. Điều này đảm bảo máy tính ở cổng RA luôn thấy được ảnh lúc vào của máy tính ở cổng VAO.
 
+3. Logic AI Đối soát:
+   * Khi xe RA, hệ thống dùng [CardID] tìm bản ghi có [TT]=0 trong bảng [Vao].
+   * AI đọc biển số hiện tại và so sánh với cột [soxe] trong bảng [Vao].
+   * Hình ảnh đối soát được truy xuất dựa trên chuỗi [IDXe] (yyyyMMddHHmmss) lưu trong database để khớp với tên file trên đĩa.
 
+========================================================================================
+GHI CHÚ PHÂN TÍCH MALOAITHE & KẾ HOẠCH THỰC NGHIỆM
+========================================================================================
 
+1. Bí ẩn MaLoaiThe trong bảng [Vao]:
+   - MaLoaiThe quyết định số tiền thu của xe vãng lai hoặc đặc quyền của thẻ tháng.
+   - Thẻ tháng: MaLoaiThe được lấy trực tiếp từ bảng [TheThang].
+   - Thẻ vãng lai: Chưa rõ nguồn gốc (Cấu hình theo Làn hay cấu hình theo Thẻ nhựa).
 
+2. Kế hoạch thực nghiệm (Dự kiến thực hiện ngày 22/03/2026):
+   - Đối tượng: 01 thẻ vãng lai ([Active].[trangthai] = 1).
+   - Địa điểm: Quẹt tại 02 đầu đọc khác nhau (Đầu đọc Ô tô và Đầu đọc Xe máy).
+   - Mục tiêu: Kiểm tra giá trị [MaLoaiThe] được ghi vào bảng [Vao].
 
+3. Dự đoán kết quả:
+   - Trường hợp A (Cấu hình theo LÀN): Nếu quẹt ở máy Xe máy ra mã "XM", quẹt ở máy Ô tô ra mã "OTO" -> Logic nằm ở cài đặt Máy trạm (AppSettings).
+   - Trường hợp B (Cấu hình theo THẺ): Nếu quẹt ở đâu cũng ra cùng 1 mã -> Logic nằm ở định danh sẵn cho dải ID thẻ trong database.
+
+4. Ghi chú thêm: 
+   - Mã nguồn hiện tại được viết lại dựa trên Database, không phải code gốc. 
+   - Cần kiểm tra cột [loaithe] (int) so với [MaLoaiThe] (varchar) trong bảng [Vao] sau khi thực nghiệm.
